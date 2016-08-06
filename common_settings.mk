@@ -1,7 +1,7 @@
 # Validate that we have everything we need
 ifeq "" "$(SRCS)"
     $(error SRCS must be defined before including this file)
-else ifneq "clean" "$(filter clean,$(MAKECMDGOALS))"
+else ifneq "" "$(filter-out clean print-%,$(MAKECMDGOALS))"
     ifeq "" "$(BOOST_DIR)"
         $(error The BOOST_DIR variable must be set to where you installed Boost\
                 v1.61.0)
@@ -31,7 +31,7 @@ CC = $(CXX)
 
 # Generate compilation dependencies from SRCS. We will still rely on implicit
 # rules for the compilations.
-ifneq "clean" "$(filter clean,$(MAKECMDGOALS))"
+ifneq "" "$(filter-out clean print-%,$(MAKECMDGOALS))"
     $(foreach \
         s, \
         $(wildcard $(SRCS)), \
@@ -42,4 +42,4 @@ endif
 # Standard cleanup target
 .PHONY : clean
 clean :
-	rm -f *.o *.exe
+	rm -f *.o *.exe $(.DEFAULT_GOAL)

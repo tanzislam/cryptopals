@@ -1,5 +1,5 @@
-#ifndef ENCODE_BASE64
-#define ENCODE_BASE64
+#ifndef INCLUDED_ENCODE_BASE64
+#define INCLUDED_ENCODE_BASE64
 
 #include <iosfwd>
 #include <boost/math/common_factor_ct.hpp>

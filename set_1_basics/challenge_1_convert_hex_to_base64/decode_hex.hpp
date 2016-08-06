@@ -1,5 +1,5 @@
-#ifndef DECODE_HEX
-#define DECODE_HEX
+#ifndef INCLUDED_DECODE_HEX
+#define INCLUDED_DECODE_HEX
 
 #include <iosfwd>
 #include <boost/integer.hpp>

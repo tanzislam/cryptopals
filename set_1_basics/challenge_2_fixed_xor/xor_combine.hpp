@@ -1,5 +1,5 @@
-#ifndef XOR_COMBINE
-#define XOR_COMBINE
+#ifndef INCLUDED_XOR_COMBINE
+#define INCLUDED_XOR_COMBINE
 
 #include <iosfwd>
 
