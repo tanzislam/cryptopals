@@ -4,7 +4,6 @@
 #include <iomanip>
 #include <cstdlib>
 
-
 namespace cryptopals {
 
 std::istream & operator>>(std::istream & input, const decode_hex & manipulator)

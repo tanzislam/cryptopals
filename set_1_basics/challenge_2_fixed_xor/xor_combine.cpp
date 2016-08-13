@@ -1,6 +1,6 @@
 #include "xor_combine.hpp"
 #include "decode_hex.hpp"
-#include <boost/io/ios_state.hpp>
+#include "encode_hex.hpp"
 #include <istream>
 #include <ostream>
 #include <iomanip>
@@ -8,17 +8,17 @@
 namespace cryptopals {
 
 void xor_combine(std::ostream & outputStream,
-                 std::istream & inputStream1,
-                 std::istream & inputStream2)
+                 std::istream & hexEncodedInputStream1,
+                 std::istream & hexEncodedInputStream2,
+                 bool hexEncodeOutput)
 {
-    boost::io::ios_flags_saver formatGuard(outputStream);
     decode_hex::decoded_t value1, value2;
-    outputStream << std::hex;
     while (
-            inputStream1 >> decode_hex(value1)
-            && inputStream2 >> decode_hex(value2)
+            hexEncodedInputStream1 >> decode_hex(value1)
+            && hexEncodedInputStream2 >> decode_hex(value2)
     ) {
-        outputStream << (value1 ^ value2);
+        if (hexEncodeOutput) outputStream << encode_hex(value1 ^ value2);
+        else outputStream << char(value1 ^ value2);
     }
 }
 
