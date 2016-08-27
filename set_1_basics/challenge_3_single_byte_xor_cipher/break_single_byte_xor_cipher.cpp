@@ -31,7 +31,7 @@ xorByteToCharFrequencyMap_t getXorByteToCharFrequencyMap(
     while (hexEncodedCipherTextStream >> decode_hex(cipherTextByte)) {
         uint8_t xorByte = 0u;
         do {
-            xorByteToCharFrequencyMap[xorByte][cipherTextByte ^ xorByte]++;
+            ++xorByteToCharFrequencyMap[xorByte][cipherTextByte ^ xorByte];
         } while (++xorByte > 0u);
     }
     return xorByteToCharFrequencyMap;

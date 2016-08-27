@@ -13,9 +13,9 @@ endif
 
 # Standard settings
 CXX = g++
-CPPFLAGS = -std=c++11 -Wc++11-compat -Wc++14-compat -pedantic -Wall -Wextra -O9
+CPPFLAGS = -std=c++11 -Wc++11-compat -Wc++14-compat -pedantic -Wall -Wextra -O3
 CXXFLAGS = -isystem $(BOOST_DIR) -isystem $(GTEST_DIR)/googletest/include
-LDLIBS = $(GTEST_DIR)/googletest/make/gtest_main.a -lpthread
+LDLIBS = $(GTEST_DIR)/googletest/make/gtest_main.a -pthread
 
 # This is so that a Challenge-specific makefile can "include" the directory of
 # another Challenge using VPATH for both dependencies and C++ headers.
@@ -42,4 +42,4 @@ endif
 # Standard cleanup target
 .PHONY : clean
 clean :
-	rm -f *.o *.exe $(.DEFAULT_GOAL)
+	rm -f *.d *.o *.exe $(.DEFAULT_GOAL)
