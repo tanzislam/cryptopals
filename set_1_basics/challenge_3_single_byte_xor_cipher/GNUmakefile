@@ -5,7 +5,7 @@ VPATH = \
 SRCS = \
 test_break_single_byte_xor_cipher.cpp \
 repeating_stringstream.cpp \
-break_single_byte_xor_cipher.cpp \
+break_single_byte_xor_cipher_char_frequency.cpp \
 xor_combine.cpp \
 decode_hex.cpp \
 encode_hex.cpp

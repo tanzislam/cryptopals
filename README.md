@@ -6,10 +6,28 @@ challenges](https://cryptopals.com). All solutions are coded in C++11 and Boost.
 ## Requirements
 
 To run these solutions, you will need:
- - GNU Compiler Collection (GCC). I used v5.3.0 in MinGW-W64 (`posix-seh-rev0`).
- - Boost C++ Libraries. I used v1.61.0.
- - Google Test. I used the "master" branch at commit ec44c6c.
- - GNU Make. I used v4.1 in MinGW-W64 (`mingw32-make`).
+ - [GNU Compiler Collection (GCC)](https://gcc.gnu.org/). I used v5.3.0 in
+   [MinGW-W64](https://mingw-w64.org/doku.php) (the `posix-seh-rev0` build).
+ - [GNU Make](https://www.gnu.org/software/make/). I used v4.1 in MinGW-W64
+   (invoked as `mingw32-make`).
+ - [Boost C++ Libraries](http://www.boost.org/). I used v1.61.0.
+  - You will need to build the libraries as described for your platform in the
+    Getting Started Guide. Specify `--layout=system toolset=gcc variant=release`
+    as command-line options to the `b2` or `bjam` commands, and use the default
+    location for the `stage` target.
+ - [Google Test](https://github.com/google/googletest/). I used the "master"
+   branch at commit ec44c6c.
+  - You will need to build Google Test as described in the Generic Build
+    Instructions. To do this on Windows you will need a UNIX-like set of
+    utilities (see below).
+
+UNIX-like utilities on Windows are provided by any of the following:
+ - [MSys2](http://msys2.github.io/), or originally [MSys](http://www.mingw.org/)
+ - [Cygwin](https://www.cygwin.com/)
+ - [Interix / Windows Services for Unix / Subsystem for Unix-based Applications
+   (SUA)](https://msdn.microsoft.com/en-us/library/cc772343(v=ws.11).aspx) --
+   available as an optional Windows feature up to Windows 8 / Server 2012
+ - [GnuWin32](http://gnuwin32.sourceforge.net/)
 
 Although my development environment is in Windows, I tried to make no
 assumptions about the environment, instead stuck by whatever is guaranteed by

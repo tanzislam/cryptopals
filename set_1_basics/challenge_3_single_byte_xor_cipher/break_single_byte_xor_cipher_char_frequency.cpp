@@ -1,15 +1,15 @@
-#include "break_single_byte_xor_cipher.hpp"
+#include "break_single_byte_xor_cipher_char_frequency.hpp"
 #include <map>
 #include <unordered_map>
 #include "decode_hex.hpp"
 #include <cctype>
-#include <utility>
 #include <string>
 #include <algorithm>
 #include <iterator>
 #include "repeating_stringstream.hpp"
 #include "encode_hex.hpp"
 #include <iomanip>
+#include <stdexcept>
 #include "xor_combine.hpp"
 
 namespace cryptopals {
@@ -70,7 +70,7 @@ unsigned int characterFrequencyScore(const charFrequencyMap_t & charFrequencies)
     }
     characterByFrequency.insert(std::make_pair(whitespaceFrequency, ' '));
 
-    const char * englishLettersByFrequency = "e taoinshrdlucmfwypvbgkjqxz";
+    const char * englishLettersByFrequency = "etaoin shrdlucmfwypvbgkjqxz";
     const auto & mismatchedEntries =
             std::mismatch(characterByFrequency.rbegin(),
                           characterByFrequency.rend(),
@@ -100,8 +100,10 @@ void rewindAndDecryptUsingXorByte(std::ostream & outputStream,
 }  // close unnamed namespace
 
 
-uint8_t break_single_byte_xor_cipher(std::ostream & plainTextStream,
-                                     std::istream & hexEncodedCipherTextStream)
+std::pair<unsigned int, uint8_t> break_single_byte_xor_cipher_char_frequency(
+        std::ostream & plainTextStream,
+        std::istream & hexEncodedCipherTextStream
+)
 {
     const xorByteToCharFrequencyMap_t & xorByteToCharFrequencyMap =
             getXorByteToCharFrequencyMap(hexEncodedCipherTextStream);
@@ -119,7 +121,7 @@ uint8_t break_single_byte_xor_cipher(std::ostream & plainTextStream,
     rewindAndDecryptUsingXorByte(plainTextStream,
                                  hexEncodedCipherTextStream,
                                  winningXorByteItr->second);
-    return winningXorByteItr->second;
+    return *winningXorByteItr;
 }
 
 }  // close namespace cryptopals
