@@ -1,8 +1,10 @@
 #include <gtest/gtest.h>
 #include "repeating_stringstream.hpp"
 #include <sstream>
-#include "break_single_byte_xor_cipher_char_frequency.hpp"
+#include "break_single_byte_xor_cipher.hpp"
 #include <iostream>
+#include "break_single_byte_xor_cipher_char_frequency.hpp"
+#include "break_single_byte_xor_cipher_recognize_words.hpp"
 
 
 TEST(RepeatingStringStream, RepeatsStringAsStream)
@@ -30,17 +32,16 @@ TEST(RepeatingStringStream, RepeatsStringAsStream)
 }
 
 
-TEST(BreakSingleByteXorCipher, UsingCharacterFrequencyAlgorithm)
+void testBreakSingleByteXorCipher(
+        cryptopals::break_single_byte_xor_cipher & breaker
+)
 {
     std::istringstream hexEncodedCipherText(
         "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
     );
     std::ostringstream plainTextOutput;
     std::pair<unsigned int, uint8_t> scoreAndXorKeyByte =
-            cryptopals::break_single_byte_xor_cipher_char_frequency(
-                    plainTextOutput,
-                    hexEncodedCipherText
-            );
+            breaker.do_break(plainTextOutput, hexEncodedCipherText);
     EXPECT_NE(0, scoreAndXorKeyByte.first);
     EXPECT_NE(0, scoreAndXorKeyByte.second);
     EXPECT_NE(0, plainTextOutput.str().size());
@@ -48,4 +49,20 @@ TEST(BreakSingleByteXorCipher, UsingCharacterFrequencyAlgorithm)
               << std::dec << "\nMessage was: " << plainTextOutput.str()
               << "\nScore was: " << scoreAndXorKeyByte.first
               << std::endl;
+}
+
+
+TEST(BreakSingleByteXorCipher, UsingCharacterFrequencyAlgorithm)
+{
+    testBreakSingleByteXorCipher(
+            cryptopals::break_single_byte_xor_cipher_char_frequency().get_ref()
+    );
+}
+
+
+TEST(BreakSingleByteXorCipher, UsingWordRecognitionAlgorithm)
+{
+    testBreakSingleByteXorCipher(
+            cryptopals::break_single_byte_xor_cipher_recognize_words().get_ref()
+    );
 }

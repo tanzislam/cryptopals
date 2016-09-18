@@ -6,11 +6,8 @@
 #include <string>
 #include <algorithm>
 #include <iterator>
-#include "repeating_stringstream.hpp"
-#include "encode_hex.hpp"
 #include <iomanip>
 #include <stdexcept>
-#include "xor_combine.hpp"
 
 namespace cryptopals {
 
@@ -80,27 +77,11 @@ unsigned int characterFrequencyScore(const charFrequencyMap_t & charFrequencies)
     return std::distance(englishLettersByFrequency, mismatchedEntries.second);
 }
 
-
-void rewindAndDecryptUsingXorByte(std::ostream & outputStream,
-                                  std::istream & hexEncodedCipherTextStream,
-                                  uint8_t xorByte)
-{
-    hexEncodedCipherTextStream.clear();
-    if (!hexEncodedCipherTextStream.seekg(0))
-        throw std::runtime_error("Could not reset hexEncodedCipherTextStream");
-
-    xor_combine(outputStream,
-                hexEncodedCipherTextStream,
-                reinterpret_cast<std::istream &>(
-                        repeating_stringstream() << encode_hex(xorByte)
-                ),
-                false);
-}
-
 }  // close unnamed namespace
 
 
-std::pair<unsigned int, uint8_t> break_single_byte_xor_cipher_char_frequency(
+std::pair<unsigned int, uint8_t>
+    break_single_byte_xor_cipher_char_frequency::do_break(
         std::ostream & plainTextStream,
         std::istream & hexEncodedCipherTextStream
 )

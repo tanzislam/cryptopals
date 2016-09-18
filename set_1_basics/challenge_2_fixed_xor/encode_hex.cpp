@@ -13,6 +13,7 @@ std::ostream & operator<<(std::ostream & output,
     boost::io::ios_fill_saver fillSaver(output, '0');
     output.width(2);
     output << std::noshowbase << int(manipulator.d_value);
+    return output;
 }
 
 }  // close namespace cryptopals
