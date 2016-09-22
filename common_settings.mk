@@ -38,12 +38,35 @@ CXXFLAGS += $(foreach v,$(VPATH),-I$(v))
 # MinGW-w64 installation, so using $(CXX) instead as defined above.
 CC = $(CXX)
 
-# Generate compilation dependencies from SRCS. We will still rely on implicit
-# rules for the compilations.
-ifneq "" "$(filter-out clean print-%,$(MAKECMDGOALS))"
-    $(foreach s, \
-              $(wildcard $(SRCS)), \
-              $(eval $(shell $(CXX) -MMD -E $(CPPFLAGS) $(CXXFLAGS) $(s))))
+ifeq "" "$(filter clean print-%,$(MAKECMDGOALS))"
+    SRCS_FULL_PATHS := $(foreach \
+        s, \
+        $(SRCS), \
+        $(wildcard ./$(s) $(foreach v,$(VPATH),$(v)/$(s))) \
+    )
+
+    # Generate compilation dependencies from SRCS. We will still rely on
+    # implicit rules for the compilations.
+    $(foreach \
+        s, \
+        $(SRCS_FULL_PATHS), \
+        $(eval $(shell \
+            $(CXX) -MMD -E $(CPPFLAGS) $(CXXFLAGS) -Wno-deprecated $(s) \
+        )) \
+    )
+
+    # Boost specifies Windows system library dependencies using the Visual C++'s
+    # "#pragma comment(lib, ...)" feature, which GCC doesn't implement. So we
+    # masquerade as MSVC to extract all such directives and incorporate them.
+    WINDOWS_LIBS := $(if \
+        $(filter CYGWIN_% MSYS_% MINGW% windows%,$(strip $(shell uname -s))), \
+        $(foreach s,$(SRCS_FULL_PATHS),$(strip $(shell \
+            $(CXX) -E $(CPPFLAGS) $(CXXFLAGS) -D_MSC_VER $(s) -Wno-deprecated \
+            | grep -E "\# *pragma +comment.*lib" \
+            | cut -f 2 -d \" \
+        ))) \
+    )
+    LDLIBS += $(foreach lib,$(sort $(WINDOWS_LIBS)),-l$(basename $(lib)))
 endif
 
 # Standard cleanup target

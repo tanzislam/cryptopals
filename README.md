@@ -11,8 +11,8 @@ challenges](https://cryptopals.com). All solutions are coded in C++11 and Boost.
 ## Requirements
 
 To run these solutions, you will need:
- - [GNU Compiler Collection (GCC)](https://gcc.gnu.org/). I used v5.3.0 in
-   [MinGW-W64](https://mingw-w64.org/doku.php) (the `posix-seh-rev0` build).
+ - [GNU Compiler Collection (GCC)](https://gcc.gnu.org/). I used v6.2.0 in
+   [MinGW-W64](https://mingw-w64.org/doku.php) (build `x86_64-posix-seh-rev1`).
 
  - [GNU Make](https://www.gnu.org/software/make/). I used v4.1 in MinGW-W64
    (invoked as `mingw32-make`).
@@ -52,7 +52,7 @@ default installation. Check the respective documentation for guidance on how to
 locate and install packages.
 
 Although my development environment is in Windows, I tried to make no
-assumptions about the environment, instead stuck by whatever is guaranteed by
+assumptions about the environment and instead stuck by whatever is guaranteed by
 the language standard and library documentation. The solutions should build in a
 UNIX environment just fine.
 
