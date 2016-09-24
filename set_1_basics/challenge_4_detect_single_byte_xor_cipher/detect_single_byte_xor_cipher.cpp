@@ -29,12 +29,12 @@ std::tuple<unsigned int, unsigned int, uint8_t> detect_single_byte_xor_cipher(
                     std::make_tuple(lineNumber,
                                     startPos,
                                     scoreAndXorKey.second);
-        } catch (std::runtime_error & e) {
+        } catch (std::runtime_error &) {
             continue;
         }
     }
 
-    auto it = scoreLinePosAndKeyMap.rbegin();
+    const auto & it = scoreLinePosAndKeyMap.rbegin();
     if (it == scoreLinePosAndKeyMap.rend())
         throw std::runtime_error("No winning line with single-byte XOR cipher");
     input.clear();

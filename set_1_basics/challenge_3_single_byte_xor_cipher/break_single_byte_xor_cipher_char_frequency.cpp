@@ -42,7 +42,7 @@ unsigned int characterFrequencyScore(const charFrequencyMap_t & charFrequencies)
     for (const auto & entry : charFrequencies) {
         unsigned int uppercaseAndLowercaseCombinedFrequency = entry.second;
         char lowercaseEquivalentChar = std::tolower(entry.first);
-        if (!std::isprint(entry.first)) return 0;
+        if (!std::isprint(entry.first) && !isspace(entry.first)) return 0;
         if (std::isupper(entry.first)) {
             charFrequencyMap_t::const_iterator counterpartEntry =
                     charFrequencies.find(lowercaseEquivalentChar);
@@ -97,7 +97,7 @@ std::pair<unsigned int, uint8_t>
         );
 
     auto winningXorByteItr = xorByteByScore.rbegin();
-    if (winningXorByteItr == xorByteByScore.rend())
+    if (winningXorByteItr == xorByteByScore.rend() || !winningXorByteItr->first)
         throw std::runtime_error("No winning XOR byte");
     rewindAndDecryptUsingXorByte(plainTextStream,
                                  hexEncodedCipherTextStream,

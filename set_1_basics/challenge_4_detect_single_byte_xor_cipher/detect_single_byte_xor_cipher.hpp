@@ -9,7 +9,7 @@
 
 namespace cryptopals {
 
-/** @return Line number, Score, XOR byte*/
+/** @return Line number (zero-based), Score, XOR byte*/
 std::tuple<unsigned int, unsigned int, uint8_t> detect_single_byte_xor_cipher(
         std::ostream & output,
         std::istream & input,

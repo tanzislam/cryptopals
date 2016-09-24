@@ -6,13 +6,15 @@
 #include <strstream>
 #include "detect_single_byte_xor_cipher.hpp"
 #include "break_single_byte_xor_cipher_recognize_words.hpp"
-#include <iostream>
 
 
 TEST(LineExtractStreamBuf, ExtractsLinesOneAtATimeAndRewindsProperly)
 {
     std::stringstream inputStream;
-    inputStream << "Hello world!\nThis is going to extract\na line at a time";
+    inputStream << "Hello world!\n"
+                   "This is going to extract\r\n"
+                   "a line at a time\r"
+                   "even for strings with mixed line-endings\n";
 
     {
         cryptopals::line_extract_streambuf lineExtractor(inputStream);
@@ -57,6 +59,21 @@ TEST(LineExtractStreamBuf, ExtractsLinesOneAtATimeAndRewindsProperly)
         lineExtractorStream.seekg(0);
         std::getline(lineExtractorStream, line, '\0');
         EXPECT_EQ("a line at a time", line);
+    }
+
+    {
+        cryptopals::line_extract_streambuf lineExtractor(inputStream);
+        std::istream lineExtractorStream(&lineExtractor);
+        std::string line;
+        std::getline(lineExtractorStream, line, '\0');
+        EXPECT_EQ("even for strings with mixed line-endings", line);
+
+        line.clear();
+        EXPECT_EQ("", line);
+        lineExtractorStream.clear();
+        lineExtractorStream.seekg(0);
+        std::getline(lineExtractorStream, line, '\0');
+        EXPECT_EQ("even for strings with mixed line-endings", line);
     }
 }
 

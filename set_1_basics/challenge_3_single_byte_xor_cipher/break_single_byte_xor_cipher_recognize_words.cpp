@@ -26,7 +26,7 @@ std::pair<unsigned int, uint8_t>
         uint8_t xorByte = 0u;
         do {
             char decryptedChar = cipherTextChar ^ xorByte;
-            if (!isprint(decryptedChar))
+            if (!isprint(decryptedChar) && !isspace(decryptedChar))
                 numRecognizedWords[xorByte] = 0u;
             else if (isspace(decryptedChar)) {
                 if (HunspellSingleton::inst().spell(decryptedWord[xorByte]))
@@ -43,14 +43,13 @@ std::pair<unsigned int, uint8_t>
         xorByteByScore.emplace(numRecognizedWords[xorByte], xorByte);
     } while (++xorByte > 0u);
 
-    const std::pair<unsigned int, uint8_t> & winningXorByte =
-            *xorByteByScore.rbegin();
-    if (winningXorByte.first == 0u)
+    const auto & winningXorByteItr = xorByteByScore.rbegin();
+    if (winningXorByteItr == xorByteByScore.rend() || !winningXorByteItr->first)
         throw std::runtime_error("No winning XOR byte");
     rewindAndDecryptUsingXorByte(plainTextStream,
                                  hexEncodedCipherTextStream,
-                                 winningXorByte.second);
-    return winningXorByte;
+                                 winningXorByteItr->second);
+    return *winningXorByteItr;
 }
 
 }  // close namespace cryptopals

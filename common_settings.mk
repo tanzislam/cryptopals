@@ -38,13 +38,13 @@ CXXFLAGS += $(foreach v,$(VPATH),-I$(v))
 # MinGW-w64 installation, so using $(CXX) instead as defined above.
 CC = $(CXX)
 
-ifeq "" "$(filter clean print-%,$(MAKECMDGOALS))"
-    SRCS_FULL_PATHS := $(foreach \
-        s, \
-        $(SRCS), \
-        $(wildcard ./$(s) $(foreach v,$(VPATH),$(v)/$(s))) \
-    )
+SRCS_FULL_PATHS := $(foreach \
+    s, \
+    $(SRCS), \
+    $(wildcard ./$(s) $(foreach v,$(VPATH),$(v)/$(s))) \
+)
 
+ifeq "" "$(filter clean print-%,$(MAKECMDGOALS))"
     # Generate compilation dependencies from SRCS. We will still rely on
     # implicit rules for the compilations.
     $(foreach \
@@ -55,11 +55,13 @@ ifeq "" "$(filter clean print-%,$(MAKECMDGOALS))"
         )) \
     )
 
+    IS_WINDOWS_PLATFORM := \
+        $(filter CYGWIN_% MSYS_% MINGW% windows%,$(strip $(shell uname -s)))
+
     # Boost specifies Windows system library dependencies using the Visual C++'s
     # "#pragma comment(lib, ...)" feature, which GCC doesn't implement. So we
     # masquerade as MSVC to extract all such directives and incorporate them.
-    WINDOWS_LIBS := $(if \
-        $(filter CYGWIN_% MSYS_% MINGW% windows%,$(strip $(shell uname -s))), \
+    WINDOWS_LIBS := $(if $(IS_WINDOWS_PLATFORM), \
         $(foreach s,$(SRCS_FULL_PATHS),$(strip $(shell \
             $(CXX) -E $(CPPFLAGS) $(CXXFLAGS) -D_MSC_VER $(s) -Wno-deprecated \
             | grep -E "\# *pragma +comment.*lib" \
@@ -67,9 +69,27 @@ ifeq "" "$(filter clean print-%,$(MAKECMDGOALS))"
         ))) \
     )
     LDLIBS += $(foreach lib,$(sort $(WINDOWS_LIBS)),-l$(basename $(lib)))
+
+    # GCC creates executables with .exe file extension on Windows platforms. GNU
+    # Make's implicit rules, however, expect an extension-less program name. So
+    # each time we run Make on Windows, it can't find the final target and so
+    # re-runs the link recipe unnecessarily. Therefore, we create an extra rule
+	# to produce a hardlink of the .exe file as the extension-less file.
+    define recipe_for_program_hardlink_without_exe_extension
+        EXECUTABLE_NAME := $(.DEFAULT_GOAL)
+        .PHONY : create_hardlink_without_exe_extension
+        create_hardlink_without_exe_extension : $(EXECUTABLE_NAME)
+	        ln -f $(EXECUTABLE_NAME).exe $(EXECUTABLE_NAME) || true
+
+        .DEFAULT_GOAL = create_hardlink_without_exe_extension
+    endef
+    $(if $(IS_WINDOWS_PLATFORM), \
+        $(eval $(value recipe_for_program_hardlink_without_exe_extension)) \
+    )
 endif
 
 # Standard cleanup target
 .PHONY : clean
 clean :
-	rm -f -- $(wildcard *.d *.o *.exe $(.DEFAULT_GOAL))
+	rm -f -- $(SRCS_FULL_PATHS:.cpp=.d) $(SRCS_FULL_PATHS:.cpp=.o) \
+        $(.DEFAULT_GOAL) $(.DEFAULT_GOAL).exe

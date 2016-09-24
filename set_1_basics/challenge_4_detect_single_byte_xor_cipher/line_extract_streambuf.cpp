@@ -26,6 +26,10 @@ std::streambuf::pos_type line_extract_streambuf::seekpos(
 std::streambuf::int_type line_extract_streambuf::underflow()
 {
     if (d_inputStream.get(d_buffer) && d_buffer != '\n') {
+        if (d_buffer == '\r') {
+            if (d_inputStream.peek() == '\n') d_inputStream.ignore();
+            return std::streambuf::traits_type::eof();
+        }
         setg(&d_buffer, &d_buffer, &d_buffer + 1);
         return std::streambuf::traits_type::to_int_type(d_buffer);
     } else return std::streambuf::traits_type::eof();
