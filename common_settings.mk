@@ -77,12 +77,17 @@ ifeq "" "$(filter clean print-%,$(MAKECMDGOALS))"
     )
     LDLIBS += $(foreach lib,$(sort $(WINDOWS_LIBS)),-l$(basename $(lib)))
 
+    # Git doesn't know how to ignore extension-less binaries, so we must teach
+    # it. No need to check this in, though -- it will be created each time.
+    $(file > .gitignore,.gitignore)
+    $(file >> .gitignore,$(.DEFAULT_GOAL))
+
     # GCC creates executables with .exe file extension on Windows platforms. GNU
     # Make's implicit rules, however, expect an extension-less program name. So
     # each time we run Make on Windows, it can't find the final target and so
     # re-runs the link recipe unnecessarily. Therefore, we create an extra rule
 	# to produce a hardlink of the .exe file as the extension-less file.
-    define recipe_for_program_hardlink_without_exe_extension
+    define recipe_for_program_hardlink_without_exe_extension =
         EXECUTABLE_NAME := $(.DEFAULT_GOAL)
         .PHONY : create_hardlink_without_exe_extension
         create_hardlink_without_exe_extension : $(EXECUTABLE_NAME)
@@ -98,5 +103,4 @@ endif
 # Standard cleanup target
 .PHONY : clean
 clean :
-	rm -f -- $(SRCS_FULL_PATHS:.cpp=.d) $(SRCS_FULL_PATHS:.cpp=.o) \
-        $(.DEFAULT_GOAL) $(.DEFAULT_GOAL).exe
+	rm -f -- $(wildcard *.d *.o *.exe $(.DEFAULT_GOAL) .gitignore)
