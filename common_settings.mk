@@ -20,8 +20,15 @@ CXXFLAGS = -isystem $(BOOST_DIR) \
            -isystem $(GTEST_DIR)/googletest/include \
            -isystem $(HUNSPELL_DIR)/src/hunspell
 LDFLAGS = -pthread \
-          $(if $(BOOST_LIBS),-L$(BOOST_DIR)/stage/lib) \
-          -L$(HUNSPELL_DIR)/src/hunspell/.libs
+          $(if \
+              $(BOOST_LIBS), \
+              $(foreach d,$(BOOST_DIR)/stage/lib,-L$(d) -Wl,-R -Wl,$(d)) \
+          ) \
+          $(foreach \
+              d, \
+              $(HUNSPELL_DIR)/src/hunspell/.libs, \
+              -L$(d) -Wl,-R -Wl,$(d) \
+          )
 LDLIBS = $(GTEST_DIR)/googletest/make/gtest_main.a \
          $(foreach lib,$(BOOST_LIBS),-lboost_$(lib)) \
          $(foreach lib,$(LIBS),-l$(lib))
