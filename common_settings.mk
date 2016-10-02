@@ -87,11 +87,12 @@ ifeq "" "$(filter clean print-%,$(MAKECMDGOALS))"
     # Make's implicit rules, however, expect an extension-less program name. So
     # each time we run Make on Windows, it can't find the final target and so
     # re-runs the link recipe unnecessarily. Therefore, we create an extra rule
-	# to produce a hardlink of the .exe file as the extension-less file.
+    # to produce a hardlink of the .exe file as the extension-less file.
     define recipe_for_program_hardlink_without_exe_extension =
         EXECUTABLE_NAME := $(.DEFAULT_GOAL)
         .PHONY : create_hardlink_without_exe_extension
         create_hardlink_without_exe_extension : $(EXECUTABLE_NAME)
+	        rm -f -- $(EXECUTABLE_NAME)
 	        ln -f $(EXECUTABLE_NAME).exe $(EXECUTABLE_NAME) || true
 
         .DEFAULT_GOAL = create_hardlink_without_exe_extension
