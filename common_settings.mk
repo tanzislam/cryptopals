@@ -5,7 +5,7 @@ else ifeq "" "$(filter clean print-%,$(MAKECMDGOALS))"
     ifeq "" "$(BOOST_DIR)"
         $(error The BOOST_DIR variable must be set to where you installed Boost)
     else ifeq "" "$(GTEST_DIR)"
-        $(error The GTEST_DIR variable must be set to where you downloaded or\
+        $(error The GTEST_DIR variable must be set to where you downloaded or \
                 cloned Google Test and Google Mock)
     else ifeq "" "$(HUNSPELL_DIR)"
         $(error The HUNSPELL_DIR variable must be set to where you downloaded \
@@ -61,6 +61,7 @@ ifeq "" "$(filter clean print-%,$(MAKECMDGOALS))"
             $(CXX) -MMD -E $(CPPFLAGS) $(CXXFLAGS) -Wno-deprecated $(s) \
         )) \
     )
+    $(SRCS:.cpp=.o) : $(lastword $(MAKEFILE_LIST))
 
     IS_WINDOWS_PLATFORM := \
         $(filter CYGWIN_% MSYS_% MINGW% windows%,$(strip $(shell uname -s)))
