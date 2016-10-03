@@ -15,11 +15,14 @@ endif
 
 # Standard settings
 CXX = g++
-CPPFLAGS = -std=c++11 -Wc++11-compat -Wc++14-compat -pedantic -Wall -Wextra -O3
+CPP_STANDARD = -std=c++11
+CPP_QUALITY_CHECKS = -Wc++11-compat -Wc++14-compat -pedantic -Wall -Wextra
+CPP_OPTIMIZATIONS = -O3 -ffunction-sections -fdata-sections
+CPPFLAGS = $(CPP_STANDARD) $(CPP_QUALITY_CHECKS) $(CPP_OPTIMIZATIONS)
 CXXFLAGS = -isystem $(BOOST_DIR) \
            -isystem $(GTEST_DIR)/googletest/include \
            -isystem $(HUNSPELL_DIR)/src/hunspell
-LDFLAGS = -pthread \
+LDFLAGS = -pthread -Wl,--gc-sections \
           $(if \
               $(BOOST_LIBS), \
               $(foreach d,$(BOOST_DIR)/stage/lib,-L$(d) -Wl,-R -Wl,$(d)) \
@@ -63,7 +66,7 @@ ifeq "" "$(filter clean print-%,$(MAKECMDGOALS))"
         s, \
         $(SRCS_FULL_PATHS), \
         $(eval $(shell \
-            $(CXX) -MM -std=c++11 $(CXXFLAGS) $(s) | tr -d "\\\\" \
+            $(CXX) -MM $(CPP_STANDARD) $(CXXFLAGS) $(s) | tr -d "\\\\" \
         )) \
     )
     $(SRCS:.cpp=.o) : $(lastword $(MAKEFILE_LIST))
@@ -76,7 +79,7 @@ ifeq "" "$(filter clean print-%,$(MAKECMDGOALS))"
     # masquerade as MSVC to extract all such directives and incorporate them.
     WINDOWS_LIBS := $(if $(IS_WINDOWS_PLATFORM), \
         $(foreach s,$(SRCS_FULL_PATHS),$(strip $(shell \
-            $(CXX) -E $(CPPFLAGS) $(CXXFLAGS) -D_MSC_VER $(s) -Wno-deprecated \
+            $(CXX) -E -w $(CPP_STANDARD) $(CXXFLAGS) -D_MSC_VER $(s) \
             | grep -E "\# *pragma +comment.*lib" \
             | cut -f 2 -d \" \
         ))) \
