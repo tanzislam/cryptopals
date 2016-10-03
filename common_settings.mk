@@ -54,11 +54,16 @@ SRCS_FULL_PATHS := $(foreach \
 ifeq "" "$(filter clean print-%,$(MAKECMDGOALS))"
     # Generate compilation dependencies from SRCS. We will still rely on
     # implicit rules for the compilations.
+    #
+    # NOTE: GCC emits backslash-newline as line-continuation, but GNU Make's
+    #       $(shell) function replaces the newline with space -- but retains the
+    #       backslash. We need to remove the backslash ourselves, to prevent it
+    #       from escaping the whitespace after it.
     $(foreach \
         s, \
         $(SRCS_FULL_PATHS), \
         $(eval $(shell \
-            $(CXX) -MMD -E $(CPPFLAGS) $(CXXFLAGS) -Wno-deprecated $(s) \
+            $(CXX) -MM -std=c++11 $(CXXFLAGS) $(s) | tr -d "\\\\" \
         )) \
     )
     $(SRCS:.cpp=.o) : $(lastword $(MAKEFILE_LIST))
@@ -86,7 +91,7 @@ ifeq "" "$(filter clean print-%,$(MAKECMDGOALS))"
     # GCC creates executables with .exe file extension on Windows platforms. GNU
     # Make's implicit rules, however, expect an extension-less program name. So
     # each time we run Make on Windows, it can't find the final target and so
-    # re-runs the link recipe unnecessarily. Therefore, we create an extra rule
+    # re-runs the link recipe unnecessarily. To fix this we create an extra rule
     # to produce a hardlink of the .exe file as the extension-less file.
     #
     # NOTE: MSYS utilities can auto-check for <file>.exe when provided <file>,
@@ -96,10 +101,10 @@ ifeq "" "$(filter clean print-%,$(MAKECMDGOALS))"
         EXECUTABLE_NAME := $(.DEFAULT_GOAL)
         .PHONY : create_hardlink_without_exe_extension
         create_hardlink_without_exe_extension : $(EXECUTABLE_NAME)
-	        mv -- $(EXECUTABLE_NAME).exe $(EXECUTABLE_NAME).sav
-	        rm -f -- $(EXECUTABLE_NAME)
-	        mv -- $(EXECUTABLE_NAME).sav $(EXECUTABLE_NAME)
-	        ln -f $(EXECUTABLE_NAME) $(EXECUTABLE_NAME).exe || true
+	        @mv -- $(EXECUTABLE_NAME).exe $(EXECUTABLE_NAME).sav
+	        @rm -f -- $(EXECUTABLE_NAME)
+	        @mv -- $(EXECUTABLE_NAME).sav $(EXECUTABLE_NAME)
+	        @ln -f $(EXECUTABLE_NAME) $(EXECUTABLE_NAME).exe || true
 
         .DEFAULT_GOAL = create_hardlink_without_exe_extension
     endef
