@@ -88,12 +88,18 @@ ifeq "" "$(filter clean print-%,$(MAKECMDGOALS))"
     # each time we run Make on Windows, it can't find the final target and so
     # re-runs the link recipe unnecessarily. Therefore, we create an extra rule
     # to produce a hardlink of the .exe file as the extension-less file.
+    #
+    # NOTE: MSYS utilities can auto-check for <file>.exe when provided <file>,
+    #       but not vice-versa. So we first rename the .exe to .sav, to prevent
+    #       it from considered for deletion or hardlink-time existence-check.
     define recipe_for_program_hardlink_without_exe_extension =
         EXECUTABLE_NAME := $(.DEFAULT_GOAL)
         .PHONY : create_hardlink_without_exe_extension
         create_hardlink_without_exe_extension : $(EXECUTABLE_NAME)
+	        mv -- $(EXECUTABLE_NAME).exe $(EXECUTABLE_NAME).sav
 	        rm -f -- $(EXECUTABLE_NAME)
-	        ln -f $(EXECUTABLE_NAME).exe $(EXECUTABLE_NAME) || true
+	        mv -- $(EXECUTABLE_NAME).sav $(EXECUTABLE_NAME)
+	        ln -f $(EXECUTABLE_NAME) $(EXECUTABLE_NAME).exe || true
 
         .DEFAULT_GOAL = create_hardlink_without_exe_extension
     endef
