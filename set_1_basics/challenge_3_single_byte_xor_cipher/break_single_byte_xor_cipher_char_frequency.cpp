@@ -4,8 +4,10 @@
 #include "decode_hex.hpp"
 #include <cctype>
 #include <string>
-#include <algorithm>
-#include <iterator>
+#include "levenshtein_distance.hpp"
+#include <boost/range/algorithm_ext/push_back.hpp>
+#include <boost/range/adaptor/map.hpp>
+#include <boost/range/adaptor/reversed.hpp>
 #include <iomanip>
 #include <stdexcept>
 
@@ -37,7 +39,7 @@ xorByteToCharFrequencyMap_t getXorByteToCharFrequencyMap(
 
 unsigned int characterFrequencyScore(const charFrequencyMap_t & charFrequencies)
 {
-    std::multimap<unsigned int, char> characterByFrequency;
+    std::multimap<unsigned int, char> characterMapByFrequency;
     unsigned int whitespaceFrequency = 0;
     for (const auto & entry : charFrequencies) {
         unsigned int uppercaseAndLowercaseCombinedFrequency = entry.second;
@@ -60,21 +62,21 @@ unsigned int characterFrequencyScore(const charFrequencyMap_t & charFrequencies)
             continue;
         }
         else continue;
-        characterByFrequency.insert(
+        characterMapByFrequency.insert(
                 std::make_pair(uppercaseAndLowercaseCombinedFrequency,
                                lowercaseEquivalentChar)
         );
     }
-    characterByFrequency.insert(std::make_pair(whitespaceFrequency, ' '));
+    characterMapByFrequency.insert(std::make_pair(whitespaceFrequency, ' '));
 
-    const char * englishLettersByFrequency = "etaoin shrdlucmfwypvbgkjqxz";
-    const auto & mismatchedEntries =
-            std::mismatch(characterByFrequency.rbegin(),
-                          characterByFrequency.rend(),
-                          englishLettersByFrequency,
-                          [](const std::pair<unsigned int, char> & a, char b)
-                                -> bool { return a.second < b; });
-    return std::distance(englishLettersByFrequency, mismatchedEntries.second);
+    std::string charactersByFrequency;
+    charactersByFrequency.reserve(characterMapByFrequency.size());
+    boost::range::push_back(charactersByFrequency,
+                            characterMapByFrequency
+                                    | boost::adaptors::map_values
+                                    | boost::adaptors::reversed);
+    return 100 - levenshtein_distance(charactersByFrequency.c_str(),
+                                      "etaoin shrdlucmfwypvbgkjqxz");
 }
 
 }  // close unnamed namespace

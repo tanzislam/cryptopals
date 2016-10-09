@@ -15,7 +15,7 @@ endif
 
 # Standard settings
 CXX = g++
-CPP_STANDARD = -std=c++11
+CPP_STANDARD = -std=c++14
 CPP_QUALITY_CHECKS = -Wc++11-compat -Wc++14-compat -pedantic -Wall -Wextra
 CPP_OPTIMIZATIONS = -O3 -ffunction-sections -fdata-sections
 CPPFLAGS = $(CPP_STANDARD) $(CPP_QUALITY_CHECKS) $(CPP_OPTIMIZATIONS)
@@ -76,10 +76,12 @@ ifeq "" "$(filter clean print-%,$(MAKECMDGOALS))"
 
     # Boost specifies Windows system library dependencies using the Visual C++'s
     # "#pragma comment(lib, ...)" feature, which GCC doesn't implement. So we
-    # masquerade as MSVC to extract all such directives and incorporate them.
+    # masquerade as MSVC to extract all such directives and incorporate them. We
+    # also specify GCCXML's flag to avoid problematic MSVC-specific code paths.
     WINDOWS_LIBS := $(if $(IS_WINDOWS_PLATFORM), \
         $(foreach s,$(SRCS_FULL_PATHS),$(strip $(shell \
-            $(CXX) -E -w $(CPP_STANDARD) $(CXXFLAGS) -D_MSC_VER $(s) \
+            $(CXX) $(CPP_STANDARD) $(CXXFLAGS) \
+                -E -w -D_MSC_VER -D__GCCXML__ $(s) \
             | grep -E "\# *pragma +comment.*lib" \
             | cut -f 2 -d \" \
         ))) \

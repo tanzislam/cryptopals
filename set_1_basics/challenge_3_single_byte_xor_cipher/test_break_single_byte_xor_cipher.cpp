@@ -1,6 +1,8 @@
 #include <gtest/gtest.h>
 #include "repeating_stringstream.hpp"
 #include <sstream>
+#include "levenshtein_distance.hpp"
+#include <string>
 #include "break_single_byte_xor_cipher.hpp"
 #include <iostream>
 #include "break_single_byte_xor_cipher_char_frequency.hpp"
@@ -29,6 +31,16 @@ TEST(RepeatingStringStream, RepeatsStringAsStream)
 
     sstream >> std::setw(10) >> extractedChars;
     EXPECT_EQ("esthellowo", extractedChars);
+}
+
+
+TEST(LevenshteinDistance, ComputesDistanceCorrectly)
+{
+    using namespace cryptopals;
+    EXPECT_EQ(3, levenshtein_distance("kitten", "sitting"));
+    EXPECT_EQ(3, levenshtein_distance("saturday", "sunday"));
+    EXPECT_EQ(2, levenshtein_distance("gumbo", "gambol"));
+    EXPECT_EQ(4, levenshtein_distance("meilenstein", "levenshtein"));
 }
 
 

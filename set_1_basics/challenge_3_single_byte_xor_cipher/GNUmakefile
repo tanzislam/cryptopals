@@ -11,7 +11,8 @@ break_single_byte_xor_cipher_recognize_words.cpp \
 hunspell_singleton.cpp \
 xor_combine.cpp \
 decode_hex.cpp \
-encode_hex.cpp
+encode_hex.cpp \
+levenshtein_distance.cpp
 
 LIBS = hunspell-1.5
 
