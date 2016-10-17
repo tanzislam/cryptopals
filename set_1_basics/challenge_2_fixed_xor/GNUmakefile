@@ -4,7 +4,8 @@ SRCS = \
 test_xor_combine.cpp \
 xor_combine.cpp \
 decode_hex.cpp \
-encode_hex.cpp
+encode_hex.cpp \
+xor.cpp
 
 test_xor_combine : $(SRCS:.cpp=.o)
 

@@ -1,25 +1,20 @@
 #include "xor_combine.hpp"
 #include "decode_hex.hpp"
 #include "encode_hex.hpp"
-#include <istream>
-#include <ostream>
-#include <iomanip>
+#include "xor.hpp"
 
 namespace cryptopals {
 
-void xor_combine(std::ostream & outputStream,
+void xor_combine(std::ostream & hexEncodedOutputStream,
                  std::istream & hexEncodedInputStream1,
-                 std::istream & hexEncodedInputStream2,
-                 bool hexEncodeOutput)
+                 std::istream & hexEncodedInputStream2)
 {
-    decode_hex::decoded_t value1, value2;
-    while (
-            hexEncodedInputStream1 >> decode_hex(value1)
-            && hexEncodedInputStream2 >> decode_hex(value2)
-    ) {
-        if (hexEncodeOutput) outputStream << encode_hex(value1 ^ value2);
-        else outputStream << char(value1 ^ value2);
-    }
+    decode_hex_streambuf hexDecoder1(hexEncodedInputStream1),
+                         hexDecoder2(hexEncodedInputStream2);
+    std::istream inputStream1(&hexDecoder1), inputStream2(&hexDecoder2);
+    xor_streambuf xorCombiner(inputStream1, inputStream2);
+    encode_hex_streambuf hexEncoder(hexEncodedOutputStream);
+    std::istream(&xorCombiner).get(hexEncoder);
 }
 
 }  // close namespace cryptopals
