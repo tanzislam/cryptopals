@@ -1,9 +1,7 @@
 #include "encode_base64.hpp"
 #include <cassert>
-#include <ostream>
 
 namespace cryptopals {
-
 
 char encode_base64::convertToBase64(uint8_t value)
 {
@@ -92,6 +90,57 @@ std::ostream & operator<<(std::ostream & output,
         output << '=';
     }
     return output;
+}
+
+
+encode_base64_streambuf::encode_base64_streambuf(std::ostream & outputStream)
+    : d_outputStream(outputStream)
+{
+    resetBuffer();
+}
+
+
+std::streambuf::int_type encode_base64_streambuf::overflow(int_type ch)
+{
+    try {
+        encode();
+        resetBuffer();
+        sputc(ch);
+        return 1;
+    } catch (...) {
+        invalidateBuffer();
+        return std::char_traits<char>::eof();
+    }
+}
+
+
+int encode_base64_streambuf::sync()
+{
+    try {
+        encode();
+        resetBuffer();
+        return 0;
+    } catch (...) {
+        invalidateBuffer();
+        return -1;
+    }
+}
+
+
+void encode_base64_streambuf::encode()
+{
+    if (!pbase() || !pptr())
+        throw std::ios_base::failure("Base64 buffer already invalidated");
+    else if (pbase() == pptr())
+        return;
+
+    encode_base64::input_t buffer;
+    buffer[0] = *pbase();
+    if (pptr() - pbase() >= 2) buffer[1] = *(pbase() + 1);
+    if (pptr() - pbase() >= 3) buffer[2] = *(pbase() + 2);
+    d_outputStream << encode_base64(buffer);
+    if (!d_outputStream)
+        throw std::ios_base::failure("Could not write Base64 to output stream");    
 }
 
 }  // close namespace cryptopals
