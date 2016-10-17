@@ -51,10 +51,14 @@ You may need to install additional packages beyond the ones bundled with the
 default installation. Check the respective documentation for guidance on how to
 locate and install packages.
 
-Although my development environment is in Windows, I tried to make no
-assumptions about the environment and instead stuck by whatever is guaranteed by
-the language standard and library documentation. The solutions should build in a
-UNIX environment just fine.
+Although my development environment is in Windows (primarily [Notepad++](
+https://notepad-plus-plus.org/) enhanced with some humble [NppExec](
+https://sourceforge.net/projects/npp-plugins/files/NppExec/) scripts), I tried
+to make no assumptions about the environment and instead stuck by whatever is
+guaranteed by the language standard and library documentation. The solutions
+should build in a UNIX environment just fine. Check out the [Wiki](
+https://github.com/tanzislam/cryptopals/wiki) for guides to using additional
+development tools.
 
 ## Building
 
@@ -97,4 +101,13 @@ an adventure in IOStreams programming, using some of its more advanced details
 and techniques:
  - custom manipulators with arguments
  - checking and setting `std::ios_base::io_state` flags
- - custom string buffers
+ - custom stream buffers as input/output filters
+
+### Why not Boost.Iostreams?
+
+I could have started out with the [Boost.Iostreams](
+http://www.boost.org/doc/libs/release/libs/iostreams/) framework for all this,
+instead of trying to make ends meet with the Standard IOStreams library. While
+the Boost framework is impressively designed for ease of use, my intention here
+was to primarily explore the C++ Standard Library thoroughly and identify its
+shortcomings, followed by a gradual feature-comparison with the Boost libraries.
