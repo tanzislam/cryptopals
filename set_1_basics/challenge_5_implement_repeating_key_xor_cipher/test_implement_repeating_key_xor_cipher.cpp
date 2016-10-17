@@ -1,24 +1,31 @@
 #include <gtest/gtest.h>
-#include <sstream>
-#include "encode_hex_streambuf.hpp"
-#include "xor_combine.hpp"
 #include "repeating_stringstream.hpp"
+#include <sstream>
+#include "encode_hex.hpp"
 
 
-TEST(ImplementRepeatingKeyXorCipher, EncodeHexStreamBuf)
+TEST(RepeatingStringStream, RepeatsStringAsStream)
 {
-    std::istringstream input("Hello World!!");
+    cryptopals::repeating_stringstream sstream;
+    sstream << "helloworld";
 
-    cryptopals::encode_hex_streambuf hexEncoder(input);
-    std::istream hexEncodedInput(&hexEncoder);
+    std::string extractedChars;
+    sstream >> std::setw(7) >> extractedChars;
+    EXPECT_EQ("hellowo", extractedChars);
 
-    std::string hexEncodedInputLine;
-    std::getline(hexEncodedInput, hexEncodedInputLine);
-    EXPECT_EQ("48656c6c6f20576f726c642121", hexEncodedInputLine);
+    sstream >> std::setw(7) >> extractedChars;
+    EXPECT_EQ("rldhell", extractedChars);
+    EXPECT_TRUE(sstream);
 
-    hexEncodedInput.seekg(10);
-    std::getline(hexEncodedInput, hexEncodedInputLine);
-    EXPECT_EQ("20576f726c642121", hexEncodedInputLine);    
+    sstream >> std::setw(5) >> extractedChars;
+    EXPECT_EQ("oworl", extractedChars);
+
+    sstream << "!ExtensionTest";
+    sstream >> std::setw(12) >> extractedChars;
+    EXPECT_EQ("d!ExtensionT", extractedChars);
+
+    sstream >> std::setw(10) >> extractedChars;
+    EXPECT_EQ("esthellowo", extractedChars);
 }
 
 
@@ -27,18 +34,13 @@ TEST(ImplementRepeatingKeyXorCipher, EncryptsProperly)
     std::istringstream input("Burning 'em, if you ain't quick and nimble\n"
                              "I go crazy when I hear a cymbal");
 
-    cryptopals::encode_hex_streambuf hexEncoderForInput(input);
-    std::istream hexEncodedInput(&hexEncoderForInput);
-
     cryptopals::repeating_stringstream xorKey;
     xorKey << "ICE";
-    cryptopals::encode_hex_streambuf hexEncoderForXorKey(xorKey);
-    std::istream hexEncodedXorKey(&hexEncoderForXorKey);
 
     std::ostringstream hexOutputStream;
-    cryptopals::xor_combine(hexOutputStream,
-                            hexEncodedInput,
-                            hexEncodedXorKey);
+    char char1, char2;
+    while (input.get(char1) && xorKey.get(char2))
+        hexOutputStream << cryptopals::encode_hex(char1 ^ char2);
     EXPECT_EQ("0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a262263"
               "24272765272a282b2f20430a652e2c652a3124333a653e2b2027630c692b2028"
               "3165286326302e27282f",

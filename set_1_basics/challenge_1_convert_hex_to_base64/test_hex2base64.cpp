@@ -1,8 +1,9 @@
-#include "decode_hex.hpp"
-#include "encode_base64.hpp"
-#include "convert_hex_to_base64.hpp"
 #include <gtest/gtest.h>
 #include <sstream>
+#include "decode_hex.hpp"
+#include <string>
+#include "encode_base64.hpp"
+#include "convert_hex_to_base64.hpp"
 
 
 TEST(DecodeHex, DeocdesUnit)
@@ -22,6 +23,42 @@ TEST(DecodeHex, DiscardsIncompleteInput)
     inputStream >> cryptopals::decode_hex(result);
     EXPECT_EQ(0u, result);
     EXPECT_TRUE(inputStream.fail());
+}
+
+
+TEST(DecodeHexStreamBuf, ComputesPositionsAndOffsets)
+{
+    std::istringstream inputStream("5468697320697320612063696365206461792e");
+    inputStream.ignore(4);
+    EXPECT_EQ(4, inputStream.tellg());
+
+    cryptopals::decode_hex_streambuf hexDecoder(inputStream);
+    EXPECT_EQ(0,
+              hexDecoder.pubseekoff(0, std::ios_base::cur, std::ios_base::in));
+
+    std::istream hexDecodedInput(&hexDecoder);
+    EXPECT_EQ(0, hexDecodedInput.tellg());
+    EXPECT_EQ(4, inputStream.tellg());
+
+    std::string word;
+    std::getline(hexDecodedInput, word, 'a');
+    EXPECT_EQ("is is ", word);
+    EXPECT_EQ(7, hexDecodedInput.tellg());
+    EXPECT_EQ(18, inputStream.tellg());
+
+    EXPECT_TRUE(hexDecodedInput.seekg(12));
+    EXPECT_TRUE(inputStream);
+    EXPECT_EQ(12, hexDecodedInput.tellg());
+    EXPECT_EQ(28, inputStream.tellg());
+
+    EXPECT_TRUE(hexDecodedInput.seekg(-5, std::ios_base::cur));
+    EXPECT_TRUE(inputStream);
+    EXPECT_EQ(7, hexDecodedInput.tellg());
+    EXPECT_EQ(18, inputStream.tellg());
+
+    EXPECT_FALSE(hexDecodedInput.seekg(-3, std::ios_base::end));
+    EXPECT_TRUE(inputStream);
+    EXPECT_EQ(18, inputStream.tellg());
 }
 
 

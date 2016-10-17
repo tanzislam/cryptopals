@@ -2,7 +2,8 @@
 #define INCLUDED_ENCODE_HEX
 
 #include <cstdint>
-#include <iosfwd>
+#include <ostream>
+#include <streambuf>
 
 namespace cryptopals {
 
@@ -19,6 +20,19 @@ class encode_hex
 
 std::ostream & operator<<(std::ostream & output,
                           const encode_hex & manipulator);
+
+
+class encode_hex_streambuf
+    : public std::streambuf
+{
+    std::ostream & d_outputStream;
+
+  protected:
+    std::streambuf::int_type overflow(std::streambuf::int_type value);
+
+  public:
+    encode_hex_streambuf(std::ostream & outputStream);
+};
 
 }  // close namespace cryptopals
 

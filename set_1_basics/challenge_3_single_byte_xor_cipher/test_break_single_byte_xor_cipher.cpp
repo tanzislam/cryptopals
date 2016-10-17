@@ -1,37 +1,12 @@
 #include <gtest/gtest.h>
-#include "repeating_stringstream.hpp"
 #include <sstream>
 #include "levenshtein_distance.hpp"
 #include <string>
 #include "break_single_byte_xor_cipher.hpp"
+#include "decode_hex.hpp"
 #include <iostream>
 #include "break_single_byte_xor_cipher_char_frequency.hpp"
 #include "break_single_byte_xor_cipher_recognize_words.hpp"
-
-
-TEST(RepeatingStringStream, RepeatsStringAsStream)
-{
-    cryptopals::repeating_stringstream sstream;
-    sstream << "helloworld";
-
-    std::string extractedChars;
-    sstream >> std::setw(7) >> extractedChars;
-    EXPECT_EQ("hellowo", extractedChars);
-
-    sstream >> std::setw(7) >> extractedChars;
-    EXPECT_EQ("rldhell", extractedChars);
-    EXPECT_TRUE(sstream);
-
-    sstream >> std::setw(5) >> extractedChars;
-    EXPECT_EQ("oworl", extractedChars);
-
-    sstream << "!ExtensionTest";
-    sstream >> std::setw(12) >> extractedChars;
-    EXPECT_EQ("d!ExtensionT", extractedChars);
-
-    sstream >> std::setw(10) >> extractedChars;
-    EXPECT_EQ("esthellowo", extractedChars);
-}
 
 
 TEST(LevenshteinDistance, ComputesDistanceCorrectly)
@@ -52,8 +27,10 @@ void testBreakSingleByteXorCipher(
         "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
     );
     std::ostringstream plainTextOutput;
+    cryptopals::decode_hex_streambuf hexDecoder(hexEncodedCipherText);
     std::pair<unsigned int, uint8_t> scoreAndXorKeyByte =
-            breaker.do_break(plainTextOutput, hexEncodedCipherText);
+            breaker.do_break(plainTextOutput,
+                             std::istream(&hexDecoder).seekg(0));
     EXPECT_NE(0, scoreAndXorKeyByte.first);
     EXPECT_NE(0, scoreAndXorKeyByte.second);
     EXPECT_NE(0, plainTextOutput.str().size());

@@ -9,10 +9,8 @@ class break_single_byte_xor_cipher_recognize_words
     : public break_single_byte_xor_cipher
 {
   public:
-    std::pair<unsigned int, uint8_t> do_break(
-            std::ostream & outputStream,
-            std::istream & hexEncodedCipherTextStream
-    );
+    std::pair<unsigned int, uint8_t> do_break(std::ostream & outputStream,
+                                              std::istream & cipherTextStream);
 };
 
 }  // close namespace cryptopals

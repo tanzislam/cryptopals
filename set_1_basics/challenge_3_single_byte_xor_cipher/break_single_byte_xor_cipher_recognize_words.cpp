@@ -2,7 +2,6 @@
 #include <limits>
 #include <string>
 #include <map>
-#include "decode_hex.hpp"
 #include "hunspell_singleton.hpp"
 
 namespace cryptopals {
@@ -10,7 +9,7 @@ namespace cryptopals {
 std::pair<unsigned int, uint8_t>
     break_single_byte_xor_cipher_recognize_words::do_break(
         std::ostream & plainTextStream,
-        std::istream & hexEncodedCipherTextStream
+        std::istream & cipherTextStream
 )
 {
     static constexpr size_t uint8_range =
@@ -21,8 +20,8 @@ std::pair<unsigned int, uint8_t>
         str.reserve(30);
 
     unsigned int numRecognizedWords[uint8_range] = { };
-    decode_hex::decoded_t cipherTextChar;
-    while (hexEncodedCipherTextStream >> decode_hex(cipherTextChar)) {
+    char cipherTextChar;
+    while (cipherTextStream.get(cipherTextChar)) {
         uint8_t xorByte = 0u;
         do {
             char decryptedChar = cipherTextChar ^ xorByte;
@@ -47,7 +46,7 @@ std::pair<unsigned int, uint8_t>
     if (winningXorByteItr == xorByteByScore.rend() || !winningXorByteItr->first)
         throw std::runtime_error("No winning XOR byte");
     rewindAndDecryptUsingXorByte(plainTextStream,
-                                 hexEncodedCipherTextStream,
+                                 cipherTextStream,
                                  winningXorByteItr->second);
     return *winningXorByteItr;
 }

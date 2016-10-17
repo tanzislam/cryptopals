@@ -12,14 +12,14 @@ class break_single_byte_xor_cipher
 {
   protected:
     void rewindAndDecryptUsingXorByte(std::ostream & outputStream,
-                                      std::istream & hexEncodedCipherTextStream,
+                                      std::istream & cipherTextStream,
                                       uint8_t xorByte);
 
   public:
     /// @return Pair of score and XOR byte
     virtual std::pair<unsigned int, uint8_t> do_break(
             std::ostream & outputStream,
-            std::istream & hexEncodedCipherTextStream
+            std::istream & cipherTextStream
     ) = 0;
 
     virtual ~break_single_byte_xor_cipher() { }

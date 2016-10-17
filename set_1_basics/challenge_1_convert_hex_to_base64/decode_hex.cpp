@@ -28,6 +28,8 @@ std::istream & operator>>(std::istream & input, const decode_hex & manipulator)
 decode_hex_streambuf::decode_hex_streambuf(std::istream & inputStream)
     : d_inputStream(inputStream), d_startPos(inputStream.tellg())
 {
+    if (!d_inputStream || d_startPos == std::streampos(-1))
+        throw std::ios_base::failure("Could not obtain initial position");
     setg(reinterpret_cast<char*>(&d_buffer), nullptr, nullptr);
 }
 
@@ -48,14 +50,40 @@ std::streambuf::pos_type decode_hex_streambuf::seekpos(
 }
 
 
+std::streambuf::pos_type decode_hex_streambuf::seekoff(
+        std::streambuf::off_type off,
+        std::ios_base::seekdir dir,
+        std::ios_base::openmode which
+
+)
+{
+    return
+            off % sizeof(d_buffer) == 0
+            && dir == std::ios_base::cur
+            && which == std::ios_base::in
+            && -off <= (d_inputStream.tellg() - d_startPos)
+                                / decode_hex::s_numHexDigitsInOctet
+            && (d_inputStream.clear(),
+                d_inputStream.seekg(off * decode_hex::s_numHexDigitsInOctet,
+                                    dir))
+        ? std::streampos((d_inputStream.tellg() - d_startPos)
+                                / decode_hex::s_numHexDigitsInOctet)
+        : std::streambuf::seekoff(off, dir, which);
+}
+
+
 std::streambuf::int_type decode_hex_streambuf::underflow()
 {
-    if (d_inputStream >> decode_hex(d_buffer)) {
-        setg(reinterpret_cast<char *>(&d_buffer),
-             reinterpret_cast<char *>(&d_buffer),
-             reinterpret_cast<char *>(&d_buffer) + sizeof(d_buffer));
-        return std::streambuf::traits_type::to_int_type(d_buffer);
-    } else return std::streambuf::traits_type::eof();
+    try {
+        if (d_inputStream >> decode_hex(d_buffer)) {
+            setg(reinterpret_cast<char *>(&d_buffer),
+                 reinterpret_cast<char *>(&d_buffer),
+                 reinterpret_cast<char *>(&d_buffer) + sizeof(d_buffer));
+            return std::streambuf::traits_type::to_int_type(d_buffer);
+        } else return std::streambuf::traits_type::eof();
+    } catch (...) {
+        return std::streambuf::traits_type::eof();
+    }
 }
 
 

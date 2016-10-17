@@ -16,4 +16,21 @@ std::ostream & operator<<(std::ostream & output,
     return output;
 }
 
+
+encode_hex_streambuf::encode_hex_streambuf(std::ostream & outputStream)
+    : d_outputStream(outputStream)
+{ }
+
+
+std::streambuf::int_type
+        encode_hex_streambuf::overflow(std::streambuf::int_type value)
+{
+    if (traits_type::eq_int_type(value, traits_type::eof())) return 1;
+    try {
+        return d_outputStream << encode_hex(value) ? 1 : traits_type::eof();
+    } catch (...) {
+        return traits_type::eof();
+    }
+}
+
 }  // close namespace cryptopals

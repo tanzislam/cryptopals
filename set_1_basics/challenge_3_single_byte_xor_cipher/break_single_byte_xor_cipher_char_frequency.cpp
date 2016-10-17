@@ -1,7 +1,6 @@
 #include "break_single_byte_xor_cipher_char_frequency.hpp"
 #include <map>
 #include <unordered_map>
-#include "decode_hex.hpp"
 #include <cctype>
 #include <string>
 #include "levenshtein_distance.hpp"
@@ -22,12 +21,12 @@ typedef std::map<uint8_t, charFrequencyMap_t> xorByteToCharFrequencyMap_t;
 
 
 xorByteToCharFrequencyMap_t getXorByteToCharFrequencyMap(
-        std::istream & hexEncodedCipherTextStream
+        std::istream & cipherTextStream
 )
 {
     xorByteToCharFrequencyMap_t xorByteToCharFrequencyMap;
-    decode_hex::decoded_t cipherTextByte;
-    while (hexEncodedCipherTextStream >> decode_hex(cipherTextByte)) {
+    char cipherTextByte;
+    while (cipherTextStream.get(cipherTextByte)) {
         uint8_t xorByte = 0u;
         do {
             ++xorByteToCharFrequencyMap[xorByte][cipherTextByte ^ xorByte];
@@ -85,11 +84,11 @@ unsigned int characterFrequencyScore(const charFrequencyMap_t & charFrequencies)
 std::pair<unsigned int, uint8_t>
     break_single_byte_xor_cipher_char_frequency::do_break(
         std::ostream & plainTextStream,
-        std::istream & hexEncodedCipherTextStream
+        std::istream & cipherTextStream
 )
 {
     const xorByteToCharFrequencyMap_t & xorByteToCharFrequencyMap =
-            getXorByteToCharFrequencyMap(hexEncodedCipherTextStream);
+            getXorByteToCharFrequencyMap(cipherTextStream);
 
     std::multimap<unsigned int, uint8_t> xorByteByScore;
     for (const auto & xorByteEntry : xorByteToCharFrequencyMap)
@@ -102,7 +101,7 @@ std::pair<unsigned int, uint8_t>
     if (winningXorByteItr == xorByteByScore.rend() || !winningXorByteItr->first)
         throw std::runtime_error("No winning XOR byte");
     rewindAndDecryptUsingXorByte(plainTextStream,
-                                 hexEncodedCipherTextStream,
+                                 cipherTextStream,
                                  winningXorByteItr->second);
     return *winningXorByteItr;
 }

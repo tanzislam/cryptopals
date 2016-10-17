@@ -41,6 +41,9 @@ class decode_hex_streambuf
     virtual int_type underflow();
     virtual pos_type seekpos(pos_type pos,
                              std::ios_base::openmode which = std::ios_base::in);
+    virtual pos_type seekoff(off_type off,
+                             std::ios_base::seekdir dir,
+                             std::ios_base::openmode which = std::ios_base::in);
 
   public:
     decode_hex_streambuf(std::istream & inputStream);
