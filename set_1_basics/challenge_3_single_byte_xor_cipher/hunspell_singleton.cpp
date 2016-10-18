@@ -1,3 +1,10 @@
+// getenv() is classified as unsafe by Microsoft due to the thread-safety issue
+// if another thread modifies that variable using setenv(), unsetenv() or
+// putenv(). We have no such issues for this code (this is the only point in our
+// code that reads these environment variables, and they are never modified), so
+// ignoring the warning here.
+#define _CRT_SECURE_NO_WARNINGS
+
 #include "hunspell_singleton.hpp"
 #include <cstdlib>
 #include <stdexcept>

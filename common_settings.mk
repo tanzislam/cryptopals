@@ -74,7 +74,7 @@ ifeq "" "$(filter clean print-%,$(MAKECMDGOALS))"
     IS_WINDOWS_PLATFORM := \
         $(filter CYGWIN_% MSYS_% MINGW% windows%,$(strip $(shell uname -s)))
 
-    # Boost specifies Windows system library dependencies using the Visual C++'s
+    # Boost specifies Windows system library dependencies using the Visual C++
     # "#pragma comment(lib, ...)" feature, which GCC doesn't implement. So we
     # masquerade as MSVC to extract all such directives and incorporate them. We
     # also specify GCCXML's flag to avoid problematic MSVC-specific code paths.

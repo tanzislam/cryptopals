@@ -6,6 +6,7 @@
 #include <strstream>
 #include "detect_single_byte_xor_cipher.hpp"
 #include "break_single_byte_xor_cipher_recognize_words.hpp"
+#include <iostream>
 
 
 TEST(LineExtractStreamBuf, ExtractsLinesOneAtATimeAndRewindsProperly)

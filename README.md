@@ -6,7 +6,7 @@
 </a>
 
 These are my solutions to the interesting challenges at [the cryptopals crypto
-challenges](https://cryptopals.com). All solutions are coded in C++11 and Boost.
+challenges](https://cryptopals.com). All solutions are coded in C++14 and Boost.
 
 ## Requirements
 
@@ -17,7 +17,7 @@ To run these solutions, you will need:
  - [GNU Make](https://www.gnu.org/software/make/). I used v4.1 in MinGW-W64
    (invoked as `mingw32-make`).
 
- - [Boost C++ Libraries](http://www.boost.org/). I used v1.61.0.
+ - [Boost C++ Libraries](http://www.boost.org/). I used v1.62.0.
   - You will need to build the libraries as described for your platform in the
     Getting Started Guide. Specify `--layout=system toolset=gcc variant=release`
     as command-line options to the `b2` or `bjam` commands, and use the default
