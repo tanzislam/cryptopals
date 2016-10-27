@@ -123,4 +123,6 @@ endif
 # Standard cleanup target
 .PHONY : clean
 clean :
-	rm -f -- $(wildcard *.d *.o *.exe $(.DEFAULT_GOAL) .gitignore)
+	rm -f -- $(wildcard $(foreach s,$(SRCS),$(s:.cpp=.d) $(s:.cpp=.o)) \
+                        $(.DEFAULT_GOAL) $(.DEFAULT_GOAL).exe \
+                        .gitignore)
