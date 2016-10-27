@@ -65,21 +65,23 @@ ifeq "" "$(filter clean print-%,$(MAKECMDGOALS))"
     $(foreach \
         s, \
         $(SRCS_FULL_PATHS), \
-        $(eval $(shell \
+        $(info Preprocessing $(s) for compilation dependencies)$(eval $(shell \
             $(CXX) -MM $(CPP_STANDARD) $(CXXFLAGS) $(s) | tr -d "\\\\" \
         )) \
     )
     $(SRCS:.cpp=.o) : $(lastword $(MAKEFILE_LIST))
 
     IS_WINDOWS_PLATFORM := \
-        $(filter CYGWIN_% MSYS_% MINGW% windows%,$(strip $(shell uname -s)))
+        $(filter CYGWIN_% MSYS_% MINGW% windows%,$(strip \
+                $(info Detecting platform)$(shell uname -s)))
 
     # Boost specifies Windows system library dependencies using the Visual C++
     # "#pragma comment(lib, ...)" feature, which GCC doesn't implement. So we
     # masquerade as MSVC to extract all such directives and incorporate them. We
     # also specify GCCXML's flag to avoid problematic MSVC-specific code paths.
     WINDOWS_LIBS := $(if $(IS_WINDOWS_PLATFORM), \
-        $(foreach s,$(SRCS_FULL_PATHS),$(strip $(shell \
+        $(foreach s,$(SRCS_FULL_PATHS),$(strip \
+            $(info Preprocessing $(s) for library dependencies)$(shell \
             $(CXX) $(CPP_STANDARD) $(CXXFLAGS) \
                 -E -w -D_MSC_VER -D__GCCXML__ $(s) \
             | grep -E "\# *pragma +comment.*lib" \

@@ -9,7 +9,9 @@ decode_hex.cpp \
 detect_single_byte_xor_cipher.cpp \
 break_single_byte_xor_cipher.cpp \
 break_single_byte_xor_cipher_recognize_words.cpp \
-hunspell_singleton.cpp
+hunspell_singleton.cpp \
+break_single_byte_xor_cipher_char_frequency.cpp \
+levenshtein_distance.cpp
 
 BOOST_LIBS = system
 

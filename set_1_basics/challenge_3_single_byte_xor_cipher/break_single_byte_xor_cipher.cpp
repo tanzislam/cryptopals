@@ -3,7 +3,7 @@
 
 namespace cryptopals {
 
-void break_single_byte_xor_cipher::rewindAndDecryptUsingXorByte(
+void break_single_byte_xor_cipher::rewind_and_decrypt_using_xor_byte(
         std::ostream & outputStream,
         std::istream & cipherTextStream,
         uint8_t xorByte

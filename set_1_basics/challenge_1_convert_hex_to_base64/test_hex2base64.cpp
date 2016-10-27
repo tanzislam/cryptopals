@@ -28,7 +28,7 @@ TEST(DecodeHex, DiscardsIncompleteInput)
 
 TEST(DecodeHexStreamBuf, ComputesPositionsAndOffsets)
 {
-    std::istringstream inputStream("5468697320697320612063696365206461792e");
+    std::istringstream inputStream("546869732069732061206e696365206461792e");
     inputStream.ignore(4);
     EXPECT_EQ(4, inputStream.tellg());
 

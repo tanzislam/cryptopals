@@ -26,11 +26,14 @@ void testBreakSingleByteXorCipher(
     std::istringstream hexEncodedCipherText(
         "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
     );
-    std::ostringstream plainTextOutput;
     cryptopals::decode_hex_streambuf hexDecoder(hexEncodedCipherText);
+    std::istream hexDecodedCipherText(&hexDecoder);
     std::pair<unsigned int, uint8_t> scoreAndXorKeyByte =
-            breaker.do_break(plainTextOutput,
-                             std::istream(&hexDecoder).seekg(0));
+            breaker.do_break(hexDecodedCipherText);
+    std::ostringstream plainTextOutput;
+    breaker.rewind_and_decrypt_using_xor_byte(plainTextOutput,
+                                              hexDecodedCipherText,
+                                              scoreAndXorKeyByte.second);
     EXPECT_NE(0, scoreAndXorKeyByte.first);
     EXPECT_NE(0, scoreAndXorKeyByte.second);
     EXPECT_NE(0, plainTextOutput.str().size());

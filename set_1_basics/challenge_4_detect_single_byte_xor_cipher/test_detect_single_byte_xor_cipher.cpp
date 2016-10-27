@@ -6,6 +6,7 @@
 #include <strstream>
 #include "detect_single_byte_xor_cipher.hpp"
 #include "break_single_byte_xor_cipher_recognize_words.hpp"
+#include "break_single_byte_xor_cipher_char_frequency.hpp"
 #include <iostream>
 
 
@@ -79,7 +80,9 @@ TEST(LineExtractStreamBuf, ExtractsLinesOneAtATimeAndRewindsProperly)
 }
 
 
-TEST(DetectSingleByteXorCipher, DetectsAndReturnsLineNumberAndXorByte)
+void testDetectSingleByteXorCipher(
+        cryptopals::break_single_byte_xor_cipher & breaker
+)
 {
     std::string fileContents;
     {
@@ -88,11 +91,10 @@ TEST(DetectSingleByteXorCipher, DetectsAndReturnsLineNumberAndXorByte)
         std::getline(challenge4File, fileContents, '\0');
     }
     std::istrstream fileRead(fileContents.c_str(), fileContents.size());
-    cryptopals::break_single_byte_xor_cipher_recognize_words xorCipherBreaker;
     auto lineNumberScoreAndXorByte =
             cryptopals::detect_single_byte_xor_cipher(std::cout,
                                                       fileRead,
-                                                      xorCipherBreaker);
+                                                      breaker);
     EXPECT_NE(0, std::get<1>(lineNumberScoreAndXorByte));
     std::cout << "\nMessage was decrypted from line "
               << std::get<0>(lineNumberScoreAndXorByte) + 1
@@ -101,4 +103,20 @@ TEST(DetectSingleByteXorCipher, DetectsAndReturnsLineNumberAndXorByte)
               << std::dec
               << ", with score " << std::get<1>(lineNumberScoreAndXorByte)
               << std::endl;
+}
+
+
+TEST(DetectSingleByteXorCipher, UsingCharacterFrequencyAlgorithm)
+{
+    testDetectSingleByteXorCipher(
+            cryptopals::break_single_byte_xor_cipher_char_frequency().get_ref()
+    );
+}
+
+
+TEST(DetectSingleByteXorCipher, UsingWordRecognitionAlgorithm)
+{
+    testDetectSingleByteXorCipher(
+            cryptopals::break_single_byte_xor_cipher_recognize_words().get_ref()
+    );
 }

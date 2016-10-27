@@ -8,7 +8,6 @@ namespace cryptopals {
 
 std::pair<unsigned int, uint8_t>
     break_single_byte_xor_cipher_recognize_words::do_break(
-        std::ostream & plainTextStream,
         std::istream & cipherTextStream
 )
 {
@@ -45,9 +44,6 @@ std::pair<unsigned int, uint8_t>
     const auto & winningXorByteItr = xorByteByScore.rbegin();
     if (winningXorByteItr == xorByteByScore.rend() || !winningXorByteItr->first)
         throw std::runtime_error("No winning XOR byte");
-    rewindAndDecryptUsingXorByte(plainTextStream,
-                                 cipherTextStream,
-                                 winningXorByteItr->second);
     return *winningXorByteItr;
 }
 

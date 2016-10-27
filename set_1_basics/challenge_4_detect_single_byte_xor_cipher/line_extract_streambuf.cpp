@@ -1,4 +1,5 @@
 #include "line_extract_streambuf.hpp"
+#include <cstdlib>
 
 namespace cryptopals {
 
@@ -32,7 +33,7 @@ std::streambuf::pos_type line_extract_streambuf::seekoff(
 )
 {
     return
-            off % sizeof(d_buffer) == 0
+            abs(off) % sizeof(d_buffer) == 0
             && dir == std::ios_base::cur
             && which == std::ios_base::in
             && -off <= d_inputStream.tellg() - d_startPos

@@ -15,7 +15,7 @@ namespace cryptopals {
 namespace {
 
 /// @todo What if @code unsigned int @endcode is not large enough for the count?
-typedef std::unordered_map<char, unsigned int> charFrequencyMap_t;
+typedef std::unordered_map<unsigned char, unsigned int> charFrequencyMap_t;
 
 typedef std::map<uint8_t, charFrequencyMap_t> xorByteToCharFrequencyMap_t;
 
@@ -39,12 +39,13 @@ xorByteToCharFrequencyMap_t getXorByteToCharFrequencyMap(
 unsigned int characterFrequencyScore(const charFrequencyMap_t & charFrequencies)
 {
     std::multimap<unsigned int, char> characterMapByFrequency;
-    unsigned int whitespaceFrequency = 0;
+    unsigned int numWhitespace = 0, numPunctuation = 0, numControlChar = 0;
     for (const auto & entry : charFrequencies) {
         unsigned int uppercaseAndLowercaseCombinedFrequency = entry.second;
         char lowercaseEquivalentChar = std::tolower(entry.first);
-        if (!std::isprint(entry.first) && !isspace(entry.first)) return 0;
-        if (std::isupper(entry.first)) {
+        if (!std::isprint(entry.first) && !isspace(entry.first))
+            ++numControlChar;
+        else if (std::isupper(entry.first)) {
             charFrequencyMap_t::const_iterator counterpartEntry =
                     charFrequencies.find(lowercaseEquivalentChar);
             if (counterpartEntry != charFrequencies.end())
@@ -57,8 +58,10 @@ unsigned int characterFrequencyScore(const charFrequencyMap_t & charFrequencies)
                 // the corresponding uppercase character.
                 continue;
         } else if (isspace(entry.first)) {
-            whitespaceFrequency += entry.second;
+            numWhitespace += entry.second;
             continue;
+        } else if (ispunct(entry.first)) {
+            numPunctuation += entry.second;
         }
         else continue;
         characterMapByFrequency.insert(
@@ -66,7 +69,7 @@ unsigned int characterFrequencyScore(const charFrequencyMap_t & charFrequencies)
                                lowercaseEquivalentChar)
         );
     }
-    characterMapByFrequency.insert(std::make_pair(whitespaceFrequency, ' '));
+    characterMapByFrequency.insert(std::make_pair(numWhitespace, ' '));
 
     std::string charactersByFrequency;
     charactersByFrequency.reserve(characterMapByFrequency.size());
@@ -74,8 +77,10 @@ unsigned int characterFrequencyScore(const charFrequencyMap_t & charFrequencies)
                             characterMapByFrequency
                                     | boost::adaptors::map_values
                                     | boost::adaptors::reversed);
-    return 100 - levenshtein_distance(charactersByFrequency.c_str(),
-                                      "etaoin shrdlucmfwypvbgkjqxz");
+    return 10000 - levenshtein_distance(charactersByFrequency.c_str(),
+                                       "etaoin shrdlucmfwypvbgkjqxz")
+                 - numPunctuation / 2
+                 - numControlChar * 50;
 }
 
 }  // close unnamed namespace
@@ -83,7 +88,6 @@ unsigned int characterFrequencyScore(const charFrequencyMap_t & charFrequencies)
 
 std::pair<unsigned int, uint8_t>
     break_single_byte_xor_cipher_char_frequency::do_break(
-        std::ostream & plainTextStream,
         std::istream & cipherTextStream
 )
 {
@@ -100,9 +104,6 @@ std::pair<unsigned int, uint8_t>
     auto winningXorByteItr = xorByteByScore.rbegin();
     if (winningXorByteItr == xorByteByScore.rend() || !winningXorByteItr->first)
         throw std::runtime_error("No winning XOR byte");
-    rewindAndDecryptUsingXorByte(plainTextStream,
-                                 cipherTextStream,
-                                 winningXorByteItr->second);
     return *winningXorByteItr;
 }
 

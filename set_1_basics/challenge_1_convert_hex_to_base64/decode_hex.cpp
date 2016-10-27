@@ -54,11 +54,10 @@ std::streambuf::pos_type decode_hex_streambuf::seekoff(
         std::streambuf::off_type off,
         std::ios_base::seekdir dir,
         std::ios_base::openmode which
-
 )
 {
     return
-            off % sizeof(d_buffer) == 0
+            abs(off) % sizeof(d_buffer) == 0
             && dir == std::ios_base::cur
             && which == std::ios_base::in
             && -off <= (d_inputStream.tellg() - d_startPos)

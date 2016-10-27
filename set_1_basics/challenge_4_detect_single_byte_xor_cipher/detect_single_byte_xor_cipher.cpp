@@ -24,10 +24,9 @@ std::tuple<unsigned int, unsigned int, uint8_t> detect_single_byte_xor_cipher(
             line_extract_streambuf lineExtractor(input);
             std::istream lineExtractStream(&lineExtractor);
             decode_hex_streambuf hexDecoder(lineExtractStream);
-            std::ostringstream plaintextStream;
+            std::istream hexDecodedInputLine(&hexDecoder);
             std::pair<unsigned int, uint8_t> scoreAndXorKey =
-                    mechanism.do_break(plaintextStream,
-                                       std::istream(&hexDecoder).seekg(0));
+                    mechanism.do_break(hexDecodedInputLine);
             scoreLinePosAndKeyMap[scoreAndXorKey.first] =
                     std::make_tuple(lineNumber,
                                     startPos,
@@ -45,7 +44,10 @@ std::tuple<unsigned int, unsigned int, uint8_t> detect_single_byte_xor_cipher(
         line_extract_streambuf lineExtractor(input);
         std::istream lineExtractStream(&lineExtractor);
         decode_hex_streambuf hexDecoder(lineExtractStream);
-        mechanism.do_break(output, std::istream(&hexDecoder).seekg(0));
+        std::istream hexDecodedInputLine(&hexDecoder);
+        mechanism.rewind_and_decrypt_using_xor_byte(output,
+                                                    hexDecodedInputLine,
+                                                    std::get<2>(it->second));
     } else {
         throw std::runtime_error("could not rewind input stream");
     }
