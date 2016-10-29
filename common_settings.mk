@@ -118,6 +118,9 @@ ifeq "" "$(filter clean print-%,$(MAKECMDGOALS))"
     $(if $(IS_WINDOWS_PLATFORM), \
         $(eval $(value recipe_for_program_hardlink_without_exe_extension)) \
     )
+
+    # https://sourceforge.net/p/mingw-w64/wiki2/gnu%20printf/
+    CPPFLAGS += $(if $(IS_WINDOWS_PLATFORM),-D__USE_MINGW_ANSI_STDIO=1)
 endif
 
 # Standard cleanup target
