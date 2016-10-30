@@ -37,6 +37,12 @@ To run these solutions, you will need:
   - You will also need an English dictionary for Hunspell (specifically the
     `.dic` and `.aff` files. Get one from [SCOWL](http://wordlist.aspell.net/).
 
+ - [Crypto++](http://www.cryptopp.com/). I used the "master" branch at commit
+   84b602cc7.
+  - You will need to Build Crypto++ as a static library using the included
+    `GNUmakefile`. To do this on Windows you will need a UNIX-like set of
+    utilites (see below).
+
 UNIX-like utilities on Windows are provided by any of the following:
  - [MSYS2](http://msys2.github.io/), or originally [MSYS](http://www.mingw.org/)
  - [Cygwin](https://www.cygwin.com/)
@@ -68,6 +74,7 @@ inner directory has a `GNUmakefile` that expects these environment variables:
  - `BOOST_DIR` -- the top-level directory of your Boost installation
  - `GTEST_DIR` -- the top-level directory of your Google Test installation
  - `HUNSPELL_DIR` -- the top-level directory of your Hunspell repository clone
+ - `CRYPTOPP_DIR` -- the top-level directory of your Crypto++ repository clone
 
 To build any solution, ensure that the above environment variables are set, then
 `cd` to that directory and run `make` (or `gmake`, `mingw32-make`, etc.). This

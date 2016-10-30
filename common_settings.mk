@@ -10,6 +10,9 @@ else ifeq "" "$(filter clean print-%,$(MAKECMDGOALS))"
     else ifeq "" "$(HUNSPELL_DIR)"
         $(error The HUNSPELL_DIR variable must be set to where you downloaded \
                 or cloned Hunspell)
+    else ifeq "" "$(CRYPTOPP_DIR)"
+        $(error The CRYPTOPP_DIR variable must be set to where you downloaded \
+                or cloned Crypto++)
     endif
 endif
 
@@ -21,7 +24,8 @@ CPP_OPTIMIZATIONS = -O3 -ffunction-sections -fdata-sections
 CPPFLAGS = $(CPP_STANDARD) $(CPP_QUALITY_CHECKS) $(CPP_OPTIMIZATIONS)
 CXXFLAGS = -isystem $(BOOST_DIR) \
            -isystem $(GTEST_DIR)/googletest/include \
-           -isystem $(HUNSPELL_DIR)/src/hunspell
+           -isystem $(HUNSPELL_DIR)/src/hunspell \
+           -isystem $(CRYPTOPP_DIR)
 LDFLAGS = -pthread -Wl,--gc-sections \
           $(if \
               $(BOOST_LIBS), \
@@ -29,7 +33,7 @@ LDFLAGS = -pthread -Wl,--gc-sections \
           ) \
           $(foreach \
               d, \
-              $(HUNSPELL_DIR)/src/hunspell/.libs, \
+              $(HUNSPELL_DIR)/src/hunspell/.libs $(CRYPTOPP_DIR), \
               -L$(d) -Wl,-R -Wl,$(d) \
           )
 LDLIBS = $(GTEST_DIR)/googletest/make/gtest_main.a \
