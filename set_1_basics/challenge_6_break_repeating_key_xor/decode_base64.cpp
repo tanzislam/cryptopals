@@ -15,8 +15,8 @@ uint8_t decode_base64::convertFromBase64(char base64Digit)
     segmentStart += 'z' - 'a' + 1;
     if ('0' <= base64Digit && base64Digit <= '9')
         return segmentStart + base64Digit - '0';
-    if (base64Digit == '/') return 62;
-    if (base64Digit == '+') return 63;
+    if (base64Digit == '+') return 62;
+    if (base64Digit == '/') return 63;
     throw std::domain_error("unrecognized Base64 digit as input");
 }
 
@@ -45,21 +45,21 @@ std::istream & operator>>(std::istream & input,
                 decode_base64::s_numBitsInBase64Digit
                 - s_numRemainingBitsInFirstOctet;
         manipulator.d_output[0].get() += value >> s_numBitsInSecondOctet;
-		manipulator.d_output[1] = (value & (1u << s_numBitsInSecondOctet) - 1)
+        manipulator.d_output[1] = (value & (1u << s_numBitsInSecondOctet) - 1)
                                   << decode_base64::s_numBitsInOctet
                                      - s_numBitsInSecondOctet;
 
-		input >> base64Digit;
-		if (!input) input.setstate(std::ios_base::failbit);
-		if (base64Digit == '=') {
-			if (manipulator.d_output[1].get() != 0)
-				input.setstate(std::ios_base::failbit);
-			manipulator.d_output[1].reset();
-			input >> base64Digit;
-			if (!input || base64Digit != '=')
-				input.setstate(std::ios_base::failbit);
-			return input;
-		}
+        input >> base64Digit;
+        if (!input) input.setstate(std::ios_base::failbit);
+        if (base64Digit == '=') {
+            if (manipulator.d_output[1].get() != 0)
+                input.setstate(std::ios_base::failbit);
+            manipulator.d_output[1].reset();
+            input >> base64Digit;
+            if (!input || base64Digit != '=')
+                input.setstate(std::ios_base::failbit);
+            return input;
+        }
 
         value = decode_base64::convertFromBase64(base64Digit);
         static const size_t s_numRemainingBitsInSecondOctet =
@@ -74,14 +74,14 @@ std::istream & operator>>(std::istream & input,
 
         input >> base64Digit;
         if (!input) input.setstate(std::ios_base::failbit);
-		if (base64Digit == '=') {
-			if (manipulator.d_output[2].get() != 0)
-				input.setstate(std::ios_base::failbit);
-			manipulator.d_output[2].reset();
-			return input;
-		}
+        if (base64Digit == '=') {
+            if (manipulator.d_output[2].get() != 0)
+                input.setstate(std::ios_base::failbit);
+            manipulator.d_output[2].reset();
+            return input;
+        }
         manipulator.d_output[2].get() += decode_base64
-											::convertFromBase64(base64Digit);
+                                            ::convertFromBase64(base64Digit);
     } catch (...) {
         input.setstate(std::ios_base::failbit);
     }
@@ -136,16 +136,16 @@ std::streambuf::int_type decode_base64_streambuf::underflow()
         d_buffer[0] = output[0].get();
         if (!output[1]) {
             setg(d_buffer, d_buffer, d_buffer + 1);
-            return *d_buffer;
+            return reinterpret_cast<unsigned char &>(*d_buffer);
         }
         d_buffer[1] = output[1].get();
         if (!output[2]) {
             setg(d_buffer, d_buffer, d_buffer + 2);
-            return *d_buffer;
+            return reinterpret_cast<unsigned char &>(*d_buffer);
         }
         d_buffer[2] = output[2].get();
         setg(d_buffer, d_buffer, d_buffer + 3);
-        return *d_buffer;
+        return reinterpret_cast<unsigned char &>(*d_buffer);
     } else return std::streambuf::traits_type::eof();
 }
 
