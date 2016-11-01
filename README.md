@@ -70,16 +70,24 @@ development tools.
 
 The solutions are organized in two directory levels: the first level for the Set
 and the second level for the Challenge (as in the Cryptopals website). Each
-inner directory has a `GNUmakefile` that expects these environment variables:
+inner directory has a `GNUmakefile` that expects these variables:
  - `BOOST_DIR` -- the top-level directory of your Boost installation
  - `GTEST_DIR` -- the top-level directory of your Google Test installation
  - `HUNSPELL_DIR` -- the top-level directory of your Hunspell repository clone
  - `CRYPTOPP_DIR` -- the top-level directory of your Crypto++ repository clone
 
-To build any solution, ensure that the above environment variables are set, then
+To build any solution, ensure that the above are set in the environment, then
 `cd` to that directory and run `make` (or `gmake`, `mingw32-make`, etc.). This
 will produce the executable, along with other intermediary build products. The
 executable name will begin with `test_`, so should be easy to locate.
+
+**NOTES:**
+ - None of the above variables may have spaces in them. So, on Windows you can't
+   use `C:\Program Files\...`, but `C:\Users\UsernameWithoutSpace\Documents\etc`
+   is good.
+ - The above variables do not have to be **environment variables**, but can
+   instead be specified in the GNU Make command line as [overrides](
+   https://www.gnu.org/software/make/manual/make.html#Overriding).
 
 Some solutions will require the location of a Hunspell dictionary to be provided
 in the `HUNSPELL_AFFIX_PATH` and `HUNSPELL_DICT_PATH` environment variables.
