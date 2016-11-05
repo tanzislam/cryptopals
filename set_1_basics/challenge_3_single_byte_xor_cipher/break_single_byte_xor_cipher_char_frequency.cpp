@@ -15,7 +15,7 @@ namespace cryptopals {
 namespace {
 
 /// @todo What if @code unsigned int @endcode is not large enough for the count?
-typedef std::unordered_map<unsigned char, unsigned int> charFrequencyMap_t;
+typedef std::map<unsigned char, unsigned int> charFrequencyMap_t;
 
 typedef std::map<uint8_t, charFrequencyMap_t> xorByteToCharFrequencyMap_t;
 
@@ -78,8 +78,8 @@ unsigned int characterFrequencyScore(const charFrequencyMap_t & charFrequencies)
                                     | boost::adaptors::map_values
                                     | boost::adaptors::reversed);
     return 10000 - levenshtein_distance(charactersByFrequency.c_str(),
-                                       "etaoin shrdlucmfwypvbgkjqxz")
-                 - numPunctuation / 2
+                                        "etaoin shrdlucmfwypvbgkjqxz")
+                 - numPunctuation * 2
                  - numControlChar * 50;
 }
 

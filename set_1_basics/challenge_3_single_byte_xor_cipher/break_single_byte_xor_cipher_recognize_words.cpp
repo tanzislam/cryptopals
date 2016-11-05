@@ -23,7 +23,7 @@ std::pair<unsigned int, uint8_t>
     while (cipherTextStream.get(cipherTextChar)) {
         uint8_t xorByte = 0u;
         do {
-            char decryptedChar = cipherTextChar ^ xorByte;
+            unsigned char decryptedChar = cipherTextChar ^ xorByte;
             if (!isprint(decryptedChar) && !isspace(decryptedChar))
                 numRecognizedWords[xorByte] = 0u;
             else if (isspace(decryptedChar)) {

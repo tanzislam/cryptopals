@@ -31,6 +31,14 @@ TEST(LineExtractStreamBuf, ExtractsLinesOneAtATimeAndRewindsProperly)
         lineExtractorStream.seekg(0);
         std::getline(lineExtractorStream, line, '\0');
         EXPECT_EQ("Hello world!", line);
+        EXPECT_TRUE(lineExtractorStream.eof());
+
+        lineExtractorStream.clear();
+        EXPECT_EQ(12, lineExtractorStream.tellg());
+        line.clear();
+        lineExtractorStream >> line;
+        EXPECT_TRUE(lineExtractorStream.eof());
+        EXPECT_TRUE(line.empty());
     }
 
     {
@@ -46,6 +54,14 @@ TEST(LineExtractStreamBuf, ExtractsLinesOneAtATimeAndRewindsProperly)
         lineExtractorStream.seekg(0);
         std::getline(lineExtractorStream, line, '\0');
         EXPECT_EQ("This is going to extract", line);
+        EXPECT_TRUE(lineExtractorStream.eof());
+
+        lineExtractorStream.clear();
+        EXPECT_EQ(24, lineExtractorStream.tellg());
+        line.clear();
+        lineExtractorStream >> line;
+        EXPECT_TRUE(lineExtractorStream.eof());
+        EXPECT_TRUE(line.empty());
     }
 
     {
@@ -61,6 +77,14 @@ TEST(LineExtractStreamBuf, ExtractsLinesOneAtATimeAndRewindsProperly)
         lineExtractorStream.seekg(0);
         std::getline(lineExtractorStream, line, '\0');
         EXPECT_EQ("a line at a time", line);
+        EXPECT_TRUE(lineExtractorStream.eof());
+
+        lineExtractorStream.clear();
+        EXPECT_EQ(16, lineExtractorStream.tellg());
+        line.clear();
+        lineExtractorStream >> line;
+        EXPECT_TRUE(lineExtractorStream.eof());
+        EXPECT_TRUE(line.empty());
     }
 
     {
@@ -76,6 +100,14 @@ TEST(LineExtractStreamBuf, ExtractsLinesOneAtATimeAndRewindsProperly)
         lineExtractorStream.seekg(0);
         std::getline(lineExtractorStream, line, '\0');
         EXPECT_EQ("even for strings with mixed line-endings", line);
+        EXPECT_TRUE(lineExtractorStream.eof());
+
+        lineExtractorStream.clear();
+        EXPECT_EQ(40, lineExtractorStream.tellg());
+        line.clear();
+        lineExtractorStream >> line;
+        EXPECT_TRUE(lineExtractorStream.eof());
+        EXPECT_TRUE(line.empty());
     }
 }
 

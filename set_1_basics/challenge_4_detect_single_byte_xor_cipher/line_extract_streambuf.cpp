@@ -4,7 +4,9 @@
 namespace cryptopals {
 
 line_extract_streambuf::line_extract_streambuf(std::istream & inputStream)
-    : d_inputStream(inputStream), d_startPos(inputStream.tellg())
+    : d_inputStream(inputStream),
+      d_startPos(inputStream.tellg()),
+      d_numEndBytesRead(0)
 {
     if (!d_inputStream || d_startPos == std::streampos(-1))
         throw std::ios_base::failure("Could not obtain initial position");
@@ -21,7 +23,7 @@ std::streambuf::pos_type line_extract_streambuf::seekpos(
             pos == std::streampos(0)
             && which == std::ios_base::in
             && (d_inputStream.clear(), d_inputStream.seekg(d_startPos))
-        ? pos
+        ? (d_numEndBytesRead = 0, pos)
         : std::streambuf::seekpos(pos, which);
 }
 
@@ -33,27 +35,36 @@ std::streambuf::pos_type line_extract_streambuf::seekoff(
 )
 {
     return
-            abs(off) % sizeof(d_buffer) == 0
+            off == 0
             && dir == std::ios_base::cur
             && which == std::ios_base::in
-            && -off <= d_inputStream.tellg() - d_startPos
-            && (d_inputStream.clear(), d_inputStream.seekg(off, dir))
-        ? std::streampos(d_inputStream.tellg() - d_startPos)
+            && (d_inputStream.clear(), true)
+        ? std::streampos(d_inputStream.tellg() - d_startPos - d_numEndBytesRead)
         : std::streambuf::seekoff(off, dir, which);
 }
 
 
 std::streambuf::int_type line_extract_streambuf::underflow()
 {
+    if (d_numEndBytesRead)
+        return std::streambuf::traits_type::eof();
+
     try {
         if (d_inputStream.get(d_buffer) && d_buffer != '\n') {
             if (d_buffer == '\r') {
-                if (d_inputStream.peek() == '\n') d_inputStream.ignore();
+                if (d_inputStream.peek() == '\n') {
+                    ++d_numEndBytesRead;
+                    d_inputStream.ignore();
+                }
+                ++d_numEndBytesRead;
                 return std::streambuf::traits_type::eof();
             }
             setg(&d_buffer, &d_buffer, &d_buffer + 1);
             return std::streambuf::traits_type::to_int_type(d_buffer);
-        } else return std::streambuf::traits_type::eof();
+        } else {
+            !d_inputStream.fail() && ++d_numEndBytesRead;
+            return std::streambuf::traits_type::eof();
+        }
     } catch (...) {
         return std::streambuf::traits_type::eof();
     }

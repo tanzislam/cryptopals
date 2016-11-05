@@ -54,7 +54,6 @@ TEST(Pkcs7Pad, ReportsPosition)
 
     inputStream >> std::setw(3) >> output;
     EXPECT_EQ("\x04\x04\x04", output);
-    EXPECT_EQ(-1, inputStream.tellg());
 
     inputStream.clear();
     EXPECT_EQ(20, inputStream.tellg());

@@ -12,7 +12,7 @@ pkcs7_pad_streambuf::pkcs7_pad_streambuf(std::istream & inputStream,
       d_inputLength(0u),
       d_blockSize(blockSize)
 {
-    if (!*d_inputStream || inputStream.tellg() != 0)
+    if (!*d_inputStream || inputStream.tellg() != std::streampos(0))
         throw std::ios_base::failure("Cannot use already-read inputStream");
     else if (d_blockSize <= 1)
         throw std::ios_base::failure("Block size must be greater than 1");
@@ -26,14 +26,14 @@ std::streambuf::pos_type pkcs7_pad_streambuf::seekpos(
 )
 {
     return
-            pos == 0
+            pos == std::streampos(0)
             && which == std::ios_base::in
             && (d_inputStream->clear(), d_inputStream->seekg(pos))
         ? (
                 delete [] d_paddingBuffer,
                 d_paddingBuffer = nullptr,
                 setg(&d_buffer, nullptr, nullptr),
-                d_inputLength = pos,
+                d_inputLength = 0,
                 pos
         )
         : std::streambuf::seekpos(pos, which);
@@ -52,10 +52,9 @@ std::streambuf::pos_type pkcs7_pad_streambuf::seekoff(
             && which == std::ios_base::in
         ? (
                 d_paddingBuffer
-                ? static_cast<std::streambuf::pos_type>(
-                        d_inputLength + gptr() - d_paddingBuffer
-                )
-                : std::streampos(d_inputStream->tellg() - (egptr() - gptr()))
+                ? std::streampos(d_inputLength + gptr() - d_paddingBuffer)
+                : std::streampos(d_inputStream->tellg()
+                                 - std::streamoff(egptr() - gptr()))
         )
         : std::streambuf::seekoff(off, dir, which);
 }
