@@ -26,16 +26,10 @@ CXXFLAGS = -isystem $(BOOST_DIR) \
            -isystem $(GTEST_DIR)/googletest/include \
            -isystem $(HUNSPELL_DIR)/src/hunspell \
            -isystem $(CRYPTOPP_DIR)
-LDFLAGS = -pthread -Wl,--gc-sections \
-          $(if \
-              $(BOOST_LIBS), \
-              $(foreach d,$(BOOST_DIR)/stage/lib,-L$(d) -Wl,-R -Wl,$(d)) \
-          ) \
-          $(foreach \
-              d, \
-              $(HUNSPELL_DIR)/src/hunspell/.libs $(CRYPTOPP_DIR), \
-              -L$(d) -Wl,-R -Wl,$(d) \
-          )
+LIB_DIRS = $(if $(BOOST_LIBS),$(BOOST_DIR)/stage/lib) \
+           $(HUNSPELL_DIR)/src/hunspell/.libs \
+           $(CRYPTOPP_DIR)
+LDFLAGS = -pthread -Wl,--gc-sections $(foreach d,$(LIB_DIRS),-L$(d) -Wl,-R,$(d))
 LDLIBS = $(GTEST_DIR)/googletest/make/gtest_main.a \
          $(foreach lib,$(BOOST_LIBS),-lboost_$(lib)) \
          $(foreach lib,$(LIBS),-l$(lib))
@@ -99,16 +93,17 @@ ifeq "" "$(filter clean print-%,$(MAKECMDGOALS))"
     $(file > .gitignore,.gitignore)
     $(file >> .gitignore,$(.DEFAULT_GOAL))
 
-    # GCC creates executables with .exe file extension on Windows platforms. GNU
-    # Make's implicit rules, however, expect an extension-less program name. So
-    # each time we run Make on Windows, it can't find the final target and so
-    # re-runs the link recipe unnecessarily. To fix this we create an extra rule
-    # to produce a hardlink of the .exe file as the extension-less file.
-    #
-    # NOTE: MSYS utilities can auto-check for <file>.exe when provided <file>,
-    #       but not vice-versa. So we first rename the .exe to .sav, to prevent
-    #       it from considered for deletion or hardlink-time existence-check.
-    define recipe_for_program_hardlink_without_exe_extension =
+    define post_link_actions_for_windows =
+        # GCC creates executables with .exe file extension on Windows platforms.
+        # GNU Make's implicit rules, however, expect an extension-less program
+        # name. So each time we run Make on Windows, it can't find the final
+        # target and so re-runs the link recipe unnecessarily. To fix this we
+        # produce a hardlink of the .exe file as the extension-less file.
+        #
+        # NOTE: MSYS utilities can auto-check for <file>.exe when provided
+        #       <file>, but not vice-versa. So we first rename the .exe to .sav,
+        #       to prevent it from being considered at deletion or hardlink-time
+        #       existence-check.
         EXECUTABLE_NAME := $(.DEFAULT_GOAL)
         .PHONY : create_hardlink_without_exe_extension
         create_hardlink_without_exe_extension : $(EXECUTABLE_NAME)
@@ -117,10 +112,23 @@ ifeq "" "$(filter clean print-%,$(MAKECMDGOALS))"
 	        @mv -- $(EXECUTABLE_NAME).sav $(EXECUTABLE_NAME)
 	        @ln -f $(EXECUTABLE_NAME) $(EXECUTABLE_NAME).exe || true
 
-        .DEFAULT_GOAL = create_hardlink_without_exe_extension
+        # Windows's PE loader does not support a DLL search path embedded inside
+        # the EXE file, without running code like AddDllDirectory() or
+        # SetDefaultDllDirectories() beforehand. See
+        # https://msdn.microsoft.com/en-us/library/ms682586(VS.85).aspx for
+        # details.
+        #
+        # We work around this limitation by creating a hardlink of any DLLs from
+        # the library search path into the directory of the EXE file.
+        .PHONY : dll_hardlinks_to_simulate_rpath
+        dll_hardlinks_to_simulate_rpath : create_hardlink_without_exe_extension
+	        @ln -f $(wildcard $(foreach d,$(LIB_DIRS),$(d)/*.dll)) .
+	        @echo *.dll >> .gitignore
+
+        .DEFAULT_GOAL = dll_hardlinks_to_simulate_rpath
     endef
     $(if $(IS_WINDOWS_PLATFORM), \
-        $(eval $(value recipe_for_program_hardlink_without_exe_extension)) \
+        $(eval $(value post_link_actions_for_windows)) \
     )
 
     # https://sourceforge.net/p/mingw-w64/wiki2/gnu%20printf/
@@ -131,5 +139,5 @@ endif
 .PHONY : clean
 clean :
 	rm -f -- $(wildcard $(foreach s,$(SRCS),$(s:.cpp=.d) $(s:.cpp=.o)) \
-                        $(.DEFAULT_GOAL) $(.DEFAULT_GOAL).exe \
+                        $(.DEFAULT_GOAL) $(.DEFAULT_GOAL).exe *.dll \
                         .gitignore)

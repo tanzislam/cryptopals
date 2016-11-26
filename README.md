@@ -12,9 +12,9 @@ challenges](https://cryptopals.com). All solutions are coded in C++14 and Boost.
 
 To run these solutions, you will need:
  - [GNU Compiler Collection (GCC)](https://gcc.gnu.org/). I used v6.2.0 in
-   [MinGW-W64](https://mingw-w64.org/doku.php) (build `x86_64-posix-seh-rev1`).
+   [MinGW-w64](https://mingw-w64.org/doku.php) (build `x86_64-posix-seh-rev1`).
 
- - [GNU Make](https://www.gnu.org/software/make/). I used v4.1 in MinGW-W64
+ - [GNU Make](https://www.gnu.org/software/make/). I used v4.1 in MinGW-w64
    (invoked as `mingw32-make`).
 
  - [Boost C++ Libraries](http://www.boost.org/). I used v1.62.0.
@@ -24,16 +24,19 @@ To run these solutions, you will need:
     location for the `stage` target.
 
  - [Google Test](https://github.com/google/googletest/). I used the "master"
-   branch at commit ec44c6c.
+   branch at commit a2b8a8e07.
   - You will need to build Google Test as described in the Generic Build
     Instructions. To do this on Windows you will need a UNIX-like set of
     utilities (see below).
+  - On Windows / MinGW-w64 I had to specify a Makefile override:
+    `cd googletest/make; mingw32-make AR=gcc-ar`.
 
  - [Hunspell](https://hunspell.github.io/). I used the "master" branch at commit
-   1474200bb.
+   53db97279.
   - The included documentation doesn't mention a way to build Hunspell with the
-    GCC in MinGW-W64, but I managed to do so by running `./configure` followed
-    by `mingw32-make` in an MSYS2 window.
+    GCC in MinGW-w64, but I managed to do so by first installing `libtool` (by
+    running `pacman -S libtool` in an admin-mode MSYS2 window) and then running
+    `autoreconf -vi && ./configure && mingw32-make` in a MinGW-w64 Win64 Shell.
   - You will also need an English dictionary for Hunspell (specifically the
     `.dic` and `.aff` files. Get one from [SCOWL](http://wordlist.aspell.net/).
 
