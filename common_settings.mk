@@ -122,6 +122,7 @@ ifeq "" "$(filter clean print-%,$(MAKECMDGOALS))"
         # the library search path into the directory of the EXE file.
         .PHONY : dll_hardlinks_to_simulate_rpath
         dll_hardlinks_to_simulate_rpath : create_hardlink_without_exe_extension
+	        @rm -f ./*.dll
 	        @ln -f $(wildcard $(foreach d,$(LIB_DIRS),$(d)/*.dll)) .
 	        @echo *.dll >> .gitignore
 

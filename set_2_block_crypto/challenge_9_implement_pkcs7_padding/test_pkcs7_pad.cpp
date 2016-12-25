@@ -23,7 +23,9 @@ TEST(Pkcs7Pad, HandlesNoPaddingNeeded)
     cryptopals::pkcs7_pad_streambuf pkcs7Padder(input, 20);
     std::string output;
     std::getline(std::istream(&pkcs7Padder).seekg(0), output, '\0');
-    EXPECT_EQ(output, "YELLOW SUBMARINE !!!");
+    EXPECT_EQ(output, "YELLOW SUBMARINE !!!"
+                      "\x14\x14\x14\x14\x14\x14\x14\x14\x14\x14"
+                      "\x14\x14\x14\x14\x14\x14\x14\x14\x14\x14");
 }
 
 

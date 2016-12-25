@@ -74,8 +74,7 @@ std::streambuf::int_type pkcs7_pad_streambuf::underflow()
             return std::streambuf::traits_type::to_int_type(d_buffer);
         } else if (d_inputStream->eof()) {
             char paddingBufferSize = d_blockSize % d_inputLength;
-            if (paddingBufferSize == 0)
-                return std::streambuf::traits_type::eof();
+            if (paddingBufferSize == 0) paddingBufferSize = d_blockSize;
             d_paddingBuffer = new char[paddingBufferSize];
             std::memset(d_paddingBuffer, paddingBufferSize, paddingBufferSize);
             setg(d_paddingBuffer,

@@ -1,5 +1,5 @@
-#ifndef INCLUDED_AES_ECB_DECRYPT
-#define INCLUDED_AES_ECB_DECRYPT
+#ifndef INCLUDED_AES_CBC_DECRYPT
+#define INCLUDED_AES_CBC_DECRYPT
 
 #include <ostream>
 #include <istream>
@@ -7,10 +7,10 @@
 
 namespace cryptopals {
 
-void aes_ecb_decrypt(std::ostream & outputStream,
+void aes_cbc_decrypt(std::ostream & outputStream,
                      std::istream & inputStream,
                      const std::string & key,
-                     bool expectPadding = true);
+                     const char * initializationVector);
 
 }  // close namespace cryptopals
 
