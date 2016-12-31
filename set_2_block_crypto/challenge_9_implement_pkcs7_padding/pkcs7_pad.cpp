@@ -73,7 +73,8 @@ std::streambuf::int_type pkcs7_pad_streambuf::underflow()
             setg(&d_buffer, &d_buffer, &d_buffer + sizeof(d_buffer));
             return std::streambuf::traits_type::to_int_type(d_buffer);
         } else if (d_inputStream->eof()) {
-            char paddingBufferSize = d_blockSize % d_inputLength;
+            unsigned int paddingBufferSize =
+                (d_inputLength / d_blockSize + 1) * d_blockSize - d_inputLength;
             if (paddingBufferSize == 0) paddingBufferSize = d_blockSize;
             d_paddingBuffer = new char[paddingBufferSize];
             std::memset(d_paddingBuffer, paddingBufferSize, paddingBufferSize);
@@ -92,6 +93,5 @@ pkcs7_pad_streambuf::~pkcs7_pad_streambuf()
 {
     delete [] d_paddingBuffer;
 }
-
 
 }  // close namespace cryptopals

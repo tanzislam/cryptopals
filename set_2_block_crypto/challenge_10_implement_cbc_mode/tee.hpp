@@ -10,8 +10,8 @@ namespace cryptopals {
 class tee_streambuf
     : public std::streambuf
 {
-    std::istream & d_inputStream;
-    std::ostream & d_teeStream;
+    std::istream * d_inputStream;
+    std::ostream & d_teeStream, * d_teeStream2;
     char d_inputBuffer;
 
   protected:
@@ -19,9 +19,11 @@ class tee_streambuf
                      std::ios_base::seekdir dir,
                      std::ios_base::openmode which);
     int_type underflow();
+    int_type overflow(int_type ch = traits_type::eof());
 
   public:
     tee_streambuf(std::istream & inputStream, std::ostream & teeStream);
+    tee_streambuf(std::ostream & teeStream1, std::ostream & teeStream2);
 };
 
 }  // close namespace cryptopals

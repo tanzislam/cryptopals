@@ -1,7 +1,5 @@
 #include <gtest/gtest.h>
 #include <sstream>
-#include "aes_ecb_encrypt.hpp"
-#include "aes_ecb_decrypt.hpp"
 #include "pkcs7_unpad.hpp"
 #include <string>
 #include <boost/asio.hpp>
@@ -9,21 +7,9 @@
 #include "decode_base64.hpp"
 #include <aes.h>
 #include "aes_cbc_decrypt.hpp"
-#include <array>
 #include <iostream>
-
-
-TEST(TestAesEcbEncryption, CanEncrypt)
-{
-    std::stringstream inputStream("This is a nice day"), encryptedStream;
-    char key[] = "YELLOW SUBMARINE";
-
-    cryptopals::aes_ecb_encrypt(encryptedStream, inputStream, key);
-
-    std::ostringstream decryptionResult;
-    cryptopals::aes_ecb_decrypt(decryptionResult, encryptedStream, key);
-    EXPECT_EQ(inputStream.str(), decryptionResult.str());
-}
+#include <array>
+#include "aes_cbc_encrypt.hpp"
 
 
 TEST(Pkcs7Unpad, UnpadsInputCorrectly)
@@ -91,7 +77,7 @@ TEST(Pkcs7Unpad, UnpadsOutputCorrectly)
 }
 
 
-TEST(AesCbcDecryption, DecryptsInCbcMode)
+TEST(AesCbcMode, CanDecrypt)
 {
     std::string fileContents;
     {
@@ -102,17 +88,30 @@ TEST(AesCbcDecryption, DecryptsInCbcMode)
         std::getline(challenge10File, fileContents, '\0');
     }
     std::istrstream challenge10File(fileContents.c_str(), fileContents.size());
-
     cryptopals::decode_base64_streambuf base64Decoder(challenge10File);
-
-    cryptopals::pkcs7_unpad_streambuf pkcs7Unpadder(std::cout,
-                                                    CryptoPP::AES::BLOCKSIZE);
-    std::ostream pkcs7UnpaddedOutput(&pkcs7Unpadder);
-
-    cryptopals::aes_cbc_decrypt(pkcs7UnpaddedOutput,
+    cryptopals::aes_cbc_decrypt(std::cout,
                                 std::istream(&base64Decoder).seekg(0),
                                 "YELLOW SUBMARINE",
                                 std::array<char,
                                            CryptoPP::AES::BLOCKSIZE>{0}.data());
     EXPECT_TRUE(challenge10File.eof());
+}
+
+
+TEST(AesCbcMode, CanEncrypt)
+{
+    std::stringstream inputStream("This is a nice day"), encryptedStream;
+    char key[] = "YELLOW SUBMARINE";
+    cryptopals::aes_cbc_encrypt(encryptedStream,
+                                inputStream,
+                                key,
+                                std::array<char,
+                                           CryptoPP::AES::BLOCKSIZE>{0}.data());
+    std::ostringstream decryptionResult;
+    cryptopals::aes_cbc_decrypt(decryptionResult,
+                                encryptedStream,
+                                key,
+                                std::array<char,
+                                           CryptoPP::AES::BLOCKSIZE>{0}.data());
+    EXPECT_EQ(inputStream.str(), decryptionResult.str());
 }

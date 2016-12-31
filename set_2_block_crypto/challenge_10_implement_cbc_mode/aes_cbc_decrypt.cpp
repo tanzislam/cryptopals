@@ -1,8 +1,8 @@
 #include "aes_cbc_decrypt.hpp"
+#include "pkcs7_unpad.hpp"
 #include <aes.h>
 #include <sstream>
 #include <strstream>
-#include <cstring>
 #include "tee.hpp"
 #include "xor.hpp"
 #include "aes_ecb_decrypt.hpp"
@@ -14,6 +14,8 @@ void aes_cbc_decrypt(std::ostream & outputStream,
                      const std::string & key,
                      const char * initializationVector)
 {
+    pkcs7_unpad_streambuf pkcs7Unpadder(outputStream, CryptoPP::AES::BLOCKSIZE);
+    std::ostream pkcs7UnpaddedOutput(&pkcs7Unpadder);
     char prevInput[CryptoPP::AES::BLOCKSIZE];
     for (
             std::istringstream prevInputStream(
@@ -26,7 +28,7 @@ void aes_cbc_decrypt(std::ostream & outputStream,
         std::ostrstream thisInputSaver(prevInput, sizeof prevInput);
         tee_streambuf teeInput(inputStream, thisInputSaver);
         std::istream teeInputStream(&teeInput);
-        xor_streambuf xorCombiner(outputStream, prevInputStream);
+        xor_streambuf xorCombiner(pkcs7UnpaddedOutput, prevInputStream);
         aes_ecb_decrypt(std::ostream(&xorCombiner).flush(),
                         teeInputStream,
                         key,
