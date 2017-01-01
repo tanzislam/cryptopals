@@ -50,7 +50,7 @@ std::streambuf::pos_type pkcs7_unpad_streambuf::seekoff(
             && dir == std::ios_base::cur
             && which == std::ios_base::in
         ? d_inputStream->rdbuf()->pubseekoff(off, dir, which)
-                - (d_currentBlock + d_blockSize - gptr())
+                - std::streamoff(d_currentBlock + d_blockSize - gptr())
         : std::streambuf::seekoff(off, dir, which);
 }
 

@@ -19,7 +19,7 @@ endif
 # Standard settings
 CXX = g++
 CPP_STANDARD = -std=c++14
-CPP_QUALITY_CHECKS = -Wc++11-compat -Wc++14-compat -pedantic -Wall -Wextra
+CPP_QUALITY_CHECKS = -Wc++14-compat -pedantic -Wall -Wextra
 CPP_OPTIMIZATIONS = -O3 -ffunction-sections -fdata-sections
 CPPFLAGS = $(CPP_STANDARD) $(CPP_QUALITY_CHECKS) $(CPP_OPTIMIZATIONS)
 CXXFLAGS = -isystem $(BOOST_DIR) \
@@ -29,7 +29,9 @@ CXXFLAGS = -isystem $(BOOST_DIR) \
 LIB_DIRS = $(if $(BOOST_LIBS),$(BOOST_DIR)/stage/lib) \
            $(HUNSPELL_DIR)/src/hunspell/.libs \
            $(CRYPTOPP_DIR)
-LDFLAGS = -pthread -Wl,--gc-sections $(foreach d,$(LIB_DIRS),-L$(d) -Wl,-R,$(d))
+GNU_LD := $(shell ld -v 2>&1 | grep GNU)
+LDFLAGS = -pthread -Wl,$(if $(GNU_LD),--gc-sections,-dead_strip) \
+          $(foreach d,$(LIB_DIRS),-L$(d) -Wl,-rpath,$(d))
 LDLIBS = $(GTEST_DIR)/googletest/make/gtest_main.a \
          $(foreach lib,$(BOOST_LIBS),-lboost_$(lib)) \
          $(foreach lib,$(LIBS),-l$(lib))
@@ -90,8 +92,9 @@ ifeq "" "$(filter clean print-%,$(MAKECMDGOALS))"
 
     # Git doesn't know how to ignore extension-less binaries, so we must teach
     # it. No need to check this in, though -- it will be created each time.
+    EXECUTABLE_NAME := $(.DEFAULT_GOAL)
     $(file > .gitignore,.gitignore)
-    $(file >> .gitignore,$(.DEFAULT_GOAL))
+    $(file >> .gitignore,$(EXECUTABLE_NAME))
 
     define post_link_actions_for_windows =
         # GCC creates executables with .exe file extension on Windows platforms.
@@ -104,13 +107,12 @@ ifeq "" "$(filter clean print-%,$(MAKECMDGOALS))"
         #       <file>, but not vice-versa. So we first rename the .exe to .sav,
         #       to prevent it from being considered at deletion or hardlink-time
         #       existence-check.
-        EXECUTABLE_NAME := $(.DEFAULT_GOAL)
         .PHONY : create_hardlink_without_exe_extension
         create_hardlink_without_exe_extension : $(EXECUTABLE_NAME)
-	        @mv -- $(EXECUTABLE_NAME).exe $(EXECUTABLE_NAME).sav
-	        @rm -f -- $(EXECUTABLE_NAME)
-	        @mv -- $(EXECUTABLE_NAME).sav $(EXECUTABLE_NAME)
-	        @ln -f $(EXECUTABLE_NAME) $(EXECUTABLE_NAME).exe || true
+	        mv -- $(EXECUTABLE_NAME).exe $(EXECUTABLE_NAME).sav
+	        rm -f -- $(EXECUTABLE_NAME)
+	        mv -- $(EXECUTABLE_NAME).sav $(EXECUTABLE_NAME)
+	        ln -f $(EXECUTABLE_NAME) $(EXECUTABLE_NAME).exe || true
 
         # Windows's PE loader does not support a DLL search path embedded inside
         # the EXE file, without running code like AddDllDirectory() or
@@ -122,9 +124,9 @@ ifeq "" "$(filter clean print-%,$(MAKECMDGOALS))"
         # the library search path into the directory of the EXE file.
         .PHONY : dll_hardlinks_to_simulate_rpath
         dll_hardlinks_to_simulate_rpath : create_hardlink_without_exe_extension
-	        @rm -f ./*.dll || true
-	        @ln -f $(wildcard $(foreach d,$(LIB_DIRS),$(d)/*.dll)) .
-	        @echo *.dll >> .gitignore
+	        rm -f ./*.dll || true
+	        ln -f $(wildcard $(foreach d,$(LIB_DIRS),$(d)/*.dll)) .
+	        echo *.dll >> .gitignore
 
         .DEFAULT_GOAL = dll_hardlinks_to_simulate_rpath
     endef
@@ -134,6 +136,31 @@ ifeq "" "$(filter clean print-%,$(MAKECMDGOALS))"
 
     # https://sourceforge.net/p/mingw-w64/wiki2/gnu%20printf/
     CPPFLAGS += $(if $(IS_WINDOWS_PLATFORM),-D__USE_MINGW_ANSI_STDIO=1)
+
+    define post_link_actions_for_darwin =
+        # Darwin (macOS) has support for dynamic library (dylib) search path
+        # embedded inside the executable, but it takes effect only if the
+        # "install name" of the dylib starts with "@rpath". The "install name"
+        # is copied over from the dylib when linking the executable, and
+        # typically doesn't contain the "@rpath" token. We fix it here.
+        #
+        # http://jorgen.tjer.no/post/2014/05/20/dt-rpath-ld-and-at-rpath-dyld/
+        .PHONY : fix_relative_paths_to_dylibs
+        fix_relative_paths_to_dylibs : $(EXECUTABLE_NAME)
+	       otool -L $(EXECUTABLE_NAME) \
+               | tail -n +2 \
+               | cut -d' ' -f1 \
+               | grep -F $(foreach lib,$(BOOST_LIBS),-e libboost_$(lib)) \
+                         $(foreach lib,$(LIBS),-e lib$(lib)) \
+               | xargs -L1 -I{} sh -c '\
+                   install_name_tool -change {} @rpath/`basename {}` \
+                                     $(EXECUTABLE_NAME)'
+
+        .DEFAULT_GOAL = fix_relative_paths_to_dylibs
+    endef
+    $(if $(and $(BOOST_LIBS)$(LIBS),$(filter Darwin,$(shell uname -s))), \
+        $(eval $(value post_link_actions_for_darwin)) \
+    )
 endif
 
 # Standard cleanup target

@@ -10,18 +10,24 @@ challenges](https://cryptopals.com). All solutions are coded in C++14 and Boost.
 
 ## Requirements
 
-To run these solutions, you will need:
+To build these solutions you will need:
  - [GNU Compiler Collection (GCC)](https://gcc.gnu.org/). I used v6.2.0 in
-   [MinGW-w64](https://mingw-w64.org/doku.php) (build `x86_64-posix-seh-rev1`).
+   [MinGW-w64](https://mingw-w64.org/doku.php) (build `x86_64-posix-seh-rev1`)
+   on Windows. On macOS Sierra I used the default [Clang](http://clang.llvm.org)
+   v8.0.0 (build `clang-800.0.42.1`) which is compatible with GCC.
 
- - [GNU Make](https://www.gnu.org/software/make/). I used v4.1 in MinGW-w64
-   (invoked as `mingw32-make`).
+ - [GNU Make](https://www.gnu.org/software/make/). I used v4.1 in MinGW-w64 in
+   Windows 7 (invoked as `mingw32-make`). On macOS Sierra I installed v4.2.1
+   using [Homebrew](http://brew.sh) (invoked as `gmake` to distinguish from the
+   system default v3.8.1).
 
  - [Boost C++ Libraries](http://www.boost.org/). I used v1.62.0.
   - You will need to build the libraries as described for your platform in the
-    Getting Started Guide. Specify `--layout=system toolset=gcc variant=release`
-    as command-line options to the `b2` or `bjam` commands, and use the default
-    location for the `stage` target.
+    Getting Started Guide. Only specific libraries are needed (as indicated by
+    the `BOOST_LIBS` line in each solution's `GNUmakefile`), so you can speed up
+    the build by appending the `--with-<library_name>` option below.
+  - On Windows: `b2 --layout=system toolset=gcc variant=release`.
+  - On macOS and Linux: `./b2 --layout=system variant=release`.
 
  - [Google Test](https://github.com/google/googletest/). I used the "master"
    branch at commit a2b8a8e07.
@@ -32,11 +38,14 @@ To run these solutions, you will need:
     `cd googletest/make; mingw32-make AR=gcc-ar`.
 
  - [Hunspell](https://hunspell.github.io/). I used the "master" branch at commit
-   53db97279.
-  - The included documentation doesn't mention a way to build Hunspell with the
-    GCC in MinGW-w64, but I managed to do so by first installing `libtool` (by
-    running `pacman -S libtool` in an admin-mode MSYS2 window) and then running
-    `autoreconf -vi && ./configure && mingw32-make` in a MinGW-w64 Win64 Shell.
+   1fc14b0c7.
+  - On Windows 7 / MinGW-w64 I had to first install `libtool` (by running
+    `pacman -S libtool` in an admin-mode MSYS2 window), and then I could run
+    `autoreconf -vfi && ./configure && mingw32-make` in a MinGW-w64 Win64 Shell.
+  - On macOS Sierra / Homebrew I had to first obtain the GNU Autotools packages:
+    `automake`, `libtool`, and `gettext`. I also had to export the `LDFLAGS` and
+    `CPPFLAGS` environment variables to what `brew` specified when installing
+    `gettext`. After that I could run the standard steps.
   - You will also need an English dictionary for Hunspell (specifically the
     `.dic` and `.aff` files. Get one from [SCOWL](http://wordlist.aspell.net/).
 
@@ -91,6 +100,7 @@ executable name will begin with `test_`, so should be easy to locate.
  - The above variables do not have to be **environment variables**, but can
    instead be specified in the GNU Make command line as [overrides](
    https://www.gnu.org/software/make/manual/make.html#Overriding).
+ - The above variables may be either relative paths or absolute paths.
 
 Some solutions will require the location of a Hunspell dictionary to be provided
 in the `HUNSPELL_AFFIX_PATH` and `HUNSPELL_DICT_PATH` environment variables.

@@ -9,7 +9,7 @@ hunspell_singleton.cpp \
 decode_hex.cpp \
 levenshtein_distance.cpp
 
-LIBS = hunspell-1.5
+LIBS = hunspell-1.6
 
 test_break_single_byte_xor_cipher : $(SRCS:.cpp=.o)
 

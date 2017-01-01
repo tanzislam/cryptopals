@@ -15,7 +15,7 @@ levenshtein_distance.cpp
 
 BOOST_LIBS = system
 
-LIBS = hunspell-1.5
+LIBS = hunspell-1.6
 
 test_detect_single_byte_xor_cipher : $(SRCS:.cpp=.o)
 
