@@ -15,11 +15,11 @@
 TEST(Pkcs7Unpad, UnpadsInputCorrectly)
 {
     std::istringstream input("YELLOW SUBMARINE\x04\x04\x04\x04");
-    EXPECT_EQ(input.tellg(), 0);
+    EXPECT_EQ(0, input.tellg());
 
     cryptopals::pkcs7_unpad_streambuf pkcs7Unpadder(input, 20);
     std::istream pkcs7UnpaddedInput(&pkcs7Unpadder);
-    EXPECT_EQ(pkcs7UnpaddedInput.tellg(), 0);
+    EXPECT_EQ(0, pkcs7UnpaddedInput.tellg());
 
     // First extraction
     std::string output;
@@ -27,9 +27,9 @@ TEST(Pkcs7Unpad, UnpadsInputCorrectly)
     EXPECT_EQ(output, "YELLOW SUBMARINE");
 
     pkcs7UnpaddedInput.clear();
-    EXPECT_EQ(pkcs7UnpaddedInput.tellg(), 16);
+    EXPECT_EQ(16, pkcs7UnpaddedInput.tellg());
     input.clear();
-    EXPECT_EQ(input.tellg(), 20);
+    EXPECT_EQ(20, input.tellg());
 
     // Further extraction attempt
     output.clear();
@@ -39,24 +39,24 @@ TEST(Pkcs7Unpad, UnpadsInputCorrectly)
     // Rewind
     pkcs7UnpaddedInput.clear();
     pkcs7UnpaddedInput.seekg(0);
-    EXPECT_EQ(pkcs7UnpaddedInput.tellg(), 0);
-    EXPECT_EQ(input.tellg(), 0);
+    EXPECT_EQ(0, pkcs7UnpaddedInput.tellg());
+    EXPECT_EQ(0, input.tellg());
 
     // Second extraction
     std::getline(pkcs7UnpaddedInput, output, '\0');
     EXPECT_EQ(output, "YELLOW SUBMARINE");
 
     pkcs7UnpaddedInput.clear();
-    EXPECT_EQ(pkcs7UnpaddedInput.tellg(), 16);
+    EXPECT_EQ(16, pkcs7UnpaddedInput.tellg());
     input.clear();
-    EXPECT_EQ(input.tellg(), 20);
+    EXPECT_EQ(20, input.tellg());
 }
 
 
 TEST(Pkcs7Unpad, UnpadsOutputCorrectly)
 {
     std::istringstream input("YELLOW SUBMARINE\x04\x04\x04\x04");
-    EXPECT_EQ(input.tellg(), 0);
+    EXPECT_EQ(0, input.tellg());
 
     std::ostringstream output;
     cryptopals::pkcs7_unpad_streambuf pkcs7Unpadder(output, 20);
@@ -67,7 +67,7 @@ TEST(Pkcs7Unpad, UnpadsOutputCorrectly)
     EXPECT_EQ(output.str(), "YELLOW SUBMARINE");
 
     input.clear();
-    EXPECT_EQ(input.tellg(), 20);
+    EXPECT_EQ(20, input.tellg());
 
     // Further extraction attempt
     output.str("");
