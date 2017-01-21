@@ -93,6 +93,10 @@ To build any solution, ensure that the above are set in the environment, then
 will produce the executable, along with other intermediary build products. The
 executable name will begin with `test_`, so should be easy to locate.
 
+Alternatively, you can use the top-level `GNUmakefile` by running `make` (or its
+equivalent for your platform) in the repository root directory. This will
+produce the combined test program called `test`.
+
 **NOTES:**
  - None of the above variables may have spaces in them. So, on Windows you can't
    use `C:\Program Files\...`, but `C:\Users\UsernameWithoutSpace\Documents\etc`

@@ -18,7 +18,7 @@ endif
 
 # Standard settings
 CXX = g++
-CPP_STANDARD = -std=c++14
+CPP_STANDARD = -std=c++14 -pthread
 CPP_QUALITY_CHECKS = -Wc++14-compat -pedantic -Wall -Wextra
 CPP_OPTIMIZATIONS = -O3 -ffunction-sections -fdata-sections
 CPPFLAGS = $(CPP_STANDARD) $(CPP_QUALITY_CHECKS) $(CPP_OPTIMIZATIONS)
@@ -93,7 +93,7 @@ ifeq "" "$(filter clean print-%,$(MAKECMDGOALS))"
     # Git doesn't know how to ignore extension-less binaries, so we must teach
     # it. No need to check this in, though -- it will be created each time.
     EXECUTABLE_NAME := $(.DEFAULT_GOAL)
-    $(file > .gitignore,.gitignore)
+    $(file >> .gitignore,.gitignore)
     $(file >> .gitignore,$(EXECUTABLE_NAME))
 
     define post_link_actions_for_windows =
@@ -167,5 +167,10 @@ endif
 .PHONY : clean
 clean :
 	rm -f -- $(wildcard $(foreach s,$(SRCS),$(s:.cpp=.d) $(s:.cpp=.o)) \
-                        $(.DEFAULT_GOAL) $(.DEFAULT_GOAL).exe *.dll \
-                        .gitignore)
+                        $(.DEFAULT_GOAL) $(.DEFAULT_GOAL).exe *.dll)
+	grep -n "^.gitignore" .gitignore \
+        | cut -d: -f1 \
+        | head -n 1 \
+        | xargs -I "{}" head -n "{}" .gitignore \
+        > .gitignore.sav
+	mv .gitignore.sav .gitignore
