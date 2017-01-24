@@ -32,8 +32,10 @@ std::ostream & operator<<(std::ostream & output,
     output <<
             encode_base64::convertToBase64(
                     *manipulator.d_input[0]
-                    >> encode_base64::s_numBitsInOctet
-                       - encode_base64::s_numBitsInBase64Digit
+                    >> (
+                            encode_base64::s_numBitsInOctet
+                            - encode_base64::s_numBitsInBase64Digit
+                       )
             );
 
     // Second base64 digit is composed of:
@@ -48,11 +50,11 @@ std::ostream & operator<<(std::ostream & output,
     uint8_t inputBitsForSecondBase64Digit =
             (
                     *manipulator.d_input[0]
-                    & (1u << s_numRemainingBitsFromFirstOctet) - 1
+                    & ((1u << s_numRemainingBitsFromFirstOctet) - 1)
             ) << s_numBitsFromSecondOctet;
     inputBitsForSecondBase64Digit +=
             manipulator.d_input[1].value_or(0)
-            >> encode_base64::s_numBitsInOctet - s_numBitsFromSecondOctet;
+            >> (encode_base64::s_numBitsInOctet - s_numBitsFromSecondOctet);
     output << encode_base64::convertToBase64(inputBitsForSecondBase64Digit);
 
     // Third base64 digit is composed of:
@@ -67,11 +69,11 @@ std::ostream & operator<<(std::ostream & output,
         uint8_t inputBitsForThirdBase64Digit =
                 (
                         manipulator.d_input[1].value()
-                        & (1u << s_numRemainingBitsFromSecondOctet) - 1
+                        & ((1u << s_numRemainingBitsFromSecondOctet) - 1)
                 ) << s_numBitsFromThirdOctet;
         inputBitsForThirdBase64Digit +=
                 manipulator.d_input[2].value_or(0)
-                >> encode_base64::s_numBitsInOctet - s_numBitsFromThirdOctet;
+                >> (encode_base64::s_numBitsInOctet - s_numBitsFromThirdOctet);
         output << encode_base64::convertToBase64(inputBitsForThirdBase64Digit);
     } catch (const boost::bad_optional_access &) {
         output << "==";
@@ -84,7 +86,7 @@ std::ostream & operator<<(std::ostream & output,
     try {
         uint8_t inputBitsForFourthBase64Digit =
                 manipulator.d_input[2].value()
-                & (1u << s_numRemainingBitsFromThirdOctet) - 1;
+                & ((1u << s_numRemainingBitsFromThirdOctet) - 1);
         output << encode_base64::convertToBase64(inputBitsForFourthBase64Digit);
     } catch (const boost::bad_optional_access &) {
         output << '=';

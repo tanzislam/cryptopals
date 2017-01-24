@@ -40,9 +40,10 @@ std::streambuf::int_type xor_streambuf::underflow()
 std::streambuf::int_type xor_streambuf::overflow(std::streambuf::int_type ch)
 {
     char otherInput;
-    if (d_inputStream1.get(otherInput))
+    if (d_inputStream1.get(otherInput)) {
         if (*d_outputStream << char(ch ^ otherInput)) return 1;
         else d_inputStream1.unget();
+    }
     return traits_type::eof();
 }
 

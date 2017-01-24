@@ -32,8 +32,10 @@ std::istream & operator>>(std::istream & input,
         input >> base64Digit;
         if (!input) input.setstate(std::ios_base::failbit);
         manipulator.d_output[0] = decode_base64::convertFromBase64(base64Digit)
-                                  << decode_base64::s_numBitsInOctet
-                                     - decode_base64::s_numBitsInBase64Digit;
+                                  << (
+                                        decode_base64::s_numBitsInOctet
+                                        - decode_base64::s_numBitsInBase64Digit
+                                     );
 
         input >> base64Digit;
         if (!input) input.setstate(std::ios_base::failbit);
@@ -45,9 +47,11 @@ std::istream & operator>>(std::istream & input,
                 decode_base64::s_numBitsInBase64Digit
                 - s_numRemainingBitsInFirstOctet;
         manipulator.d_output[0].get() += value >> s_numBitsInSecondOctet;
-        manipulator.d_output[1] = (value & (1u << s_numBitsInSecondOctet) - 1)
-                                  << decode_base64::s_numBitsInOctet
-                                     - s_numBitsInSecondOctet;
+        manipulator.d_output[1] = (value & ((1u << s_numBitsInSecondOctet) - 1))
+                                  << (
+                                        decode_base64::s_numBitsInOctet
+                                        - s_numBitsInSecondOctet
+                                     );
 
         input >> base64Digit;
         if (!input) input.setstate(std::ios_base::failbit);
@@ -68,9 +72,11 @@ std::istream & operator>>(std::istream & input,
                 decode_base64::s_numBitsInBase64Digit
                 - s_numRemainingBitsInSecondOctet;
         manipulator.d_output[1].get() += value >> s_numBitsInThirdOctet;
-        manipulator.d_output[2] = (value & (1u << s_numBitsInThirdOctet) - 1)
-                                  << decode_base64::s_numBitsInOctet
-                                     - s_numBitsInThirdOctet;
+        manipulator.d_output[2] = (value & ((1u << s_numBitsInThirdOctet) - 1))
+                                  << (
+                                        decode_base64::s_numBitsInOctet
+                                        - s_numBitsInThirdOctet
+                                     );
 
         input >> base64Digit;
         if (!input) input.setstate(std::ios_base::failbit);
