@@ -1,8 +1,8 @@
 mkfiles := $(shell git ls-files */*/GNUmakefile)
 VPATH = $(sort $(dir $(mkfiles)))
 
-# '%' is a metacharacter in Windows cmd.exe batch files (which GNU Make uses
-# when launching processes), so we escape it and later correct it.
+# '%' is a metacharacter in Windows batch files (which GNU Make uses when
+# launching processes under cmd.exe), so we escape it and later correct it.
 SRCS := $(sort $(foreach \
     mkfile, \
     $(mkfiles), \
@@ -36,5 +36,5 @@ test : $(.DEFAULT_GOAL)
 else
 .PHONY clean : clean-test
 clean-test :
-	rm -f -- test
+	rm -f test
 endif

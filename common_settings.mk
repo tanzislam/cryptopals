@@ -17,6 +17,7 @@ else ifeq "" "$(filter clean print-%,$(MAKECMDGOALS))"
 endif
 
 # Standard settings
+.DELETE_ON_ERROR :
 CXX = g++
 CPP_STANDARD = -std=c++14 -pthread
 CPP_QUALITY_CHECKS = -Wc++14-compat -pedantic -Wall -Wextra
@@ -109,9 +110,9 @@ ifeq "" "$(filter clean print-%,$(MAKECMDGOALS))"
         #       existence-check.
         .PHONY : create_hardlink_without_exe_extension
         create_hardlink_without_exe_extension : $(EXECUTABLE_NAME)
-	        mv -- $(EXECUTABLE_NAME).exe $(EXECUTABLE_NAME).sav
-	        rm -f -- $(EXECUTABLE_NAME)
-	        mv -- $(EXECUTABLE_NAME).sav $(EXECUTABLE_NAME)
+	        mv $(EXECUTABLE_NAME).exe $(EXECUTABLE_NAME).sav
+	        rm -f $(EXECUTABLE_NAME)
+	        mv $(EXECUTABLE_NAME).sav $(EXECUTABLE_NAME)
 	        ln -f $(EXECUTABLE_NAME) $(EXECUTABLE_NAME).exe || true
 
         # Windows's PE loader does not support a DLL search path embedded inside
@@ -166,8 +167,8 @@ endif
 # Standard cleanup target
 .PHONY : clean
 clean :
-	rm -f -- $(wildcard $(foreach s,$(SRCS),$(s:.cpp=.d) $(s:.cpp=.o)) \
-                        $(.DEFAULT_GOAL) $(.DEFAULT_GOAL).exe *.dll)
+	rm -f $(wildcard $(foreach s,$(SRCS),$(s:.cpp=.d) $(s:.cpp=.o)) \
+                     $(.DEFAULT_GOAL) $(.DEFAULT_GOAL).exe *.dll)
 	grep -n "^.gitignore" .gitignore \
         | cut -d: -f1 \
         | head -n 1 \
