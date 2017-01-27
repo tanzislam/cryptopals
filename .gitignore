@@ -10,6 +10,7 @@ ConsoleApplication*
 *.swp
 *.dll
 *.so
+deps
 
 # Keep this entry in the last line of this file.
 # (The "clean" target relies on this fact.)

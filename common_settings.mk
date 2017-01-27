@@ -17,6 +17,7 @@ else ifeq "" "$(filter clean print-%,$(MAKECMDGOALS))"
 endif
 
 # Standard settings
+this_plugin := $(lastword $(MAKEFILE_LIST))
 .DELETE_ON_ERROR :
 CXX = g++
 CPP_STANDARD = -std=c++14 -pthread
@@ -56,31 +57,17 @@ SRCS_FULL_PATHS := $(foreach \
 )
 
 ifeq "" "$(filter clean print-%,$(MAKECMDGOALS))"
-    # Generate compilation dependencies from SRCS. We will still rely on
-    # implicit rules for the compilations.
-    #
-    # NOTE: GCC emits backslash-newline as line-continuation, but GNU Make's
-    #       $(shell) function replaces the newline with space -- but retains the
-    #       backslash. We need to remove the backslash ourselves, to prevent it
-    #       from escaping the whitespace after it.
-    $(foreach \
-        s, \
-        $(SRCS_FULL_PATHS), \
-        $(info Preprocessing $(s) for compilation dependencies)$(eval $(shell \
-            $(CXX) -MM $(CPP_STANDARD) $(CXXFLAGS) $(s) | tr -d "\\\\" \
-        )) \
-    )
-    $(SRCS:.cpp=.o) : $(lastword $(MAKEFILE_LIST))
+    $(SRCS:.cpp=.o) : $(this_plugin)
+    include $(dir $(this_plugin))dependency_cache.mk
 
-    IS_WINDOWS_PLATFORM := \
-        $(filter CYGWIN_% MSYS_% MINGW% windows%,$(strip \
-                $(info Detecting platform)$(shell uname -s)))
+    PLATFORM := $(strip $(info Detecting platform)$(shell uname -s))
+    IS_WINDOWS_PLATFORM := $(filter CYGWIN_% MSYS_% MINGW% windows%,$(PLATFORM))
 
     # Boost specifies Windows system library dependencies using the Visual C++
     # "#pragma comment(lib, ...)" feature, which GCC doesn't implement. So we
     # masquerade as MSVC to extract all such directives and incorporate them. We
     # also specify GCCXML's flag to avoid problematic MSVC-specific code paths.
-    WINDOWS_LIBS := $(if $(IS_WINDOWS_PLATFORM), \
+    WINDOWS_LIBS = $(if $(IS_WINDOWS_PLATFORM), \
         $(foreach s,$(SRCS_FULL_PATHS),$(strip \
             $(info Preprocessing $(s) for library dependencies)$(shell \
             $(CXX) $(CPP_STANDARD) $(CXXFLAGS) \
@@ -159,7 +146,7 @@ ifeq "" "$(filter clean print-%,$(MAKECMDGOALS))"
 
         .DEFAULT_GOAL = fix_relative_paths_to_dylibs
     endef
-    $(if $(and $(BOOST_LIBS)$(LIBS),$(filter Darwin,$(shell uname -s))), \
+    $(if $(and $(BOOST_LIBS)$(LIBS),$(filter Darwin,$(PLATFORM))), \
         $(eval $(value post_link_actions_for_darwin)) \
     )
 endif
