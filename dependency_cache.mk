@@ -34,7 +34,33 @@ $(DEPDIR)/%.$(DEPEXT) : ;
 
 -include $(patsubst %,$(DEPDIR)/%.$(DEPEXT),$(basename $(SRCS)))
 
+$(if $(filter undefined,$(origin IS_WINDOWS_PLATFORM)), \
+     $(error This plugin must be included after IS_WINDOWS_PLATFORM is defined))
+ifneq "" "$(IS_WINDOWS_PLATFORM)"
+    # Boost specifies Windows system library dependencies using the Visual C++
+    # "#pragma comment(lib, ...)" feature, which GCC doesn't implement. So we
+    # masquerade as MSVC to extract all such directives and incorporate them. We
+    # also specify GCCXML's flag to avoid problematic MSVC-specific code paths.
+    LDEPEXT := ldep
+    $(DEPDIR)/%.$(LDEPEXT) : %.cpp
+	    $(file > $(DEPDIR)/$*.T$(LDEPEXT),$(shell \
+            $(info Preprocessing $< for library dependencies) \
+            $(CXX) $(CPP_STANDARD) $(CXXFLAGS) \
+                -E -w -D_MSC_VER -D__GCCXML__ $< \
+            | grep -E "\# *pragma +comment.*lib" \
+            | cut -f 2 -d \" \
+        ))
+	    mv -f $(DEPDIR)/$*.T$(LDEPEXT) $(DEPDIR)/$*.$(LDEPEXT)
+
+    .PHONY : read_windows_libs
+    read_windows_libs : $(patsubst %,$(DEPDIR)/%.$(LDEPEXT),$(basename $(SRCS)))
+	    $(eval LDLIBS += \
+               $(foreach lib,$(sort $(shell cat $^)),-l$(basename $(lib))))
+
+    $(.DEFAULT_GOAL) : | read_windows_libs
+endif
+
 clean : clean_deps
 .PHONY : clean_deps
 clean_deps :
-	rm -f $(DEPDIR)/*.$(DEPEXT)
+	rm -f $(wildcard $(DEPDIR)/*.$(DEPEXT) $(DEPDIR)/*.$(LDEPEXT))

@@ -50,33 +50,12 @@ CXXFLAGS += $(foreach v,$(VPATH),-I$(v))
 # MinGW-w64 installation, so using $(CXX) instead as defined above.
 CC = $(CXX)
 
-SRCS_FULL_PATHS := $(foreach \
-    s, \
-    $(SRCS), \
-    $(wildcard ./$(s) $(foreach v,$(VPATH),$(v)/$(s))) \
-)
+PLATFORM := $(strip $(shell uname -s))
+IS_WINDOWS_PLATFORM := $(filter CYGWIN_% MSYS_% MINGW% windows%,$(PLATFORM))
+include $(dir $(this_plugin))dependency_cache.mk
 
 ifeq "" "$(filter clean print-%,$(MAKECMDGOALS))"
-    $(SRCS:.cpp=.o) : $(this_plugin)
-    include $(dir $(this_plugin))dependency_cache.mk
-
-    PLATFORM := $(strip $(info Detecting platform)$(shell uname -s))
-    IS_WINDOWS_PLATFORM := $(filter CYGWIN_% MSYS_% MINGW% windows%,$(PLATFORM))
-
-    # Boost specifies Windows system library dependencies using the Visual C++
-    # "#pragma comment(lib, ...)" feature, which GCC doesn't implement. So we
-    # masquerade as MSVC to extract all such directives and incorporate them. We
-    # also specify GCCXML's flag to avoid problematic MSVC-specific code paths.
-    WINDOWS_LIBS = $(if $(IS_WINDOWS_PLATFORM), \
-        $(foreach s,$(SRCS_FULL_PATHS),$(strip \
-            $(info Preprocessing $(s) for library dependencies)$(shell \
-            $(CXX) $(CPP_STANDARD) $(CXXFLAGS) \
-                -E -w -D_MSC_VER -D__GCCXML__ $(s) \
-            | grep -E "\# *pragma +comment.*lib" \
-            | cut -f 2 -d \" \
-        ))) \
-    )
-    LDLIBS += $(foreach lib,$(sort $(WINDOWS_LIBS)),-l$(basename $(lib)))
+    $(SRCS:.cpp=.o) : $(this_plugin) $(dir $(this_plugin))dependency_cache.mk
 
     # Git doesn't know how to ignore extension-less binaries, so we must teach
     # it. No need to check this in, though -- it will be created each time.
