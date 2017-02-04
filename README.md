@@ -22,38 +22,39 @@ To build these solutions you will need:
    system default v3.8.1).
 
  - [Boost C++ Libraries](http://www.boost.org/). I used v1.62.0.
-  - You will need to build the libraries as described for your platform in the
-    Getting Started Guide. Only specific libraries are needed (as indicated by
-    the `BOOST_LIBS` line in each solution's `GNUmakefile`), so you can speed up
-    the build by appending the `--with-<library_name>` option below.
-  - On Windows: `b2 --layout=system toolset=gcc variant=release`.
-  - On macOS and Linux: `./b2 --layout=system variant=release`.
+   - You will need to build the libraries as described for your platform in the
+     Getting Started Guide. Only specific libraries are needed (as indicated by
+     the `BOOST_LIBS` line in each solution's `GNUmakefile`), so you can speed
+     up the build by appending the `--with-<library_name>` option below.
+   - On Windows: `b2 --layout=system toolset=gcc variant=release`.
+   - On macOS and Linux: `./b2 --layout=system variant=release`.
 
  - [Google Test](https://github.com/google/googletest/). I used the "master"
    branch at commit a2b8a8e07.
-  - You will need to build Google Test as described in the Generic Build
-    Instructions. To do this on Windows you will need a UNIX-like set of
-    utilities (see below).
-  - On Windows / MinGW-w64 I had to specify a Makefile override:
-    `cd googletest/make; mingw32-make AR=gcc-ar`.
+   - You will need to build Google Test as described in the Generic Build
+     Instructions. To do this on Windows you will need a UNIX-like set of
+     utilities (see below).
+   - On Windows / MinGW-w64 I had to specify a Makefile override:
+     `cd googletest/make; mingw32-make AR=gcc-ar`.
 
  - [Hunspell](https://hunspell.github.io/). I used the "master" branch at commit
    1fc14b0c7.
-  - On Windows 7 / MinGW-w64 I had to first install `libtool` (by running
-    `pacman -S libtool` in an admin-mode MSYS2 window), and then I could run
-    `autoreconf -vfi && ./configure && mingw32-make` in a MinGW-w64 Win64 Shell.
-  - On macOS Sierra / Homebrew I had to first obtain the GNU Autotools packages:
-    `automake`, `libtool`, and `gettext`. I also had to export the `LDFLAGS` and
-    `CPPFLAGS` environment variables to what `brew` specified when installing
-    `gettext`. After that I could run the standard steps.
-  - You will also need an English dictionary for Hunspell (specifically the
-    `.dic` and `.aff` files. Get one from [SCOWL](http://wordlist.aspell.net/).
+   - On Windows 7 / MinGW-w64 I had to first install `libtool` (by running
+     `pacman -S libtool` in an admin-mode MSYS2 window), and then I could run
+     `autoreconf -vfi && ./configure && mingw32-make` in a MinGW-w64 Win64
+      Shell.
+   - On macOS Sierra / Homebrew I had to first obtain the GNU Autotools
+     packages: `automake`, `libtool`, and `gettext`. I also had to export the
+     `LDFLAGS` and `CPPFLAGS` environment variables to what `brew` specified
+     when installing `gettext`. After that I could run the standard steps.
+   - You will also need an English dictionary for Hunspell (specifically the
+     `.dic` and `.aff` files. Get one from [SCOWL](http://wordlist.aspell.net/).
 
  - [Crypto++](http://www.cryptopp.com/). I used the "master" branch at commit
    84b602cc7.
-  - You will need to Build Crypto++ as a static library using the included
-    `GNUmakefile`. To do this on Windows you will need a UNIX-like set of
-    utilites (see below).
+   - You will need to Build Crypto++ as a static library using the included
+     `GNUmakefile`. To do this on Windows you will need a UNIX-like set of
+     utilites (see below).
 
 UNIX-like utilities on Windows are provided by any of the following:
  - [MSYS2](http://msys2.github.io/), or originally [MSYS](http://www.mingw.org/)
