@@ -1,8 +1,5 @@
-sudo: false
+sudo: required
 language: cpp
-
-compiler:
-- g++-6
 
 addons:
     apt:
