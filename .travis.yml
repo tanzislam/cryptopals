@@ -26,7 +26,7 @@ addons:
             version: $TRAVIS_COMMIT
             description: Cryptopals
         build_command: make -k
-        branch_pattern: coverity_scan
+        branch_pattern: travis-coverity_scan
 
 before_install:
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
