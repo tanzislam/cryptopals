@@ -21,7 +21,7 @@ before_install:
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install homebrew/dupes/make; fi
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install p7zip; fi
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew outdated automake || brew upgrade automake; fi
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install libtool; fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew outdated libtool || brew upgrade libtool; fi
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install gettext; fi
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export GNU_MAKE=gmake; else export GNU_MAKE=make; fi
 
@@ -49,6 +49,7 @@ before_script:
 - popd
 - git clone https://github.com/hunspell/hunspell.git
 - pushd hunspell
+- export LDFLAGS=-L/usr/local/opt/gettext/lib CPPFLAGS=-I/usr/local/opt/gettext/include
 - autoreconf -vfi
 - ./configure
 - $GNU_MAKE -kj 2
