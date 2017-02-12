@@ -1,6 +1,11 @@
 sudo: false
 language: cpp
 
+branches:
+    only:
+    - master
+    - /^travis-.*/
+
 os:
 - linux
 - osx
