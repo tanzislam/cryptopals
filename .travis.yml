@@ -20,6 +20,13 @@ addons:
         packages:
         - p7zip-full
         - g++-6
+    coverity_scan:
+        project:
+            name: $TRAVIS_REPO_SLUG
+            version: $TRAVIS_COMMIT
+            description: Cryptopals
+        build_command: make -k
+        branch_pattern: coverity_scan
 
 before_install:
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
