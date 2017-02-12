@@ -22,7 +22,7 @@ before_script:
 - p7zip -d boost_1_63_0.7z > /dev/null
 - pushd boost_1_63_0
 - ./bootstrap.sh
-- ./b2 --layout=system variant=release --with-system --with-date_time --with-regex
+- ./b2 -d0 --layout=system variant=release --with-system --with-date_time --with-regex
 - export BOOST_DIR=$PWD
 - popd
 - git clone https://github.com/google/googletest.git
