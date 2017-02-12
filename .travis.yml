@@ -1,0 +1,42 @@
+sudo: false
+language: cpp
+
+addons:
+    apt:
+        packages:
+        - p7zip
+
+before_script:
+- wget 'https://downloads.sourceforge.net/project/boost/boost/1.63.0/boost_1_63_0.7z?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fboost%2Ffiles%2Fboost%2F1.63.0%2Fboost_1_63_0.7z%2Fdownload%3Fuse_mirror%3Dautoselect&ts=1486852109&use_mirror=vorboss' -O boost_1_63_0.7z
+- p7zip --decompress boost_1_63_0.7z
+- pushd boost_1_63_0
+- ./bootstrap.sh
+- ./b2 --layout=system variant=release --with-system --with-date_time --with-regex
+- export BOOST_DIR=$PWD
+- popd
+- git clone https://github.com/google/googletest.git
+- pushd googletest/googletest/make
+- make -kj 2
+- export GTEST_DIR=$PWD
+- popd
+- git clone https://github.com/hunspell/hunspell.git
+- pushd hunspell
+- autoreconf -vfi
+- ./configure
+- make -kj 2
+- export HUNSPELL_DIR=$PWD
+- popd
+- git clone https://github.com/weidai11/cryptopp.git
+- pushd cryptopp
+- make -kj 2
+- export CRYPTOPP_DIR=$PWD
+- popd
+- wget 'https://downloads.sourceforge.net/project/wordlist/speller/2017.01.22/hunspell-en_US-2017.01.22.zip?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fwordlist%2Ffiles%2Fspeller%2F2017.01.22%2F&ts=1486860415&use_mirror=vorboss' -O hunspell-en_US-2017.01.22.zip
+- unzip -d hunspell hunspell-en_US-2017.01.22.zip
+- rm hunspell-en_US-2017.01.22.zip
+
+script:
+- make -kj 2
+- export HUNSPELL_AFFIX_PATH=$HUNSPELL_DIR/en_US.aff
+- export HUNSPELL_DICT_PATH=$HUNSPELL_DIR/en_US.dic
+- ./test
