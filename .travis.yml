@@ -26,8 +26,10 @@ addons:
         project:
             name: $TRAVIS_REPO_SLUG
             version: $TRAVIS_COMMIT
-        build_command: bash -c 'if [[ "${TRAVIS_JOB_NUMBER##*.}" == "1" ]]; then $GNU_MAKE -k; else true; fi'
-        branch_pattern: travis-coverity_scan
+        # Coverity refuses to run on OSX due to System Integrity Protection
+        # being enabled, so we need no hackery here to limit it to Linux only.
+        build_command: $GNU_MAKE -k
+        branch_pattern: master
 
 before_install:
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
