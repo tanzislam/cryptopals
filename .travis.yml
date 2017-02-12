@@ -9,6 +9,7 @@ addons:
         packages:
         - p7zip
         - g++-6
+        - g++
 
 before_script:
 - ls -ltrF `which g++`
@@ -23,7 +24,7 @@ before_script:
 - git clone https://github.com/google/googletest.git
 - pushd googletest/googletest/make
 - make -kj 2
-- export GTEST_DIR=$PWD
+- export GTEST_DIR=$PWD/../..
 - popd
 - git clone https://github.com/hunspell/hunspell.git
 - pushd hunspell
@@ -42,7 +43,7 @@ before_script:
 - rm hunspell-en_US-2017.01.22.zip
 
 script:
-- make -kj 2 CXX=g++-6
+- make -kj 2
 - export HUNSPELL_AFFIX_PATH=$HUNSPELL_DIR/en_US.aff
 - export HUNSPELL_DICT_PATH=$HUNSPELL_DIR/en_US.dic
 - ./test
