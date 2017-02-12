@@ -40,7 +40,7 @@ before_script:
 - rm hunspell-en_US-2017.01.22.zip
 
 script:
-- make -kj 2
+- make -kj 2 CXX=g++-6
 - export HUNSPELL_AFFIX_PATH=$HUNSPELL_DIR/en_US.aff
 - export HUNSPELL_DICT_PATH=$HUNSPELL_DIR/en_US.dic
 - ./test
