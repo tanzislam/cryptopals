@@ -1,0 +1,76 @@
+sudo: false
+language: cpp
+
+branches:
+    only:
+    - master
+    - /^travis-.*/
+
+os:
+- linux
+- osx
+
+dist: trusty
+osx_image: xcode8.2
+
+addons:
+    apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        packages:
+        - p7zip-full
+        - g++-6
+
+before_install:
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install homebrew/dupes/make; fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install p7zip; fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew outdated automake || brew upgrade automake; fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew outdated libtool || brew upgrade libtool; fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install gettext; fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export GNU_MAKE=gmake; else export GNU_MAKE=make; fi
+
+install:
+# Workaround for https://github.com/travis-ci/travis-ci/issues/3668
+- mkdir -p latest-gcc-symlinks
+- ln -s /usr/bin/g++-6 latest-gcc-symlinks/g++
+- ln -s /usr/bin/gcc-6 latest-gcc-symlinks/gcc
+- export PATH=$PWD/latest-gcc-symlinks:$PATH
+- g++ --version
+
+before_script:
+- wget 'https://downloads.sourceforge.net/project/boost/boost/1.63.0/boost_1_63_0.7z?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fboost%2Ffiles%2Fboost%2F1.63.0%2Fboost_1_63_0.7z%2Fdownload%3Fuse_mirror%3Dautoselect&ts=1486852109&use_mirror=vorboss' -O boost_1_63_0.7z
+- 7z x boost_1_63_0.7z > /dev/null
+- rm boost_1_63_0.7z
+- pushd boost_1_63_0
+- ./bootstrap.sh
+- ./b2 --layout=system variant=release --with-system --with-date_time --with-regex
+- export BOOST_DIR=$PWD
+- popd
+- git clone https://github.com/google/googletest.git
+- pushd googletest/googletest/make
+- $GNU_MAKE -kj 2
+- export GTEST_DIR=$PWD/../..
+- popd
+- git clone https://github.com/hunspell/hunspell.git
+- pushd hunspell
+- export LDFLAGS=-L/usr/local/opt/gettext/lib CPPFLAGS=-I/usr/local/opt/gettext/include
+- autoreconf -vfi
+- ./configure
+- $GNU_MAKE -kj 2
+- export HUNSPELL_DIR=$PWD
+- popd
+- git clone https://github.com/weidai11/cryptopp.git
+- pushd cryptopp
+- $GNU_MAKE -kj 2
+- export CRYPTOPP_DIR=$PWD
+- popd
+- wget 'https://downloads.sourceforge.net/project/wordlist/speller/2017.01.22/hunspell-en_US-2017.01.22.zip?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fwordlist%2Ffiles%2Fspeller%2F2017.01.22%2F&ts=1486860415&use_mirror=vorboss' -O hunspell-en_US-2017.01.22.zip
+- unzip -d hunspell hunspell-en_US-2017.01.22.zip
+- rm hunspell-en_US-2017.01.22.zip
+
+script:
+- $GNU_MAKE -kj 2
+- export HUNSPELL_AFFIX_PATH=$HUNSPELL_DIR/en_US.aff
+- export HUNSPELL_DICT_PATH=$HUNSPELL_DIR/en_US.dic
+- ./test
