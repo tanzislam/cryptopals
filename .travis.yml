@@ -1,8 +1,11 @@
-sudo: required
+sudo: false
 language: cpp
+compiler: g++
 
 addons:
     apt:
+        sources:
+        - ubuntu-toolchain-r-test
         packages:
         - p7zip
         - g++-6
