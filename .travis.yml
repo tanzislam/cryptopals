@@ -20,6 +20,16 @@ addons:
         packages:
         - p7zip-full
         - g++-6
+    coverity_scan:
+        # COVERITY_SCAN_TOKEN and COVERITY_SCAN_NOTIFICATION_EMAIL should be set
+        # in Travis settings. They depend on repo owner so aren't included here.
+        project:
+            name: $TRAVIS_REPO_SLUG
+            version: $TRAVIS_COMMIT
+        # Coverity refuses to run on OSX due to System Integrity Protection
+        # being enabled, so we need no hackery here to limit it to Linux only.
+        build_command: $GNU_MAKE -k
+        branch_pattern: master
 
 before_install:
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
