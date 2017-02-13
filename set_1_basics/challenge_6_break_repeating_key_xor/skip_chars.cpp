@@ -5,7 +5,7 @@ namespace cryptopals {
 skip_chars_streambuf::skip_chars_streambuf(std::istream & inputStream,
                                            unsigned int startPos,
                                            unsigned int skipLength)
-    : d_inputStream(inputStream), d_skipLength(skipLength)
+    : d_inputStream(inputStream), d_buffer(), d_skipLength(skipLength)
 {
     if (!d_inputStream.ignore(startPos))
         throw std::ios_base::failure("Failed to ignore leading characters");

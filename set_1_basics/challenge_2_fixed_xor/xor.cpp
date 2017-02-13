@@ -6,6 +6,7 @@ xor_streambuf::xor_streambuf(std::istream & inputStream1,
                              std::istream & inputStream2)
     : d_inputStream1(inputStream1),
       d_inputStream2(&inputStream2),
+      d_inputBuffer(),
       d_outputStream(nullptr)
 {
     setg(nullptr, nullptr, nullptr);
@@ -16,6 +17,7 @@ xor_streambuf::xor_streambuf(std::ostream & outputStream,
                              std::istream & otherInputStream)
     : d_inputStream1(otherInputStream),
       d_inputStream2(nullptr),
+      d_inputBuffer(),
       d_outputStream(&outputStream)
 {
     setp(nullptr, nullptr);

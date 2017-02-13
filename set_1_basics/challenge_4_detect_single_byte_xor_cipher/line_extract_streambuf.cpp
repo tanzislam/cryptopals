@@ -5,6 +5,7 @@ namespace cryptopals {
 
 line_extract_streambuf::line_extract_streambuf(std::istream & inputStream)
     : d_inputStream(inputStream),
+      d_buffer(),
       d_startPos(inputStream.tellg()),
       d_numEndBytesRead(0)
 {

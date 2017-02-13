@@ -5,7 +5,10 @@ namespace cryptopals {
 
 tee_streambuf::tee_streambuf(std::istream & inputStream,
                              std::ostream & teeStream)
-    : d_inputStream(&inputStream), d_teeStream(teeStream), d_teeStream2(nullptr)
+    : d_inputStream(&inputStream),
+      d_teeStream(teeStream),
+      d_teeStream2(nullptr),
+      d_inputBuffer()
 {
     setg(nullptr, nullptr, nullptr);
 }
@@ -44,7 +47,10 @@ std::streambuf::int_type tee_streambuf::underflow()
 
 tee_streambuf::tee_streambuf(std::ostream & teeStream1,
                              std::ostream & teeStream2)
-    : d_inputStream(nullptr), d_teeStream(teeStream1), d_teeStream2(&teeStream2)
+    : d_inputStream(nullptr),
+      d_teeStream(teeStream1),
+      d_teeStream2(&teeStream2),
+      d_inputBuffer()
 {
     setp(nullptr, nullptr);
 }

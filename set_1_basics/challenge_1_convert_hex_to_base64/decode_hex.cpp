@@ -26,7 +26,7 @@ std::istream & operator>>(std::istream & input, const decode_hex & manipulator)
 
 
 decode_hex_streambuf::decode_hex_streambuf(std::istream & inputStream)
-    : d_inputStream(inputStream), d_startPos(inputStream.tellg())
+    : d_inputStream(inputStream), d_buffer(), d_startPos(inputStream.tellg())
 {
     if (!d_inputStream || d_startPos == std::streampos(-1))
         throw std::ios_base::failure("Could not obtain initial position");
