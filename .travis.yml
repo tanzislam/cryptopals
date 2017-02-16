@@ -51,7 +51,8 @@ before_script:
 - pushd boost
 - git submodule --quiet update --init --recursive
 - ./bootstrap.sh
-- ./b2 --layout=system variant=release headers --with-system --with-date_time --with-regex
+- ./b2 headers
+- ./b2 --layout=system variant=release --with-system --with-date_time --with-regex
 - export BOOST_DIR=$PWD
 - popd
 - git clone https://github.com/google/googletest.git
