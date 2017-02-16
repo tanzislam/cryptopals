@@ -49,7 +49,7 @@ install:
 before_script:
 - git clone https://github.com/boostorg/boost.git
 - pushd boost
-- git submodule update --init --recursive --jobs 2
+- git submodule update --init --recursive
 - ./bootstrap.sh
 - ./b2 --layout=system variant=release --with-system --with-date_time --with-regex
 - export BOOST_DIR=$PWD
