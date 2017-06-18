@@ -11,14 +11,14 @@ os:
 - osx
 
 dist: trusty
-osx_image: xcode8.2
+osx_image: xcode8.3
 
 addons:
     apt:
         sources:
         - ubuntu-toolchain-r-test
         packages:
-        - g++-6
+        - g++-7
     coverity_scan:
         # COVERITY_SCAN_TOKEN and COVERITY_SCAN_NOTIFICATION_EMAIL should be set
         # in Travis settings. They depend on repo owner so aren't included here.
@@ -41,8 +41,8 @@ before_install:
 install:
 # Workaround for https://github.com/travis-ci/travis-ci/issues/3668
 - mkdir -p latest-gcc-symlinks
-- ln -s /usr/bin/g++-6 latest-gcc-symlinks/g++
-- ln -s /usr/bin/gcc-6 latest-gcc-symlinks/gcc
+- ln -s /usr/bin/g++-7 latest-gcc-symlinks/g++
+- ln -s /usr/bin/gcc-7 latest-gcc-symlinks/gcc
 - export PATH=$PWD/latest-gcc-symlinks:$PATH
 - g++ --version
 
