@@ -1,4 +1,5 @@
 #include "line_extract_streambuf.hpp"
+#include <cassert>
 #include <cstdlib>
 
 namespace cryptopals {
@@ -20,6 +21,8 @@ std::streambuf::pos_type line_extract_streambuf::seekpos(
         std::ios_base::openmode which
 )
 {
+    assert(pos == 0);
+    assert(which == std::ios_base::in);
     return
             pos == std::streampos(0)
             && which == std::ios_base::in
@@ -35,6 +38,9 @@ std::streambuf::pos_type line_extract_streambuf::seekoff(
         std::ios_base::openmode which
 )
 {
+    assert(off == 0);
+    assert(dir == std::ios_base::cur);
+    assert(which == std::ios_base::in);
     return
             off == 0
             && dir == std::ios_base::cur
