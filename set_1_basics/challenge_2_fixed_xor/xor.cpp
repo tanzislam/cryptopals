@@ -49,4 +49,20 @@ std::streambuf::int_type xor_streambuf::overflow(std::streambuf::int_type ch)
     return traits_type::eof();
 }
 
+
+std::streambuf::pos_type xor_streambuf::seekoff(off_type off,
+                                                std::ios_base::seekdir dir,
+                                                std::ios_base::openmode which)
+{
+    assert(off == 0);
+    assert(dir == std::ios_base::cur);
+    assert(d_inputStream2
+            ? which == std::ios_base::in
+            : which == std::ios_base::out);
+    return which == std::ios_base::in
+            ? d_inputStream2->tellg()
+            : d_outputStream->tellp();
+}
+
+
 }  // close namespace cryptopals
