@@ -4,6 +4,7 @@
 #include "base64_common.hpp"
 #include <ostream>
 #include <streambuf>
+#include "disable_method.hpp"
 
 namespace cryptopals {
 
@@ -39,6 +40,16 @@ class encode_base64_streambuf
   protected:
     int_type overflow(int_type ch = std::char_traits<char>::eof());
     int sync();
+
+    DISABLE_VOID_METHOD(void imbue(const std::locale &))
+    DISABLE_METHOD(std::streambuf * setbuf(char_type *, std::streamsize))
+    DISABLE_METHOD(pos_type seekpos(pos_type, std::ios_base::openmode))
+    DISABLE_METHOD(pos_type seekoff(off_type,
+                                    std::ios_base::seekdir,
+                                    std::ios_base::openmode))
+    DISABLE_METHOD(std::streamsize showmanyc())
+    DISABLE_METHOD(int_type underflow())
+    DISABLE_METHOD(int_type pbackfail(int_type))
 
   public:
     encode_base64_streambuf(std::ostream & outputStream);

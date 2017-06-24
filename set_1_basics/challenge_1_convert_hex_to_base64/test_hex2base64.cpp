@@ -56,7 +56,12 @@ TEST(DecodeHexStreamBuf, ComputesPositionsAndOffsets)
     EXPECT_EQ(7, hexDecodedInput.tellg());
     EXPECT_EQ(18, inputStream.tellg());
 
+#ifdef NDEBUG
     EXPECT_FALSE(hexDecodedInput.seekg(-3, std::ios_base::end));
+#else
+    EXPECT_DEATH(hexDecodedInput.seekg(-3, std::ios_base::end),
+                 "dir == std::ios_base::cur");
+#endif
     EXPECT_TRUE(inputStream);
     EXPECT_EQ(18, inputStream.tellg());
 }

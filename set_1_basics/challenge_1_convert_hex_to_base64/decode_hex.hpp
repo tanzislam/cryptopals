@@ -4,6 +4,7 @@
 #include <istream>
 #include <boost/integer.hpp>
 #include <streambuf>
+#include "disable_method.hpp"
 
 namespace cryptopals {
 
@@ -38,12 +39,19 @@ class decode_hex_streambuf
     std::istream::pos_type d_startPos;
 
   protected:
-    virtual int_type underflow();
-    virtual pos_type seekpos(pos_type pos,
-                             std::ios_base::openmode which = std::ios_base::in);
-    virtual pos_type seekoff(off_type off,
-                             std::ios_base::seekdir dir,
-                             std::ios_base::openmode which = std::ios_base::in);
+    int_type underflow();
+    pos_type seekpos(pos_type pos,
+                     std::ios_base::openmode which = std::ios_base::in);
+    pos_type seekoff(off_type off,
+                     std::ios_base::seekdir dir,
+                     std::ios_base::openmode which = std::ios_base::in);
+
+    DISABLE_VOID_METHOD(void imbue(const std::locale &))
+    DISABLE_METHOD(std::streambuf * setbuf(char_type *, std::streamsize))
+    DISABLE_METHOD(int sync())
+    DISABLE_METHOD(std::streamsize showmanyc())
+    DISABLE_METHOD(int_type overflow(int_type))
+    DISABLE_METHOD(int_type pbackfail(int_type))
 
   public:
     decode_hex_streambuf(std::istream & inputStream);
