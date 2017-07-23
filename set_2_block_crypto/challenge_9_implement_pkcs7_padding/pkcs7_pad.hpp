@@ -3,6 +3,7 @@
 
 #include <streambuf>
 #include <istream>
+#include "disable_method.hpp"
 
 namespace cryptopals {
 
@@ -28,6 +29,13 @@ class pkcs7_pad_streambuf
     virtual pos_type seekoff(off_type off,
                              std::ios_base::seekdir dir,
                              std::ios_base::openmode which = std::ios_base::in);
+
+    DISABLE_VOID_METHOD(void imbue(const std::locale &))
+    DISABLE_METHOD(std::streambuf * setbuf(char_type *, std::streamsize))
+    DISABLE_METHOD(int sync())
+    DISABLE_METHOD(std::streamsize showmanyc())
+    DISABLE_METHOD(int_type overflow(int_type))
+    DISABLE_METHOD(int_type pbackfail(int_type))
 
   public:
     pkcs7_pad_streambuf(std::istream & inputStream, unsigned int blockSize);
