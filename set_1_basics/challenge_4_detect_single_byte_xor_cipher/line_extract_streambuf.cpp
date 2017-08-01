@@ -21,7 +21,7 @@ std::streambuf::pos_type line_extract_streambuf::seekpos(
         std::ios_base::openmode which
 )
 {
-    assert(pos == 0);
+    assert(pos == std::streampos(0));
     assert(which == std::ios_base::in);
     return
             pos == std::streampos(0)
@@ -53,6 +53,7 @@ std::streambuf::pos_type line_extract_streambuf::seekoff(
 
 std::streambuf::int_type line_extract_streambuf::underflow()
 {
+    assert((!gptr() && !egptr()) || (gptr() && egptr() && gptr() == egptr()));
     if (d_numEndBytesRead)
         return std::streambuf::traits_type::eof();
 

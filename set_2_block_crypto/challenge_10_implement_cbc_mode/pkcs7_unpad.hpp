@@ -4,6 +4,7 @@
 #include <streambuf>
 #include <istream>
 #include <ostream>
+#include "disable_method.hpp"
 
 namespace cryptopals {
 
@@ -18,11 +19,12 @@ class pkcs7_unpad_streambuf
     void resetInputBlock();
     void resetOutputBlock();
     char * findFirstPaddingByte() const;
+    void emitBuffer(char * end);
 
   protected:
     virtual int_type underflow();
     virtual int_type overflow(int_type ch = traits_type::eof());
-    virtual int sync();
+    DEFINE_DEFAULT_SYNC_METHOD(d_outputStream)
 
     /// only supports rewinding (i.e. pos == 0 and which == in)
     virtual pos_type seekpos(pos_type pos,
@@ -33,6 +35,11 @@ class pkcs7_unpad_streambuf
     virtual pos_type seekoff(off_type off,
                              std::ios_base::seekdir dir,
                              std::ios_base::openmode which = std::ios_base::in);
+
+    DISABLE_VOID_METHOD(void imbue(const std::locale &))
+    DISABLE_METHOD(std::streambuf * setbuf(char_type *, std::streamsize))
+    DISABLE_METHOD(std::streamsize showmanyc())
+    DISABLE_METHOD(int_type pbackfail(int_type))
 
   public:
     pkcs7_unpad_streambuf(std::istream & inputStream, unsigned int blockSize);

@@ -1,6 +1,7 @@
 #include "pkcs7_unpad.hpp"
 #include <boost/io/ios_state.hpp>
 #include <algorithm>
+#include <cassert>
 
 namespace cryptopals {
 
@@ -30,6 +31,8 @@ std::streambuf::pos_type pkcs7_unpad_streambuf::seekpos(
         std::ios_base::openmode which
 )
 {
+    assert(pos == std::streampos(0));
+    assert(which == std::ios_base::in);
     return
             pos == std::streampos(0)
             && which == std::ios_base::in
@@ -45,6 +48,9 @@ std::streambuf::pos_type pkcs7_unpad_streambuf::seekoff(
         std::ios_base::openmode which
 )
 {
+    assert(off == 0);
+    assert(dir == std::ios_base::cur);
+    assert(which == std::ios_base::in);
     return
             off == 0
             && dir == std::ios_base::cur
@@ -57,6 +63,7 @@ std::streambuf::pos_type pkcs7_unpad_streambuf::seekoff(
 
 char * pkcs7_unpad_streambuf::findFirstPaddingByte() const
 {
+    assert(d_outputStream ? pptr() == epptr() : gptr() == egptr());
     unsigned int numPaddingBytes = d_currentBlock[d_blockSize - 1];
     if (numPaddingBytes > d_blockSize)
         throw std::ios_base::failure("Invalid PKCS#7 padding byte");
@@ -76,6 +83,8 @@ char * pkcs7_unpad_streambuf::findFirstPaddingByte() const
 
 std::streambuf::int_type pkcs7_unpad_streambuf::underflow()
 {
+    assert(!d_outputStream);
+    assert((!gptr() && !egptr()) || (gptr() && egptr() && gptr() == egptr()));
     try {
         boost::io::ios_exception_saver exceptionsSaver(*d_inputStream,
                                                        std::ios_base::goodbit);
@@ -111,16 +120,22 @@ pkcs7_unpad_streambuf::pkcs7_unpad_streambuf(std::ostream & outputStream,
 }
 
 
+void pkcs7_unpad_streambuf::emitBuffer(char * end)
+{
+    assert(d_outputStream && end && pbase());
+    d_outputStream->write(pbase(), end - pbase());
+}
+
+
 std::streambuf::int_type pkcs7_unpad_streambuf::overflow(int_type ch)
 {
+    assert(d_outputStream);
+    assert((!pptr() && !epptr()) || (pptr() && epptr() && pptr() == epptr()));
     if (ch == traits_type::eof())
-        return sync() ? traits_type::eof() : !traits_type::eof();
+        return !traits_type::eof();
 
     try {
-        boost::io::ios_exception_saver exceptionsSaver(*d_outputStream,
-                                                       std::ios_base::goodbit);
-        if (!d_outputStream->write(pbase(), pptr() - pbase()))
-            throw std::ios_base::failure("Failed to write to output stream");
+        emitBuffer(pptr());
         resetOutputBlock();
         sputc(ch);
         return !traits_type::eof();
@@ -130,26 +145,16 @@ std::streambuf::int_type pkcs7_unpad_streambuf::overflow(int_type ch)
 }
 
 
-int pkcs7_unpad_streambuf::sync()
-{
-    try {
-        if (pptr() != epptr())
-            throw std::ios_base::failure("Sync after incomplete block");
-        boost::io::ios_exception_saver exceptionsSaver(*d_outputStream,
-                                                       std::ios_base::goodbit);
-        if (!d_outputStream->write(pbase(), findFirstPaddingByte() - pbase()))
-            throw std::ios_base::failure("Failed to write to output stream");
-        resetOutputBlock();
-        return 0;
-    } catch (...) {
-        return -1;
-    }
-}
-
-
 pkcs7_unpad_streambuf::~pkcs7_unpad_streambuf()
 {
-    if (d_outputStream) sync();
+    if (d_outputStream && pptr() != pbase())
+        try {
+            if (pptr() != epptr())
+                throw std::ios_base::failure("Sync after incomplete block");
+            emitBuffer(findFirstPaddingByte());
+        } catch (...) {
+            d_outputStream->setstate(std::ios_base::failbit);
+        }
     delete [] d_currentBlock;
 }
 

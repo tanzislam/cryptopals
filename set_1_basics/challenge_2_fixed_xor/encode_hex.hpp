@@ -30,6 +30,7 @@ class encode_hex_streambuf
 
   protected:
     std::streambuf::int_type overflow(std::streambuf::int_type value);
+    DEFINE_DEFAULT_SYNC_METHOD(&d_outputStream);
 
     DISABLE_VOID_METHOD(void imbue(const std::locale &))
     DISABLE_METHOD(std::streambuf * setbuf(char_type *, std::streamsize))
@@ -37,7 +38,6 @@ class encode_hex_streambuf
                                     std::ios_base::seekdir,
                                     std::ios_base::openmode))
     DISABLE_METHOD(pos_type seekpos(pos_type, std::ios_base::openmode))
-    DISABLE_METHOD(int sync())
     DISABLE_METHOD(std::streamsize showmanyc())
     DISABLE_METHOD(int_type underflow())
     DISABLE_METHOD(int_type pbackfail(int_type))

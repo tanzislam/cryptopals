@@ -2,6 +2,7 @@
 #include <string>
 #include <iomanip>
 #include <cstdlib>
+#include <cassert>
 
 namespace cryptopals {
 
@@ -30,7 +31,7 @@ decode_hex_streambuf::decode_hex_streambuf(std::istream & inputStream)
 {
     if (!d_inputStream || d_startPos == std::streampos(-1))
         throw std::ios_base::failure("Could not obtain initial position");
-    setg(reinterpret_cast<char*>(&d_buffer), nullptr, nullptr);
+    setg(nullptr, nullptr, nullptr);
 }
 
 
@@ -80,6 +81,7 @@ std::streambuf::pos_type decode_hex_streambuf::seekoff(
 
 std::streambuf::int_type decode_hex_streambuf::underflow()
 {
+    assert((!gptr() && !egptr()) || (gptr() && egptr() && gptr() == egptr()));
     try {
         if (d_inputStream >> decode_hex(d_buffer)) {
             setg(reinterpret_cast<char *>(&d_buffer),

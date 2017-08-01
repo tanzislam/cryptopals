@@ -1,6 +1,7 @@
 #include "pkcs7_pad.hpp"
 #include <boost/io/ios_state.hpp>
 #include <cstring>
+#include <cassert>
 
 namespace cryptopals {
 
@@ -16,7 +17,7 @@ pkcs7_pad_streambuf::pkcs7_pad_streambuf(std::istream & inputStream,
         throw std::ios_base::failure("Cannot use already-read inputStream");
     else if (d_blockSize <= 1)
         throw std::ios_base::failure("Block size must be greater than 1");
-    setg(&d_buffer, nullptr, nullptr);
+    setg(nullptr, nullptr, nullptr);
 }
 
 
@@ -25,7 +26,7 @@ std::streambuf::pos_type pkcs7_pad_streambuf::seekpos(
         std::ios_base::openmode which
 )
 {
-    assert(pos == 0);
+    assert(pos == std::streampos(0));
     assert(which == std::ios_base::in);
     return
             pos == std::streampos(0)
@@ -34,7 +35,7 @@ std::streambuf::pos_type pkcs7_pad_streambuf::seekpos(
         ? (
                 delete [] d_paddingBuffer,
                 d_paddingBuffer = nullptr,
-                setg(&d_buffer, nullptr, nullptr),
+                setg(nullptr, nullptr, nullptr),
                 d_inputLength = 0,
                 pos
         )
@@ -67,6 +68,7 @@ std::streambuf::pos_type pkcs7_pad_streambuf::seekoff(
 
 std::streambuf::int_type pkcs7_pad_streambuf::underflow()
 {
+    assert((!gptr() && !egptr()) || (gptr() && egptr() && gptr() == egptr()));
     if (d_paddingBuffer)
         return std::streambuf::traits_type::eof();
 

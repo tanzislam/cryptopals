@@ -22,4 +22,17 @@ declaration \
     assert(false); \
 }
 
+
+// This default sync() method is meant to call .flush() on the connected ostream
+#define DEFINE_DEFAULT_SYNC_METHOD(outputStreamPtr) \
+int sync() \
+{ \
+    assert(outputStreamPtr); \
+    try { \
+        return (outputStreamPtr)->flush() ? 0 : -1; \
+    } catch (...) { \
+        return -1; \
+    } \
+}
+
 #endif

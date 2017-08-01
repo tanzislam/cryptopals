@@ -39,7 +39,7 @@ class encode_base64_streambuf
 
   protected:
     int_type overflow(int_type ch = std::char_traits<char>::eof());
-    int sync();
+    DEFINE_DEFAULT_SYNC_METHOD(&d_outputStream)
 
     DISABLE_VOID_METHOD(void imbue(const std::locale &))
     DISABLE_METHOD(std::streambuf * setbuf(char_type *, std::streamsize))
@@ -53,7 +53,7 @@ class encode_base64_streambuf
 
   public:
     encode_base64_streambuf(std::ostream & outputStream);
-    ~encode_base64_streambuf() { sync(); }
+    ~encode_base64_streambuf();
 };
 
 }  // close namespace cryptopals

@@ -21,6 +21,9 @@ std::streambuf::pos_type tee_streambuf::seekoff(
 )
 {
     assert(d_inputStream);
+    assert(off == 0);
+    assert(dir == std::ios_base::cur);
+    assert(which == std::ios_base::in);
     return
             off == 0
             && dir == std::ios_base::cur
@@ -33,6 +36,7 @@ std::streambuf::pos_type tee_streambuf::seekoff(
 std::streambuf::int_type tee_streambuf::underflow()
 {
     assert(d_inputStream);
+    assert((!gptr() && !egptr()) || (gptr() && egptr() && gptr() == egptr()));
     char input;
     if (d_inputStream->get(input)) {
         if (d_teeStream.put(input)) {
@@ -59,11 +63,23 @@ tee_streambuf::tee_streambuf(std::ostream & teeStream1,
 std::streambuf::int_type tee_streambuf::overflow(std::streambuf::int_type ch)
 {
     assert(d_teeStream2);
+    assert((!pptr() && !epptr()) || (pptr() && epptr() && pptr() == epptr()));
     if (ch != std::streambuf::traits_type::eof())
         d_teeStream.put(ch) && d_teeStream2->put(ch);
     return d_teeStream && *d_teeStream2
                 ? !std::streambuf::traits_type::eof()
                 : std::streambuf::overflow(ch);
+}
+
+
+int tee_streambuf::sync()
+{
+    assert(d_teeStream2);
+    try {
+        return d_teeStream.flush() && d_teeStream2->flush() ? 0 : -1;
+    } catch (...) {
+        return -1;
+    }
 }
 
 }  // close namespace cryptopals

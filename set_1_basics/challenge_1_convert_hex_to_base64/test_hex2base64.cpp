@@ -103,6 +103,21 @@ TEST(EncodeBase64, DiscardsIncompleteInput)
 }
 
 
+TEST(EncodeBase64, EncodesStream)
+{
+    std::ostringstream output;
+    {
+        cryptopals::encode_base64_streambuf base64Encoder(output);
+        std::ostream base64EncodingOutput(&base64Encoder);
+        base64EncodingOutput << 'M';
+        EXPECT_EQ("", output.str());
+        base64EncodingOutput << std::flush;
+        EXPECT_EQ("", output.str());
+    }
+    EXPECT_EQ("TQ==", output.str());
+}
+
+
 TEST(ConvertHexToBase64, ConvertsHexToBase64)
 {
     std::ostringstream outputStream;

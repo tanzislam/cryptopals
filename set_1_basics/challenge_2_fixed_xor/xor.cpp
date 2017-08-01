@@ -1,4 +1,5 @@
 #include "xor.hpp"
+#include <cassert>
 
 namespace cryptopals {
 
@@ -26,6 +27,8 @@ xor_streambuf::xor_streambuf(std::ostream & outputStream,
 
 std::streambuf::int_type xor_streambuf::underflow()
 {
+    assert(!d_outputStream);
+    assert((!gptr() && !egptr()) || (gptr() && egptr() && gptr() == egptr()));
     char input1, input2;
     if (d_inputStream1.get(input1)) {
         if (d_inputStream2->get(input2)) {
@@ -41,6 +44,8 @@ std::streambuf::int_type xor_streambuf::underflow()
 
 std::streambuf::int_type xor_streambuf::overflow(std::streambuf::int_type ch)
 {
+    assert(d_outputStream);
+    assert((!pptr() && !epptr()) || (pptr() && epptr() && pptr() == epptr()));
     char otherInput;
     if (d_inputStream1.get(otherInput)) {
         if (*d_outputStream << char(ch ^ otherInput)) return 1;
@@ -63,6 +68,5 @@ std::streambuf::pos_type xor_streambuf::seekoff(off_type off,
             ? d_inputStream2->tellg()
             : d_outputStream->tellp();
 }
-
 
 }  // close namespace cryptopals
