@@ -1,6 +1,7 @@
 #include "encode_hex.hpp"
 #include <boost/io/ios_state.hpp>
 #include <ios>
+#include <cassert>
 
 namespace cryptopals {
 
@@ -25,6 +26,7 @@ encode_hex_streambuf::encode_hex_streambuf(std::ostream & outputStream)
 std::streambuf::int_type
         encode_hex_streambuf::overflow(std::streambuf::int_type value)
 {
+    assert((!pptr() && !epptr()) || (pptr() && epptr() && pptr() == epptr()));
     if (traits_type::eq_int_type(value, traits_type::eof())) return 1;
     try {
         return d_outputStream << encode_hex(value) ? 1 : traits_type::eof();

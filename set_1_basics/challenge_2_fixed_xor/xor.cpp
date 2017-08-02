@@ -1,4 +1,5 @@
 #include "xor.hpp"
+#include <cassert>
 
 namespace cryptopals {
 
@@ -26,6 +27,8 @@ xor_streambuf::xor_streambuf(std::ostream & outputStream,
 
 std::streambuf::int_type xor_streambuf::underflow()
 {
+    assert(!d_outputStream);
+    assert((!gptr() && !egptr()) || (gptr() && egptr() && gptr() == egptr()));
     char input1, input2;
     if (d_inputStream1.get(input1)) {
         if (d_inputStream2->get(input2)) {
@@ -41,12 +44,29 @@ std::streambuf::int_type xor_streambuf::underflow()
 
 std::streambuf::int_type xor_streambuf::overflow(std::streambuf::int_type ch)
 {
+    assert(d_outputStream);
+    assert((!pptr() && !epptr()) || (pptr() && epptr() && pptr() == epptr()));
     char otherInput;
     if (d_inputStream1.get(otherInput)) {
         if (*d_outputStream << char(ch ^ otherInput)) return 1;
         else d_inputStream1.unget();
     }
     return traits_type::eof();
+}
+
+
+std::streambuf::pos_type xor_streambuf::seekoff(off_type off,
+                                                std::ios_base::seekdir dir,
+                                                std::ios_base::openmode which)
+{
+    assert(off == 0);
+    assert(dir == std::ios_base::cur);
+    assert(d_inputStream2
+            ? which == std::ios_base::in
+            : which == std::ios_base::out);
+    return which == std::ios_base::in
+            ? d_inputStream2->tellg()
+            : d_outputStream->tellp();
 }
 
 }  // close namespace cryptopals

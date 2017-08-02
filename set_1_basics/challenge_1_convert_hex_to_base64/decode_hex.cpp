@@ -2,6 +2,7 @@
 #include <string>
 #include <iomanip>
 #include <cstdlib>
+#include <cassert>
 
 namespace cryptopals {
 
@@ -30,7 +31,7 @@ decode_hex_streambuf::decode_hex_streambuf(std::istream & inputStream)
 {
     if (!d_inputStream || d_startPos == std::streampos(-1))
         throw std::ios_base::failure("Could not obtain initial position");
-    setg(reinterpret_cast<char*>(&d_buffer), nullptr, nullptr);
+    setg(nullptr, nullptr, nullptr);
 }
 
 
@@ -39,6 +40,8 @@ std::streambuf::pos_type decode_hex_streambuf::seekpos(
         std::ios_base::openmode which
 )
 {
+    assert(pos % sizeof(d_buffer) == 0);
+    assert(which == std::ios_base::in);
     return
             pos % sizeof(d_buffer) == 0
             && which == std::ios_base::in
@@ -56,6 +59,11 @@ std::streambuf::pos_type decode_hex_streambuf::seekoff(
         std::ios_base::openmode which
 )
 {
+    assert(abs(off) % sizeof(d_buffer) == 0);
+    assert(dir == std::ios_base::cur);
+    assert(which == std::ios_base::in);
+    assert(-off <= (d_inputStream.tellg() - d_startPos)
+                            / decode_hex::s_numHexDigitsInOctet);
     return
             abs(off) % sizeof(d_buffer) == 0
             && dir == std::ios_base::cur
@@ -73,6 +81,7 @@ std::streambuf::pos_type decode_hex_streambuf::seekoff(
 
 std::streambuf::int_type decode_hex_streambuf::underflow()
 {
+    assert((!gptr() && !egptr()) || (gptr() && egptr() && gptr() == egptr()));
     try {
         if (d_inputStream >> decode_hex(d_buffer)) {
             setg(reinterpret_cast<char *>(&d_buffer),

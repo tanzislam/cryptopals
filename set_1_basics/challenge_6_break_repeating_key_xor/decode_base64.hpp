@@ -4,6 +4,7 @@
 #include "base64_common.hpp"
 #include <istream>
 #include <streambuf>
+#include "disable_method.hpp"
 
 namespace cryptopals {
 
@@ -41,6 +42,13 @@ class decode_base64_streambuf
     virtual pos_type seekoff(off_type off,
                              std::ios_base::seekdir dir,
                              std::ios_base::openmode which = std::ios_base::in);
+
+    DISABLE_VOID_METHOD(void imbue(const std::locale &))
+    DISABLE_METHOD(std::streambuf * setbuf(char_type *, std::streamsize))
+    DISABLE_METHOD(int sync())
+    DISABLE_METHOD(std::streamsize showmanyc())
+    DISABLE_METHOD(int_type overflow())
+    DISABLE_METHOD(int_type pbackfail(int_type))
 
   public:
     decode_base64_streambuf(std::istream & inputStream);

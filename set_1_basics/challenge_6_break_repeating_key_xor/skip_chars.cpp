@@ -1,4 +1,5 @@
 #include "skip_chars.hpp"
+#include <cassert>
 
 namespace cryptopals {
 
@@ -9,12 +10,13 @@ skip_chars_streambuf::skip_chars_streambuf(std::istream & inputStream,
 {
     if (!d_inputStream.ignore(startPos))
         throw std::ios_base::failure("Failed to ignore leading characters");
-    setg(&d_buffer, nullptr, nullptr);
+    setg(nullptr, nullptr, nullptr);
 }
 
 
 std::streambuf::int_type skip_chars_streambuf::underflow()
 {
+    assert((!gptr() && !egptr()) || (gptr() && egptr() && gptr() == egptr()));
     try {
         if (d_inputStream.get(d_buffer)) {
             setg(&d_buffer, &d_buffer, &d_buffer + 1);

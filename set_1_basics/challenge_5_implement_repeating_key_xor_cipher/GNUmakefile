@@ -1,4 +1,6 @@
-VPATH = ../challenge_2_fixed_xor
+VPATH = \
+../challenge_2_fixed_xor \
+../challenge_1_convert_hex_to_base64
 
 SRCS = \
 test_implement_repeating_key_xor_cipher.cpp \

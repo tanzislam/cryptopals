@@ -56,7 +56,12 @@ TEST(DecodeHexStreamBuf, ComputesPositionsAndOffsets)
     EXPECT_EQ(7, hexDecodedInput.tellg());
     EXPECT_EQ(18, inputStream.tellg());
 
+#ifdef NDEBUG
     EXPECT_FALSE(hexDecodedInput.seekg(-3, std::ios_base::end));
+#else
+    EXPECT_DEATH(hexDecodedInput.seekg(-3, std::ios_base::end),
+                 "dir == std::ios_base::cur");
+#endif
     EXPECT_TRUE(inputStream);
     EXPECT_EQ(18, inputStream.tellg());
 }
@@ -95,6 +100,21 @@ TEST(EncodeBase64, DiscardsIncompleteInput)
     outputStream << cryptopals::encode_base64({ });
     EXPECT_EQ(0u, outputStream.str().length());
     EXPECT_TRUE(outputStream.fail());
+}
+
+
+TEST(EncodeBase64, EncodesStream)
+{
+    std::ostringstream output;
+    {
+        cryptopals::encode_base64_streambuf base64Encoder(output);
+        std::ostream base64EncodingOutput(&base64Encoder);
+        base64EncodingOutput << 'M';
+        EXPECT_EQ("", output.str());
+        base64EncodingOutput << std::flush;
+        EXPECT_EQ("", output.str());
+    }
+    EXPECT_EQ("TQ==", output.str());
 }
 
 

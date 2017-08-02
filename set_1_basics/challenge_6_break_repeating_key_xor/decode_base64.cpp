@@ -3,6 +3,7 @@
 #include <istream>
 #include <boost/io/ios_state.hpp>
 #include <cstdlib>
+#include <cassert>
 
 namespace cryptopals {
 
@@ -107,6 +108,8 @@ std::streambuf::pos_type decode_base64_streambuf::seekpos(
         std::ios_base::openmode which
 )
 {
+    assert(pos % sizeof(d_buffer) == 0);
+    assert(which == std::ios_base::in);
     return
             pos % sizeof(d_buffer) == 0
             && which == std::ios_base::in
@@ -123,6 +126,9 @@ std::streambuf::pos_type decode_base64_streambuf::seekoff(
         std::ios_base::openmode which
 )
 {
+    assert(abs(off) % sizeof(d_buffer) == 0);
+    assert(dir == std::ios_base::cur);
+    assert(which == std::ios_base::in);
     return
             abs(off) % sizeof(d_buffer) == 0
             && dir == std::ios_base::cur
@@ -137,6 +143,7 @@ std::streambuf::pos_type decode_base64_streambuf::seekoff(
 
 std::streambuf::int_type decode_base64_streambuf::underflow()
 {
+    assert((!gptr() && !egptr()) || (gptr() && egptr() && gptr() == egptr()));
     decode_base64::output_t output;
     if (d_inputStream >> decode_base64(output)) {
         d_buffer[0] = output[0].get();

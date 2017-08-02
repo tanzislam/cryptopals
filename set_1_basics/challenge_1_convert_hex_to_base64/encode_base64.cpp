@@ -104,6 +104,7 @@ encode_base64_streambuf::encode_base64_streambuf(std::ostream & outputStream)
 
 std::streambuf::int_type encode_base64_streambuf::overflow(int_type ch)
 {
+    assert((!pptr() && !epptr()) || (pptr() && epptr() && pptr() == epptr()));
     try {
         encode();
         resetBuffer();
@@ -116,15 +117,12 @@ std::streambuf::int_type encode_base64_streambuf::overflow(int_type ch)
 }
 
 
-int encode_base64_streambuf::sync()
+encode_base64_streambuf::~encode_base64_streambuf()
 {
     try {
         encode();
-        resetBuffer();
-        return 0;
     } catch (...) {
-        invalidateBuffer();
-        return -1;
+        d_outputStream.setstate(std::ios_base::failbit);
     }
 }
 
@@ -142,7 +140,7 @@ void encode_base64_streambuf::encode()
     if (pptr() - pbase() >= 3) buffer[2] = *(pbase() + 2);
     d_outputStream << encode_base64(buffer);
     if (!d_outputStream)
-        throw std::ios_base::failure("Could not write Base64 to output stream");    
+        throw std::ios_base::failure("Could not write Base64 to output stream");
 }
 
 }  // close namespace cryptopals
