@@ -1,13 +1,15 @@
 # Cryptopals
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/0eefb6418259474191b5611351e02dee)](https://www.codacy.com/app/t_17_7/cryptopals?utm_source=github.com&utm_medium=referral&utm_content=tanzislam/cryptopals&utm_campaign=badger)
-
 <a href="https://travis-ci.org/tanzislam/cryptopals">
   <img alt="Build Status"
        src="https://travis-ci.org/tanzislam/cryptopals.svg?branch=master"/>
 </a> <a href="https://scan.coverity.com/projects/tanzislam-cryptopals">
   <img alt="Coverity Scan Build Status"
        src="https://scan.coverity.com/projects/10143/badge.svg"/>
+</a> <a href="https://www.codacy.com/app/t_17_7/cryptopals">
+  <img src=
+   "https://api.codacy.com/project/badge/Grade/0eefb6418259474191b5611351e02dee"
+  />
 </a>
 
 These are my solutions to the interesting challenges at [the cryptopals crypto
