@@ -18,7 +18,7 @@ class decode_hex
   public:
     typedef boost::uint_t<s_numBitsInOctet>::fast decoded_t;
 
-    decode_hex(decoded_t & value)
+    explicit decode_hex(decoded_t & value)
         : d_value(value) { }
 
   private:
@@ -54,7 +54,7 @@ class decode_hex_streambuf
     DISABLE_METHOD(int_type pbackfail(int_type))
 
   public:
-    decode_hex_streambuf(std::istream & inputStream);
+    explicit decode_hex_streambuf(std::istream & inputStream);
 };
 
 }  // close namespace cryptopals

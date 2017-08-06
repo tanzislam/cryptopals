@@ -12,7 +12,7 @@ line_extract_streambuf::line_extract_streambuf(std::istream & inputStream)
 {
     if (!d_inputStream || d_startPos == std::streampos(-1))
         throw std::ios_base::failure("Could not obtain initial position");
-    setg(&d_buffer, nullptr, nullptr);
+    setg(nullptr, nullptr, nullptr);
 }
 
 
@@ -23,8 +23,7 @@ std::streambuf::pos_type line_extract_streambuf::seekpos(
 {
     assert(pos == std::streampos(0));
     assert(which == std::ios_base::in);
-    return
-            pos == std::streampos(0)
+    return pos == std::streampos(0)
             && which == std::ios_base::in
             && (d_inputStream.clear(), d_inputStream.seekg(d_startPos))
         ? (d_numEndBytesRead = 0, pos)
@@ -41,8 +40,7 @@ std::streambuf::pos_type line_extract_streambuf::seekoff(
     assert(off == 0);
     assert(dir == std::ios_base::cur);
     assert(which == std::ios_base::in);
-    return
-            off == 0
+    return off == 0
             && dir == std::ios_base::cur
             && which == std::ios_base::in
             && (d_inputStream.clear(), true)

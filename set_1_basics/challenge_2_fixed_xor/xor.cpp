@@ -29,8 +29,9 @@ std::streambuf::int_type xor_streambuf::underflow()
 {
     assert(!d_outputStream);
     assert((!gptr() && !egptr()) || (gptr() && egptr() && gptr() == egptr()));
-    char input1, input2;
+    char input1;
     if (d_inputStream1.get(input1)) {
+        char input2;
         if (d_inputStream2->get(input2)) {
             d_inputBuffer = char(input1 ^ input2);
             setg(&d_inputBuffer, &d_inputBuffer, &d_inputBuffer + 1);

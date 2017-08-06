@@ -24,8 +24,7 @@ std::streambuf::pos_type tee_streambuf::seekoff(
     assert(off == 0);
     assert(dir == std::ios_base::cur);
     assert(which == std::ios_base::in);
-    return
-            off == 0
+    return off == 0
             && dir == std::ios_base::cur
             && which == std::ios_base::in
         ? std::streampos(d_inputStream->tellg())

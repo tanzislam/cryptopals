@@ -36,7 +36,7 @@ class line_extract_streambuf
     DISABLE_METHOD(int_type pbackfail(int_type))
 
   public:
-    line_extract_streambuf(std::istream & inputStream);
+    explicit line_extract_streambuf(std::istream & inputStream);
 };
 
 }  // close namespace cryptopals

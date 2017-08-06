@@ -14,7 +14,7 @@ class encode_hex
     friend std::ostream & operator<<(std::ostream &, const encode_hex &);
 
   public:
-    encode_hex(const uint8_t & value)
+    explicit encode_hex(const uint8_t & value)
         : d_value(value) { }
 };
 
@@ -30,7 +30,7 @@ class encode_hex_streambuf
 
   protected:
     std::streambuf::int_type overflow(std::streambuf::int_type value);
-    DEFINE_DEFAULT_SYNC_METHOD(&d_outputStream);
+    DEFINE_DEFAULT_SYNC_METHOD(&d_outputStream)
 
     DISABLE_VOID_METHOD(void imbue(const std::locale &))
     DISABLE_METHOD(std::streambuf * setbuf(char_type *, std::streamsize))
@@ -43,7 +43,7 @@ class encode_hex_streambuf
     DISABLE_METHOD(int_type pbackfail(int_type))
 
   public:
-    encode_hex_streambuf(std::ostream & outputStream);
+    explicit encode_hex_streambuf(std::ostream & outputStream);
 };
 
 }  // close namespace cryptopals
