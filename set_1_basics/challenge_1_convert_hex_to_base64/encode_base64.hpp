@@ -13,7 +13,7 @@ class encode_base64
 {
   public:
     typedef base64_common::binary_t input_t;
-    encode_base64(const input_t & input)
+    explicit encode_base64(const input_t & input)
         : d_input(input) { }
 
   private:
@@ -52,7 +52,7 @@ class encode_base64_streambuf
     DISABLE_METHOD(int_type pbackfail(int_type))
 
   public:
-    encode_base64_streambuf(std::ostream & outputStream);
+    explicit encode_base64_streambuf(std::ostream & outputStream);
     ~encode_base64_streambuf();
 };
 

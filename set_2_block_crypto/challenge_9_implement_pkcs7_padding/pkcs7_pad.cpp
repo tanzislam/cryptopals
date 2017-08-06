@@ -28,8 +28,7 @@ std::streambuf::pos_type pkcs7_pad_streambuf::seekpos(
 {
     assert(pos == std::streampos(0));
     assert(which == std::ios_base::in);
-    return
-            pos == std::streampos(0)
+    return pos == std::streampos(0)
             && which == std::ios_base::in
             && (d_inputStream->clear(), d_inputStream->seekg(pos))
         ? (
@@ -52,8 +51,7 @@ std::streambuf::pos_type pkcs7_pad_streambuf::seekoff(
     assert(off == 0);
     assert(dir == std::ios_base::cur);
     assert(which == std::ios_base::in);
-    return
-            off == 0
+    return off == 0
             && dir == std::ios_base::cur
             && which == std::ios_base::in
         ? (

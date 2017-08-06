@@ -97,9 +97,9 @@ std::istream & operator>>(std::istream & input,
 
 
 decode_base64_streambuf::decode_base64_streambuf(std::istream & inputStream)
-    : d_inputStream(inputStream), d_startPos(inputStream.tellg())
+    : d_inputStream(inputStream), d_buffer(), d_startPos(inputStream.tellg())
 {
-    setg(d_buffer, nullptr, nullptr);
+    setg(nullptr, nullptr, nullptr);
 }
 
 
@@ -110,8 +110,7 @@ std::streambuf::pos_type decode_base64_streambuf::seekpos(
 {
     assert(pos % sizeof(d_buffer) == 0);
     assert(which == std::ios_base::in);
-    return
-            pos % sizeof(d_buffer) == 0
+    return pos % sizeof(d_buffer) == 0
             && which == std::ios_base::in
             && (d_inputStream.clear(),
                 d_inputStream.seekg(d_startPos + pos * 4 / 3))
@@ -129,8 +128,7 @@ std::streambuf::pos_type decode_base64_streambuf::seekoff(
     assert(abs(off) % sizeof(d_buffer) == 0);
     assert(dir == std::ios_base::cur);
     assert(which == std::ios_base::in);
-    return
-            abs(off) % sizeof(d_buffer) == 0
+    return abs(off) % sizeof(d_buffer) == 0
             && dir == std::ios_base::cur
             && which == std::ios_base::in
             && -off <= (d_inputStream.tellg() - d_startPos) * 3 / 4

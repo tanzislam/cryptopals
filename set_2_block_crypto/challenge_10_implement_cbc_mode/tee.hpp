@@ -21,7 +21,7 @@ class tee_streambuf
                      std::ios_base::openmode which);
     int_type underflow();
     int_type overflow(int_type ch = traits_type::eof());
-	int sync();
+    int sync();
 
     DISABLE_VOID_METHOD(void imbue(const std::locale &))
     DISABLE_METHOD(std::streambuf * setbuf(char_type *, std::streamsize))

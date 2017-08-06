@@ -15,8 +15,8 @@ class repeating_stringstream
     {
         virtual int_type underflow();
       public:
-        repeating_stringbuf(std::ios_base::openmode which =
-                                    std::ios_base::in | std::ios_base::out)
+        explicit repeating_stringbuf(std::ios_base::openmode which =
+                                        std::ios_base::in | std::ios_base::out)
                 : std::stringbuf(which) { }
     };
 

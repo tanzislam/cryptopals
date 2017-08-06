@@ -13,7 +13,7 @@ class decode_base64
 {
   public:
     typedef base64_common::binary_t output_t;
-    decode_base64(output_t & output)
+    explicit decode_base64(output_t & output)
         : d_output(output) { }
 
   private:
@@ -51,7 +51,7 @@ class decode_base64_streambuf
     DISABLE_METHOD(int_type pbackfail(int_type))
 
   public:
-    decode_base64_streambuf(std::istream & inputStream);
+    explicit decode_base64_streambuf(std::istream & inputStream);
 };
 
 }  // close namespace cryptopals
