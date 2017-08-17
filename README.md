@@ -10,6 +10,9 @@
   <img src=
    "https://api.codacy.com/project/badge/Grade/0eefb6418259474191b5611351e02dee"
   />
+</a> <a href="https://sonarcloud.io/project/key?id=tanzislam_cryptopals">
+  <img alt="SonarCloud"
+       src="https://sonarcloud.io/api/badges/gate?key=tanzislam_cryptopals"/>
 </a>
 
 These are my solutions to the interesting challenges at [the cryptopals crypto

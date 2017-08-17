@@ -29,6 +29,10 @@ addons:
         # being enabled, so we need no hackery here to limit it to Linux only.
         build_command: $GNU_MAKE -k
         branch_pattern: master
+    sonarcloud:
+        # SONAR_ORGANIZATION, SONAR_PROJECTKEY and SONAR_TOKEN should be set in
+        # Travis settings. They depend on repo owner so aren't included here.
+        organization: $SONAR_ORGANIZATION
 
 before_install:
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
@@ -78,7 +82,9 @@ before_script:
 - rm hunspell-en_US-2017.01.22.zip
 
 script:
-- $GNU_MAKE -kj 2
+- $GNU_MAKE -k clean
+- build-wrapper-linux-x86-64 --out-dir bw-output $GNU_MAKE -k
+- sonar-scanner -Dsonar.projectKey=$SONAR_PROJECTKEY -Dsonar.sources=. -Dsonar.cfamily.build-wrapper-output=bw-output -Dsonar.host.url='https://sonarcloud.io'
 - export HUNSPELL_AFFIX_PATH=$HUNSPELL_DIR/en_US.aff
 - export HUNSPELL_DICT_PATH=$HUNSPELL_DIR/en_US.dic
 - ./test
