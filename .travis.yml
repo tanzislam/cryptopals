@@ -101,7 +101,7 @@ before_script:
 script:
 - $GNU_MAKE -k clean
 - build-wrapper-linux-x86-64 --out-dir bw-output $GNU_MAKE -k
-- sonar-scanner -Dsonar.projectKey=$SONAR_PROJECTKEY -Dsonar.sources='set_1_basics set_2_block_crypto' -Dsonar.cfamily.build-wrapper-output=bw-output -Dsonar.host.url='https://sonarcloud.io'
+- sonar-scanner -Dsonar.projectKey=$SONAR_PROJECTKEY -Dsonar.sources=set_1_basics,set_2_block_crypto -Dsonar.cfamily.build-wrapper-output=bw-output -Dsonar.host.url='https://sonarcloud.io'
 - export HUNSPELL_AFFIX_PATH=$HUNSPELL_DIR/en_US.aff
 - export HUNSPELL_DICT_PATH=$HUNSPELL_DIR/en_US.dic
 - ./test
