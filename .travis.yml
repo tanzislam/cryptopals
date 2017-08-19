@@ -30,9 +30,11 @@ addons:
         build_command: $GNU_MAKE -k
         branch_pattern: master
     sonarcloud:
-        # SONAR_ORGANIZATION, SONAR_PROJECTKEY and SONAR_TOKEN should be set in
-        # Travis settings. They depend on repo owner so aren't included here.
+        # SONAR_ORGANIZATION, SONAR_PROJECTKEY, SONAR_TOKEN and
+        # SONAR_GITHUB_TOKEN should be set in Travis settings. They depend on
+        # repo owner so aren't included here.
         organization: $SONAR_ORGANIZATION
+        github_token: $SONAR_GITHUB_TOKEN
 
 before_install:
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
