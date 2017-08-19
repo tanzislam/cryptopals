@@ -1,3 +1,23 @@
+# Environment Variables to set up in Travis settings:
+#
+# For integration with Coverity Scan (https://scan.coverity.com)
+# - COVERITY_SCAN_TOKEN: The Project Token in Project Settings.
+# - COVERITY_SCAN_NOTIFICATION_EMAIL: Email address to receive notifications.
+#
+# For integration with SonarCloud (https://sonarcloud.io)
+# - SONAR_ORGANIZATION: The SonarCloud organization ID. View it in My Account ->
+#                       Organizations. (For personal SonarCloud organizations of
+#                       accounts linked to GitHub accounts, it would be of the
+#                       form "<username>-github".)
+# - SONAR_PROJECTKEY: The SonarCloud project name. View it in your organization
+#                     at Administration -> Projects Management.
+# - SONAR_TOKEN: Create this SonarCloud access token in My Account -> Security.
+# - SONAR_GITHUB_TOKEN: A personal access token of a GitHub account that will
+#                       be used by SonarCloud to insert analysis results in pull
+#                       requests. Create it in GitHub Settings -> Personal
+#                       access tokens. It needs the public_repo and repo:status
+#                       scopes.
+
 sudo: false
 language: cpp
 
@@ -20,8 +40,6 @@ addons:
         packages:
         - g++-7
     coverity_scan:
-        # COVERITY_SCAN_TOKEN and COVERITY_SCAN_NOTIFICATION_EMAIL should be set
-        # in Travis settings. They depend on repo owner so aren't included here.
         project:
             name: $TRAVIS_REPO_SLUG
             version: $TRAVIS_COMMIT
@@ -30,9 +48,6 @@ addons:
         build_command: $GNU_MAKE -k
         branch_pattern: master
     sonarcloud:
-        # SONAR_ORGANIZATION, SONAR_PROJECTKEY, SONAR_TOKEN and
-        # SONAR_GITHUB_TOKEN should be set in Travis settings. They depend on
-        # repo owner so aren't included here.
         organization: $SONAR_ORGANIZATION
         github_token: $SONAR_GITHUB_TOKEN
 
@@ -86,7 +101,7 @@ before_script:
 script:
 - $GNU_MAKE -k clean
 - build-wrapper-linux-x86-64 --out-dir bw-output $GNU_MAKE -k
-- sonar-scanner -Dsonar.projectKey=$SONAR_PROJECTKEY -Dsonar.sources=. -Dsonar.cfamily.build-wrapper-output=bw-output -Dsonar.host.url='https://sonarcloud.io' -Dsonar.organization=$SONAR_ORGANIZATION -Dsonar.login=$SONAR_TOKEN
+- sonar-scanner -Dsonar.projectKey=$SONAR_PROJECTKEY -Dsonar.sources='set_1_basics set_2_block_crypto' -Dsonar.cfamily.build-wrapper-output=bw-output -Dsonar.host.url='https://sonarcloud.io'
 - export HUNSPELL_AFFIX_PATH=$HUNSPELL_DIR/en_US.aff
 - export HUNSPELL_DICT_PATH=$HUNSPELL_DIR/en_US.dic
 - ./test
