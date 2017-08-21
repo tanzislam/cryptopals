@@ -99,9 +99,9 @@ before_script:
 - rm hunspell-en_US-2017.01.22.zip
 
 script:
-- $GNU_MAKE -k clean
-- build-wrapper-linux-x86-64 --out-dir bw-output $GNU_MAKE -k
-- sonar-scanner -Dsonar.projectKey=$SONAR_PROJECTKEY -Dsonar.sources=set_1_basics,set_2_block_crypto -Dsonar.cfamily.build-wrapper-output=bw-output -Dsonar.host.url='https://sonarcloud.io'
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then $GNU_MAKE -k clean; fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then build-wrapper-macosx-x86 --out-dir bw-output $GNU_MAKE -kj 2; fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sonar-scanner -Dsonar.projectKey=$SONAR_PROJECTKEY -Dsonar.sources=set_1_basics,set_2_block_crypto -Dsonar.cfamily.build-wrapper-output=bw-output -Dsonar.host.url='https://sonarcloud.io'; fi
 - export HUNSPELL_AFFIX_PATH=$HUNSPELL_DIR/en_US.aff
 - export HUNSPELL_DICT_PATH=$HUNSPELL_DIR/en_US.dic
 - ./test
