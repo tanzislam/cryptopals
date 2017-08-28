@@ -64,7 +64,7 @@ To build these solutions you will need:
    84b602cc7.
    - You will need to Build Crypto++ as a static library using the included
      `GNUmakefile`. To do this on Windows you will need a UNIX-like set of
-     utilites (see below).
+     utilities (see below).
 
 UNIX-like utilities on Windows are provided by any of the following:
  - [MSYS2](http://msys2.github.io/), or originally [MSYS](http://www.mingw.org/)
@@ -74,7 +74,12 @@ UNIX-like utilities on Windows are provided by any of the following:
    Unix-based Applications (SUA)](
    https://msdn.microsoft.com/en-us/library/cc772343(v=ws.11).aspx) --
    available as an optional Windows feature up to Windows 8 / Server 2012
- - [GnuWin](http://gnuwin32.sourceforge.net/)
+ - [Windows Services for Linux (WSL)](
+   https://msdn.microsoft.com/commandline/wsl/) -- available as an optional
+   Windows feature on Windows 10 (Anniversary Update onwards)
+ - [GnuWin](http://gnuwin32.sourceforge.net/), [UnxUtils](
+   http://unxutils.sourceforge.net/) or [win-bash](
+   http://win-bash.sourceforge.net/)
 
 You may need to install additional packages beyond the ones bundled with the
 default installation. Check the respective documentation for guidance on how to
