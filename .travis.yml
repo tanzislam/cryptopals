@@ -18,6 +18,10 @@
 #                       access tokens. It needs the public_repo and repo:status
 #                       scopes.
 #
+# For integration with SourceClear (https://app.sourceclear.io/)
+# - SRCCLR_API_TOKEN: Create this access token in Manage Workspace -> Agents ->
+#                     Create new agent -> Travis CI.
+#
 # Note: Encrypted environment variables aren't available to pull request builds.
 
 sudo: false
@@ -53,6 +57,7 @@ addons:
     sonarcloud:
         organization: $SONAR_ORGANIZATION
         github_token: $SONAR_GITHUB_TOKEN
+    srcclr: true
 
 before_install:
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
