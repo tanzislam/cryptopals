@@ -59,6 +59,13 @@ addons:
         github_token: $SONAR_GITHUB_TOKEN
     srcclr: true
 
+cache:
+    directories:
+    - boost
+    - googletest
+    - hunspell
+    - cryptopp
+
 before_install:
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install homebrew/dupes/make; fi
@@ -76,23 +83,23 @@ install:
 - g++ --version
 
 before_script:
-- if [[ ! -d boost ]]; then git clone https://github.com/boostorg/boost.git; fi
+# The Cache plugin creates the directories, so we can't use [[ ! -d $dir ]] here
+- if [[ ! -x boost/bootstrap.sh ]]; then git clone https://github.com/boostorg/boost.git; fi
 - pushd boost
 - git pull --prune
 - git submodule update --init --recursive
-- chmod u+x bootstrap.sh
 - ./bootstrap.sh
 - ./b2 headers
 - ./b2 --layout=system variant=release --with-system --with-date_time --with-regex
 - export BOOST_DIR=$PWD
 - popd
-- if [[ ! -d googletest ]]; then git clone https://github.com/google/googletest.git; fi
-- pushd googletest; git pull --prune; popd
+- if [[ ! -f googletest/googletest/make/Makefile && ! -f googletest/googletest/make/GNUmakefile ]]; then git clone https://github.com/google/googletest.git; fi
+- pushd googletest; git pull --prune; git submodule update --init --recursive; popd
 - pushd googletest/googletest/make
 - $GNU_MAKE -kj 2
 - export GTEST_DIR=$PWD/../..
 - popd
-- if [[ ! -d hunspell ]]; then git clone https://github.com/hunspell/hunspell.git; fi
+- if [[ ! -f hunspell/configure.ac ]]; then git clone https://github.com/hunspell/hunspell.git; fi
 - pushd hunspell
 - git pull --prune
 - git submodule update --init --recursive
@@ -102,7 +109,7 @@ before_script:
 - $GNU_MAKE -kj 2
 - export HUNSPELL_DIR=$PWD
 - popd
-- if [[ ! -d cryptopp ]]; then git clone https://github.com/weidai11/cryptopp.git; fi
+- if [[ ! -f cryptopp/GNUmakefile ]]; then git clone https://github.com/weidai11/cryptopp.git; fi
 - pushd cryptopp
 - git pull --prune
 - git submodule update --init --recursive
@@ -121,10 +128,3 @@ script:
 - export HUNSPELL_AFFIX_PATH=$HUNSPELL_DIR/en_US.aff
 - export HUNSPELL_DICT_PATH=$HUNSPELL_DIR/en_US.dic
 - ./test
-
-cache:
-    directories:
-    - boost
-    - googletest
-    - hunspell
-    - cryptopp
