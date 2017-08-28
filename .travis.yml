@@ -17,6 +17,8 @@
 #                       requests. Create it in GitHub Settings -> Personal
 #                       access tokens. It needs the public_repo and repo:status
 #                       scopes.
+#
+# Note: Encrypted environment variables aren't available to pull request builds.
 
 sudo: false
 language: cpp
@@ -45,6 +47,7 @@ addons:
             version: $TRAVIS_COMMIT
         # Coverity refuses to run on OSX due to System Integrity Protection
         # being enabled, so we need no hackery here to limit it to Linux only.
+        build_command_prepend: $GNU_MAKE -k clean
         build_command: $GNU_MAKE -k
         branch_pattern: master
     sonarcloud:
@@ -68,29 +71,33 @@ install:
 - g++ --version
 
 before_script:
-- git clone https://github.com/boostorg/boost.git
+- if [[ ! -d boost ]]; then git clone https://github.com/boostorg/boost.git; fi
 - pushd boost
+- git pull --prune
 - git submodule update --init --recursive
 - ./bootstrap.sh
 - ./b2 headers
 - ./b2 --layout=system variant=release --with-system --with-date_time --with-regex
 - export BOOST_DIR=$PWD
 - popd
-- git clone https://github.com/google/googletest.git
+- if [[ ! -d googletest ]]; then git clone https://github.com/google/googletest.git; fi
+- pushd googletest; git pull --prune; popd
 - pushd googletest/googletest/make
 - $GNU_MAKE -kj 2
 - export GTEST_DIR=$PWD/../..
 - popd
-- git clone https://github.com/hunspell/hunspell.git
+- if [[ ! -d hunspell ]]; then git clone https://github.com/hunspell/hunspell.git; fi
 - pushd hunspell
+- git pull --prune
 - export LDFLAGS=-L/usr/local/opt/gettext/lib CPPFLAGS=-I/usr/local/opt/gettext/include
 - autoreconf -vfi
 - ./configure
 - $GNU_MAKE -kj 2
 - export HUNSPELL_DIR=$PWD
 - popd
-- git clone https://github.com/weidai11/cryptopp.git
+- if [[ ! -d cryptopp ]]; then git clone https://github.com/weidai11/cryptopp.git; fi
 - pushd cryptopp
+- git pull --prune
 - $GNU_MAKE -kj 2
 - export CRYPTOPP_DIR=$PWD
 - popd
@@ -99,9 +106,17 @@ before_script:
 - rm hunspell-en_US-2017.01.22.zip
 
 script:
+# On Linux this build step is effectively done by the Coverity Scan plugin above
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then $GNU_MAKE -k clean; fi
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then build-wrapper-macosx-x86 --out-dir bw-output $GNU_MAKE -kj 2; fi
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sonar-scanner -Dsonar.projectKey=$SONAR_PROJECTKEY -Dsonar.sources=set_1_basics,set_2_block_crypto -Dsonar.cfamily.build-wrapper-output=bw-output -Dsonar.host.url='https://sonarcloud.io'; fi
 - export HUNSPELL_AFFIX_PATH=$HUNSPELL_DIR/en_US.aff
 - export HUNSPELL_DICT_PATH=$HUNSPELL_DIR/en_US.dic
 - ./test
+
+cache:
+    directories:
+    - boost
+    - googletest
+    - hunspell
+    - cryptopp
