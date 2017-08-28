@@ -37,7 +37,7 @@ os:
 - osx
 
 dist: trusty
-osx_image: xcode8.3
+osx_image: xcode9
 
 addons:
     apt:
@@ -80,6 +80,7 @@ before_script:
 - pushd boost
 - git pull --prune
 - git submodule update --init --recursive
+- chmod u+x bootstrap.sh
 - ./bootstrap.sh
 - ./b2 headers
 - ./b2 --layout=system variant=release --with-system --with-date_time --with-regex
@@ -94,6 +95,7 @@ before_script:
 - if [[ ! -d hunspell ]]; then git clone https://github.com/hunspell/hunspell.git; fi
 - pushd hunspell
 - git pull --prune
+- git submodule update --init --recursive
 - export LDFLAGS=-L/usr/local/opt/gettext/lib CPPFLAGS=-I/usr/local/opt/gettext/include
 - autoreconf -vfi
 - ./configure
@@ -103,6 +105,7 @@ before_script:
 - if [[ ! -d cryptopp ]]; then git clone https://github.com/weidai11/cryptopp.git; fi
 - pushd cryptopp
 - git pull --prune
+- git submodule update --init --recursive
 - $GNU_MAKE -kj 2
 - export CRYPTOPP_DIR=$PWD
 - popd
