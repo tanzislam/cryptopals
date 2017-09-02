@@ -1,3 +1,5 @@
+# IMPORTANT: Validate this file at http://lint.travis-ci.org/ before use!
+#
 # Environment Variables to set up in Travis settings:
 #
 # For integration with Coverity Scan (https://scan.coverity.com)
@@ -62,12 +64,18 @@ cache:
     - cryptopp
 
 before_install:
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install homebrew/dupes/make; fi
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew outdated automake || brew upgrade automake; fi
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew outdated libtool || brew upgrade libtool; fi
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install gettext; fi
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export GNU_MAKE=gmake; else export GNU_MAKE=make; fi
+- >-
+    if [[ "$TRAVIS_OS_NAME" == "osx" ]];
+    then
+        brew update;
+        brew install homebrew/dupes/make;
+        brew outdated automake || brew upgrade automake;
+        brew outdated libtool || brew upgrade libtool;
+        brew install gettext;
+        export GNU_MAKE=gmake;
+    else
+        export GNU_MAKE=make;
+    fi
 
 install:
 # Workaround for https://github.com/travis-ci/travis-ci/issues/3668
@@ -79,47 +87,82 @@ install:
 
 before_script:
 # The Cache plugin creates the directories, so we can't use [[ ! -d $dir ]] here
-- if [[ ! -x boost/bootstrap.sh ]]; then git clone https://github.com/boostorg/boost.git; fi
+- >-
+    if [[ ! -x boost/bootstrap.sh ]];
+    then
+        git clone https://github.com/boostorg/boost.git;
+    fi
 - pushd boost
 - git pull --prune
 - git submodule update --init --recursive
 - ./bootstrap.sh
 - ./b2 headers
-- ./b2 --layout=system variant=release --with-system --with-date_time --with-regex
+- >-
+    ./b2 --layout=system variant=release -j 2
+    --with-system --with-date_time --with-regex
 - export BOOST_DIR=$PWD
 - popd
-- if [[ ! -f googletest/googletest/make/Makefile && ! -f googletest/googletest/make/GNUmakefile ]]; then git clone https://github.com/google/googletest.git; fi
-- pushd googletest; git pull --prune; git submodule update --init --recursive; popd
-- pushd googletest/googletest/make
+- >-
+    if [[ ! -f googletest/googletest/make/Makefile &&
+          ! -f googletest/googletest/make/GNUmakefile ]];
+    then
+        git clone https://github.com/google/googletest.git;
+    fi
+- pushd googletest
+- git pull --prune
+- git submodule update --init --recursive
+- pushd googletest/make
 - $GNU_MAKE -kj 2
-- export GTEST_DIR=$PWD/../..
 - popd
-- if [[ ! -f hunspell/configure.ac ]]; then git clone https://github.com/hunspell/hunspell.git; fi
+- export GTEST_DIR=$PWD
+- popd
+- >-
+    if [[ ! -f hunspell/configure.ac ]];
+    then
+        git clone https://github.com/hunspell/hunspell.git;
+    fi
 - pushd hunspell
 - git pull --prune
 - git submodule update --init --recursive
-- export LDFLAGS=-L/usr/local/opt/gettext/lib CPPFLAGS=-I/usr/local/opt/gettext/include
+- export LDFLAGS=-L/usr/local/opt/gettext/lib
+- export CPPFLAGS=-I/usr/local/opt/gettext/include
 - autoreconf -vfi
 - ./configure
 - $GNU_MAKE -kj 2
 - export HUNSPELL_DIR=$PWD
 - popd
-- if [[ ! -f cryptopp/GNUmakefile ]]; then git clone https://github.com/weidai11/cryptopp.git; fi
+- >-
+    if [[ ! -f cryptopp/GNUmakefile ]];
+    then
+        git clone https://github.com/weidai11/cryptopp.git;
+    fi
 - pushd cryptopp
 - git pull --prune
 - git submodule update --init --recursive
 - $GNU_MAKE -kj 2
 - export CRYPTOPP_DIR=$PWD
 - popd
-- wget 'https://downloads.sourceforge.net/project/wordlist/speller/2017.01.22/hunspell-en_US-2017.01.22.zip?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fwordlist%2Ffiles%2Fspeller%2F2017.01.22%2F&ts=1486860415&use_mirror=vorboss' -O hunspell-en_US-2017.01.22.zip
-- unzip -d hunspell hunspell-en_US-2017.01.22.zip
+- "wget \
+'https://downloads.sourceforge.net/project/wordlist/speller/2017.01.22/\
+hunspell-en_US-2017.01.22.zip?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2F\
+wordlist%2Ffiles%2Fspeller%2F2017.01.22%2F&ts=1486860415&use_mirror=vorboss' \
+-O hunspell-en_US-2017.01.22.zip"
+- unzip -o -d hunspell hunspell-en_US-2017.01.22.zip
 - rm hunspell-en_US-2017.01.22.zip
 
 script:
-# On Linux this build step is effectively done by the Coverity Scan plugin above
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then $GNU_MAKE -k clean; fi
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then build-wrapper-macosx-x86 --out-dir bw-output $GNU_MAKE -kj 2; fi
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sonar-scanner -Dsonar.projectKey=$SONAR_PROJECTKEY -Dsonar.sources=set_1_basics,set_2_block_crypto -Dsonar.cfamily.build-wrapper-output=bw-output -Dsonar.host.url='https://sonarcloud.io'; fi
+- >-
+    if [[ "$TRAVIS_OS_NAME" == "osx" ]];
+    then
+        $GNU_MAKE -k clean;
+        build-wrapper-macosx-x86 --out-dir bw-output $GNU_MAKE -kj 2;
+        sonar-scanner -Dsonar.projectKey=$SONAR_PROJECTKEY \
+                      -Dsonar.sources=set_1_basics,set_2_block_crypto \
+                      -Dsonar.cfamily.build-wrapper-output=bw-output \
+                      -Dsonar.host.url='https://sonarcloud.io';
+    else
+        $GNU_MAKE -kj 2;
+    fi
 - export HUNSPELL_AFFIX_PATH=$HUNSPELL_DIR/en_US.aff
 - export HUNSPELL_DICT_PATH=$HUNSPELL_DIR/en_US.dic
 - ./test
