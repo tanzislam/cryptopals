@@ -143,6 +143,7 @@ before_script:
 - pushd cryptopp
 - git pull --prune
 - git submodule update --init --recursive
+- $GNU_MAKE deps
 - $GNU_MAKE -kj 2
 - export CRYPTOPP_DIR=$PWD
 - popd
