@@ -7,7 +7,7 @@ DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.T$(DEPEXT)
 
 COMPILE.c = $(CC) $(DEPFLAGS) $(CFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c
 COMPILE.cc = $(CXX) $(DEPFLAGS) $(CXXFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c
-POSTCOMPILE = mv -f $(DEPDIR)/$*.T$(DEPEXT) $(DEPDIR)/$*.$(DEPEXT)
+POSTCOMPILE = mv -f $(DEPDIR)/$*.T$(DEPEXT) $(DEPDIR)/$*.$(DEPEXT) && touch $@
 
 %.o : %.c
 %.o : %.c $(DEPDIR)/%.$(DEPEXT)

@@ -58,12 +58,12 @@ std::streambuf::pos_type decode_hex_streambuf::seekoff(
         std::ios_base::openmode which
 )
 {
-    assert(abs(off) % sizeof(d_buffer) == 0);
+    assert(std::abs(off) % sizeof(d_buffer) == 0);
     assert(dir == std::ios_base::cur);
     assert(which == std::ios_base::in);
     assert(-off <= (d_inputStream.tellg() - d_startPos)
                             / decode_hex::s_numHexDigitsInOctet);
-    return abs(off) % sizeof(d_buffer) == 0
+    return std::abs(off) % sizeof(d_buffer) == 0
             && dir == std::ios_base::cur
             && which == std::ios_base::in
             && -off <= (d_inputStream.tellg() - d_startPos)

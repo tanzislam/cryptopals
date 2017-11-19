@@ -1,6 +1,7 @@
 #include "levenshtein_distance.hpp"
 #include <cstring>
 #include <vector>
+#include <numeric>
 #include <algorithm>
 
 namespace cryptopals {
@@ -10,7 +11,7 @@ unsigned int levenshtein_distance(const char * str1, const char * str2)
     // Wagner-Fischer algorithm, with the "two matrix rows" space optimization
     size_t str2_len = strlen(str2);
     std::vector<unsigned int> dist(str2_len + 1);
-    std::generate(dist.begin(), dist.end(), [i = 0u]() mutable { return i++; });
+    std::iota(dist.begin(), dist.end(), 0u);
 
     size_t str1_len = strlen(str1);
     for (size_t i = 1; i <= str1_len; ++i) {

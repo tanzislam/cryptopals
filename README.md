@@ -16,7 +16,8 @@
 </a>
 
 These are my solutions to the interesting challenges at [the cryptopals crypto
-challenges](https://cryptopals.com). All solutions are coded in C++14 and Boost.
+challenges](https://cryptopals.com). All solutions are coded in modern C++ and
+Boost.
 
 ## Requirements
 
@@ -127,7 +128,7 @@ in the `HUNSPELL_AFFIX_PATH` and `HUNSPELL_DICT_PATH` environment variables.
 
 ## Deciphering the Code
 
-The `main` translation unit of each solution is full of test cases written for
+The main translation unit of each solution is full of test cases written with
 the Google Test framework. The `main()` inside Google Test is used, so you will
 not find a `main()` function in here.
 

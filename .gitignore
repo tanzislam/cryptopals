@@ -2,10 +2,13 @@
 *.o
 *.exe
 .vscode
+.vs
 tags
 TAGS
 *.html
 ConsoleApplication*
+Project*
+__history
 *.tmp
 *.swp
 *.dll
