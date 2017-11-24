@@ -35,7 +35,7 @@ os:
 - osx
 
 dist: trusty
-osx_image: xcode9
+osx_image: xcode9.1
 
 addons:
     apt:
@@ -97,9 +97,7 @@ before_script:
 - git submodule update --init --recursive
 - ./bootstrap.sh
 - ./b2 headers
-- >-
-    ./b2 --layout=system variant=release -j 2
-    --with-system --with-date_time --with-regex
+- ./b2 --layout=system variant=release -j 2 --with-system
 - export BOOST_DIR=$PWD
 - popd
 - >-
