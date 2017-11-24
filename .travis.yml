@@ -43,7 +43,6 @@ addons:
         - ubuntu-toolchain-r-test
         packages:
         - g++-7
-        - libcppunit-dev
     coverity_scan:
         project:
             name: $TRAVIS_REPO_SLUG
@@ -72,8 +71,7 @@ before_install:
         brew install make;
         brew outdated automake || brew upgrade automake;
         brew outdated libtool || brew upgrade libtool;
-        brew install gettext cppunit;
-        brew link gettext --force;
+        brew install gettext;
         export GNU_MAKE=gmake;
     else
         export GNU_MAKE=make;
@@ -101,7 +99,7 @@ before_script:
 - ./b2 headers
 - >-
     ./b2 --layout=system variant=release -j 2
-    --with-system --with-date_time --with-regex --with-locale
+    --with-system --with-date_time --with-regex
 - export BOOST_DIR=$PWD
 - popd
 - >-
@@ -129,9 +127,7 @@ before_script:
 - export LDFLAGS=-L/usr/local/opt/gettext/lib
 - export CPPFLAGS=-I/usr/local/opt/gettext/include
 - autoreconf -vfi
-- >-
-    ./configure BOOST_ROOT=$BOOST_DIR
-    "LDFLAGS=-L$BOOST_DIR/stage/lib -Wl,-rpath,$BOOST_DIR/stage/lib"
+- ./configure
 - $GNU_MAKE -kj 2
 - export HUNSPELL_DIR=$PWD
 - popd
