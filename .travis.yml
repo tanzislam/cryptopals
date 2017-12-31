@@ -62,6 +62,8 @@ cache:
     - googletest
     - hunspell
     - cryptopp
+    - $HOME/.sonar/cache
+    timeout: 1000
 
 before_install:
 - >-
