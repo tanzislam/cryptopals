@@ -22,26 +22,29 @@ Boost.
 ## Requirements
 
 To build these solutions you will need:
- - [GNU Compiler Collection (GCC)](https://gcc.gnu.org/). I used v6.2.0 in
-   [MinGW-w64](https://mingw-w64.org/doku.php) (build `x86_64-posix-seh-rev1`)
-   on Windows. On macOS Sierra I used the default [Clang](http://clang.llvm.org)
+ - [GNU Compiler Collection (GCC)](https://gcc.gnu.org/). I used v7.2.0 in
+   [MinGW-w64](https://mingw-w64.org/doku.php) (available as a MSYS2 package) on
+   Windows 7. On macOS Sierra I used the default [Clang](http://clang.llvm.org)
    v8.0.0 (build `clang-800.0.42.1`) which is compatible with GCC.
 
- - [GNU Make](https://www.gnu.org/software/make/). I used v4.1 in MinGW-w64 in
+ - [GNU Make](https://www.gnu.org/software/make/). I used v4.2.1 in MinGW-w64 in
    Windows 7 (invoked as `mingw32-make`). On macOS Sierra I installed v4.2.1
    using [Homebrew](http://brew.sh) (invoked as `gmake` to distinguish from the
    system default v3.8.1).
 
- - [Boost C++ Libraries](http://www.boost.org/). I used v1.62.0.
+ - [Boost C++ Libraries](http://www.boost.org/). I used the "master" branch at
+   commit 51046e29c from [modular Boost](https://github.com/boostorg/boost).
    - You will need to build the libraries as described for your platform in the
-     Getting Started Guide. Only specific libraries are needed (as indicated by
-     the `BOOST_LIBS` line in each solution's `GNUmakefile`), so you can speed
-     up the build by appending the `--with-<library_name>` option below.
-   - On Windows: `b2 --layout=system toolset=gcc variant=release`.
+     [Getting Started](https://github.com/boostorg/boost/wiki/Getting-Started)
+     guide. Only specific libraries are needed (as indicated by the `BOOST_LIBS`
+     line in each solution's `GNUmakefile`), so you can speed up the build by
+     appending the `--with-<library_name>` option below.
+   - On Windows:
+     `b2 --layout=system toolset=gcc variant=release address-model=64`.
    - On macOS and Linux: `./b2 --layout=system variant=release`.
 
  - [Google Test](https://github.com/google/googletest/). I used the "master"
-   branch at commit a2b8a8e07.
+   branch at commit 5490beb.
    - You will need to build Google Test as described in the Generic Build
      Instructions. To do this on Windows you will need a UNIX-like set of
      utilities (see below).
@@ -49,7 +52,7 @@ To build these solutions you will need:
      `cd googletest/make; mingw32-make AR=gcc-ar`.
 
  - [Hunspell](https://hunspell.github.io/). I used the "master" branch at commit
-   1fc14b0c7.
+   4a90abe87.
    - On Windows 7 / MinGW-w64 I had to first install `libtool` (by running
      `pacman -S libtool` in an admin-mode MSYS2 window), and then I could run
      `autoreconf -vfi && ./configure && mingw32-make` in a MinGW-w64 Win64
@@ -62,10 +65,10 @@ To build these solutions you will need:
      `.dic` and `.aff` files. Get one from [SCOWL](http://wordlist.aspell.net/).
 
  - [Crypto++](http://www.cryptopp.com/). I used the "master" branch at commit
-   84b602cc7.
+   b4df31c7f.
    - You will need to Build Crypto++ as a static library using the included
-     `GNUmakefile`. To do this on Windows you will need a UNIX-like set of
-     utilities (see below).
+     `GNUmakefile`. To do this on Windows you will need a UNIX-like shell and
+     set of utilities (see below).
 
 UNIX-like utilities on Windows are provided by any of the following:
  - [MSYS2](http://msys2.github.io/), or originally [MSYS](http://www.mingw.org/)

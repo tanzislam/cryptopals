@@ -72,7 +72,7 @@ std::pair<unsigned int, std::string> break_repeating_key_xor_cipher(
                 winningXorKey.second = xorKey;
                 if (xorKeyScore >= 9950) break;
             }
-        } catch (std::runtime_error & e) {
+        } catch (std::runtime_error &) {
             continue;
         }
     }

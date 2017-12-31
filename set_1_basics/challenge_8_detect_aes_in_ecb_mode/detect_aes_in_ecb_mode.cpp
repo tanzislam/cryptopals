@@ -9,8 +9,7 @@ std::tuple<unsigned int, unsigned int, unsigned int> detect_aes_in_ecb_mode(
         std::istream & input
 )
 {
-    std::tuple<unsigned int, unsigned int, unsigned int>
-            lineNumberOffsetAndRepeatCount = { 0, 0, 0 };
+    auto lineNumberOffsetAndRepeatCount = std::make_tuple(0u, 0u, 0u);
     for (unsigned int lineNumber = 1; input; ++lineNumber) {
         line_extract_streambuf thisLine(input);
         std::istream thisLineStream(&thisLine);
@@ -18,9 +17,10 @@ std::tuple<unsigned int, unsigned int, unsigned int> detect_aes_in_ecb_mode(
         auto mostRepeats =
                 detect_most_repeats(std::istream(&hexDecoder).seekg(0), 16);
         if (mostRepeats.second > std::get<2>(lineNumberOffsetAndRepeatCount))
-            lineNumberOffsetAndRepeatCount = { lineNumber,
-                                               (mostRepeats.first - 1 * 2) + 1,
-                                               mostRepeats.second };
+            lineNumberOffsetAndRepeatCount =
+                    std::make_tuple(lineNumber,
+                                    (mostRepeats.first - 1 * 2) + 1,
+                                    mostRepeats.second);
     }
     return lineNumberOffsetAndRepeatCount;
 }
