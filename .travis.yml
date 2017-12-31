@@ -76,8 +76,6 @@ before_install:
     else
         export GNU_MAKE=make;
     fi
-
-install:
 # Workaround for https://github.com/travis-ci/travis-ci/issues/3668
 - mkdir -p latest-gcc-symlinks
 - ln -s /usr/bin/g++-7 latest-gcc-symlinks/g++
@@ -85,7 +83,7 @@ install:
 - export PATH=$PWD/latest-gcc-symlinks:$PATH
 - g++ --version
 
-before_script:
+install:
 # The Cache plugin creates the directories, so we can't use [[ ! -d $dir ]] here
 - >-
     if [[ ! -x boost/bootstrap.sh ]];
