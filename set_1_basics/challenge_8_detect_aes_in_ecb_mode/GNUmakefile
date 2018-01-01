@@ -13,4 +13,4 @@ BOOST_LIBS = system
 
 test_detect_aes_in_ecb_mode : $(SRCS:.cpp=.o)
 
-include ../../common_settings.mk
+include $(dir $(lastword $(MAKEFILE_LIST)))../../common_settings.mk

@@ -38,6 +38,10 @@ LDLIBS = $(GTEST_DIR)/googletest/make/gtest_main.a \
          $(foreach lib,$(BOOST_LIBS),-lboost_$(lib)) \
          $(foreach lib,$(LIBS),-l$(lib))
 
+# Adapt VPATH for out-of-source builds, i.e. "make -f .../.../GNUmakefile".
+caller_makefile := $(lastword $(filter-out $(this_plugin),$(MAKEFILE_LIST)))
+override VPATH := $(addprefix $(dir $(caller_makefile)),$(VPATH) .)
+
 # This is so that a Challenge-specific makefile can "include" the directory of
 # another Challenge using VPATH for both dependencies and C++ headers.
 #

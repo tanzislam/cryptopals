@@ -23,4 +23,4 @@ LIBS = cryptopp
 
 test_implement_cbc_mode : $(SRCS:.cpp=.o)
 
-include ../../common_settings.mk
+include $(dir $(lastword $(MAKEFILE_LIST)))../../common_settings.mk

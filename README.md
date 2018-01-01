@@ -126,6 +126,12 @@ produce the combined test program called `test`.
    https://www.gnu.org/software/make/manual/make.html#Overriding).
  - The above variables may be either relative paths or absolute paths.
 
+You can even do an out-of-source build. `cd` into an unrelated directory (it can
+be outside the repo or an uncommitted subdirectory inside the repo) and then run
+`make -f path/to/GNUmakefile`. The build system will adjust VPATH by itself, so
+you do not need to specify it yourself. (The `clean` target in this case leaks
+some files, but you can `rm -rf` the entire build directory yourself anyway.)
+
 Some solutions will require the location of a Hunspell dictionary to be provided
 in the `HUNSPELL_AFFIX_PATH` and `HUNSPELL_DICT_PATH` environment variables.
 

@@ -1,4 +1,5 @@
-mkfiles := $(shell git ls-files */*/GNUmakefile)
+this_makefile_dir := $(dir $(lastword $(MAKEFILE_LIST)))
+mkfiles := $(wildcard $(this_makefile_dir)/*/*/GNUmakefile)
 VPATH = $(sort $(dir $(mkfiles)))
 
 # '%' is a metacharacter in Windows batch files (which GNU Make uses when
@@ -24,7 +25,7 @@ LIBS = cryptopp hunspell-1.6
 # link to our final desired name.
 TEMP_TARGET := $(notdir $(basename $(firstword $(filter test_%.cpp,$(SRCS)))))
 $(TEMP_TARGET) : $(SRCS:.cpp=.o)
-include common_settings.mk
+include $(this_makefile_dir)common_settings.mk
 
 # The "clean" recipe in common_settings.mk relies on the eventual value of
 # .DEFAULT_GOAL, so we avoid overwriting it if the user ran the "clean" target.

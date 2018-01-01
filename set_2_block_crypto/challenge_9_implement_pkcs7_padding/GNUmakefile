@@ -6,4 +6,4 @@ pkcs7_pad.cpp
 
 test_pkcs7_pad : $(SRCS:.cpp=.o)
 
-include ../../common_settings.mk
+include $(dir $(lastword $(MAKEFILE_LIST)))../../common_settings.mk

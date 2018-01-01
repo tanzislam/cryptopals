@@ -13,4 +13,4 @@ LIBS = hunspell-1.6
 
 test_break_single_byte_xor_cipher : $(SRCS:.cpp=.o)
 
-include ../../common_settings.mk
+include $(dir $(lastword $(MAKEFILE_LIST)))../../common_settings.mk
