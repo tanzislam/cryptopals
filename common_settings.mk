@@ -24,10 +24,10 @@ CPP_STANDARD = -std=c++14 -pthread
 CPP_QUALITY_CHECKS = -Wc++14-compat -pedantic -Wall -Wextra
 CPP_OPTIMIZATIONS = -O3 -ffunction-sections -fdata-sections
 CPPFLAGS = $(CPP_STANDARD) $(CPP_QUALITY_CHECKS) $(CPP_OPTIMIZATIONS)
-CXXFLAGS = -isystem $(BOOST_DIR) \
-           -isystem $(GTEST_DIR)/googletest/include \
-           -isystem $(HUNSPELL_DIR)/src/hunspell \
-           -isystem $(CRYPTOPP_DIR)
+CXXFLAGS := -isystem $(BOOST_DIR) \
+            -isystem $(GTEST_DIR)/googletest/include \
+            -isystem $(HUNSPELL_DIR)/src/hunspell \
+            -isystem $(CRYPTOPP_DIR)
 LIB_DIRS = $(if $(BOOST_LIBS),$(BOOST_DIR)/stage/lib) \
            $(HUNSPELL_DIR)/src/hunspell/.libs \
            $(CRYPTOPP_DIR)
@@ -38,16 +38,24 @@ LDLIBS = $(GTEST_DIR)/googletest/make/gtest_main.a \
          $(foreach lib,$(BOOST_LIBS),-lboost_$(lib)) \
          $(foreach lib,$(LIBS),-l$(lib))
 
-# Adapt VPATH for out-of-source builds, i.e. "make -f .../.../GNUmakefile".
+# Adapt VPATH for out-of-source builds, i.e. "make -f .../path/to/GNUmakefile".
+# Also allow only source files, not build products, to be directory-searched.
 caller_makefile := $(lastword $(filter-out $(this_plugin),$(MAKEFILE_LIST)))
-override VPATH := $(addprefix $(dir $(caller_makefile)),$(VPATH) .)
+VPATH := $(addprefix $(dir $(caller_makefile)),$(VPATH) .)
+vpath %.h $(VPATH)
+vpath %.hpp $(VPATH)
+vpath %.c $(VPATH)
+vpath %.cc $(VPATH)
+vpath %.cxx $(VPATH)
+vpath %.cpp $(VPATH)
 
 # This is so that a Challenge-specific makefile can "include" the directory of
 # another Challenge using VPATH for both dependencies and C++ headers.
 #
 # Precondition: VPATH must be space-delimited, and not colon- or
 #               semicolon-delimited.
-CXXFLAGS += $(foreach v,$(VPATH),-I$(v))
+CXXFLAGS += $(addprefix -I,$(VPATH))
+VPATH :=
 
 # The built-in rule for linking object files uses the $(CC) variable, which
 # expands to "cc". However, the "cc" program does not exist in a standard

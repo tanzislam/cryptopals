@@ -1,6 +1,6 @@
 this_makefile_dir := $(dir $(lastword $(MAKEFILE_LIST)))
-mkfiles := $(wildcard $(this_makefile_dir)/*/*/GNUmakefile)
-VPATH = $(sort $(dir $(mkfiles)))
+mkfiles := $(wildcard $(this_makefile_dir)*/*/GNUmakefile)
+VPATH := $(patsubst $(this_makefile_dir)%,%,$(sort $(dir $(mkfiles))))
 
 # '%' is a metacharacter in Windows batch files (which GNU Make uses when
 # launching processes under cmd.exe), so we escape it and later correct it.
