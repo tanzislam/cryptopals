@@ -69,6 +69,8 @@ To build these solutions you will need:
    - You will need to Build Crypto++ as a static library using the included
      `GNUmakefile`. To do this on Windows you will need a UNIX-like shell and
      set of utilities (see below).
+   - On Windows / MinGW-w64 I had to specify a Makefile override:
+     `cd googletest/make; mingw32-make AR=gcc-ar`.
 
 UNIX-like utilities on Windows are provided by any of the following:
  - [MSYS2](http://msys2.github.io/), or originally [MSYS](http://www.mingw.org/)
@@ -125,6 +127,10 @@ produce the combined test program called `test`.
    instead be specified in the GNU Make command line as [overrides](
    https://www.gnu.org/software/make/manual/make.html#Overriding).
  - The above variables may be either relative paths or absolute paths.
+ - By default the makefiles will compile the code with maximum optimizations and
+   no debugging information. To put the code under a debugger, you need to do a
+   debug build instead by overriding `"CPP_OPTIMIZATIONS=-g -Og"` on the command
+   line.
 
 You can even do an out-of-source build. `cd` into an unrelated directory (it can
 be outside the repo or an uncommitted subdirectory inside the repo) and then run

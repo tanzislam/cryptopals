@@ -32,6 +32,7 @@ include $(this_makefile_dir)common_settings.mk
 ifeq "" "$(filter clean,$(MAKECMDGOALS))"
 test : $(.DEFAULT_GOAL)
 	$(file >> .gitignore,$@)
+	rm -f $@
 	ln -f $(TEMP_TARGET) $@
 .DEFAULT_GOAL = test
 else

@@ -41,7 +41,7 @@ std::streambuf::int_type tee_streambuf::underflow()
         if (d_teeStream.put(input)) {
             d_inputBuffer = input;
             setg(&d_inputBuffer, &d_inputBuffer, &d_inputBuffer + 1);
-            return static_cast<unsigned char>(d_inputBuffer);
+            return std::streambuf::traits_type::to_int_type(d_inputBuffer);
         } else d_inputStream->unget();
     }
     return std::streambuf::underflow();

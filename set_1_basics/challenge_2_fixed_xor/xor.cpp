@@ -35,7 +35,7 @@ std::streambuf::int_type xor_streambuf::underflow()
         if (d_inputStream2->get(input2)) {
             d_inputBuffer = char(input1 ^ input2);
             setg(&d_inputBuffer, &d_inputBuffer, &d_inputBuffer + 1);
-            return d_inputBuffer;
+            return std::streambuf::traits_type::to_int_type(d_inputBuffer);
         } else
             d_inputStream1.unget();
     }

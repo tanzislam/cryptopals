@@ -147,16 +147,16 @@ std::streambuf::int_type decode_base64_streambuf::underflow()
         d_buffer[0] = output[0].get();
         if (!output[1]) {
             setg(d_buffer, d_buffer, d_buffer + 1);
-            return reinterpret_cast<unsigned char &>(*d_buffer);
+            return std::streambuf::traits_type::to_int_type(*d_buffer);
         }
         d_buffer[1] = output[1].get();
         if (!output[2]) {
             setg(d_buffer, d_buffer, d_buffer + 2);
-            return reinterpret_cast<unsigned char &>(*d_buffer);
+            return std::streambuf::traits_type::to_int_type(*d_buffer);
         }
         d_buffer[2] = output[2].get();
         setg(d_buffer, d_buffer, d_buffer + 3);
-        return reinterpret_cast<unsigned char &>(*d_buffer);
+        return std::streambuf::traits_type::to_int_type(*d_buffer);
     } else return std::streambuf::traits_type::eof();
 }
 
