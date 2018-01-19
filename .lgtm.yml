@@ -1,0 +1,30 @@
+path_classifiers:
+    test:
+        - "*/*/test_*.cpp"
+    docs:
+        - README.md
+        - LICENSE.txt
+
+extraction:
+    cpp:
+        prepare:
+            packages:
+                - g++-7
+        after_prepare:
+            - mkdir -p $LGTM_WORKSPACE/latest-gcc-symlinks
+            - ln -s /usr/bin/g++-7 $LGTM_WORKSPACE/latest-gcc-symlinks/g++
+            - ln -s /usr/bin/gcc-7 $LGTM_WORKSPACE/latest-gcc-symlinks/gcc
+            - export PATH=$LGTM_WORKSPACE/latest-gcc-symlinks:$PATH
+            - export GNU_MAKE=make
+        configure:
+            command:
+                - pushd $LGTM_WORKSPACE
+                - $LGTM_SRC/prepare_deps
+                - popd
+                - export BOOST_DIR=$LGTM_WORKSPACE/boost
+                - export GTEST_DIR=$LGTM_WORKSPACE/googletest
+                - export HUNSPELL_DIR=$LGTM_WORKSPACE/hunspell
+                - export CRYPTOPP_DIR=$LGTM_WORKSPACE/cryptopp
+        index:
+            build_command:
+                - $GNU_MAKE -k
