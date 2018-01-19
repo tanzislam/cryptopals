@@ -86,68 +86,11 @@ before_install:
 - g++ --version
 
 install:
-# The Cache plugin creates the directories, so we can't use [[ ! -d $dir ]] here
-- >-
-    if [[ ! -x boost/bootstrap.sh ]];
-    then
-        git clone https://github.com/boostorg/boost.git;
-    fi
-- pushd boost
-- git pull --prune
-- git submodule update --init --recursive
-- ./bootstrap.sh
-- ./b2 headers
-- ./b2 --layout=system variant=release -j 2 --with-system
-- export BOOST_DIR=$PWD
-- popd
-- >-
-    if [[ ! -f googletest/googletest/make/Makefile &&
-          ! -f googletest/googletest/make/GNUmakefile ]];
-    then
-        git clone https://github.com/google/googletest.git;
-    fi
-- pushd googletest
-- git pull --prune
-- git submodule update --init --recursive
-- pushd googletest/make
-- $GNU_MAKE -kj 2
-- popd
-- export GTEST_DIR=$PWD
-- popd
-- >-
-    if [[ ! -f hunspell/configure.ac ]];
-    then
-        git clone https://github.com/hunspell/hunspell.git;
-    fi
-- pushd hunspell
-- git pull --prune
-- git submodule update --init --recursive
-- export LDFLAGS=-L/usr/local/opt/gettext/lib
-- export CPPFLAGS=-I/usr/local/opt/gettext/include
-- autoreconf -vfi
-- ./configure
-- $GNU_MAKE -kj 2
-- export HUNSPELL_DIR=$PWD
-- popd
-- >-
-    if [[ ! -f cryptopp/GNUmakefile ]];
-    then
-        git clone https://github.com/weidai11/cryptopp.git;
-    fi
-- pushd cryptopp
-- git pull --prune
-- git submodule update --init --recursive
-- $GNU_MAKE deps
-- $GNU_MAKE -kj 2
-- export CRYPTOPP_DIR=$PWD
-- popd
-- "wget \
-'https://downloads.sourceforge.net/project/wordlist/speller/2017.01.22/\
-hunspell-en_US-2017.01.22.zip?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2F\
-wordlist%2Ffiles%2Fspeller%2F2017.01.22%2F&ts=1486860415&use_mirror=vorboss' \
--O hunspell-en_US-2017.01.22.zip"
-- unzip -o -d hunspell hunspell-en_US-2017.01.22.zip
-- rm hunspell-en_US-2017.01.22.zip
+- ./prepare_deps
+- export BOOST_DIR=$PWD/boost
+- export GTEST_DIR=$PWD/googletest
+- export HUNSPELL_DIR=$PWD/hunspell
+- export CRYPTOPP_DIR=$PWD/cryptopp
 
 script:
 - >-
