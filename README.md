@@ -91,6 +91,9 @@ You may need to install additional packages beyond the ones bundled with the
 default installation. Check the respective documentation for guidance on how to
 locate and install packages.
 
+Once the packages are installed, the "from source" dependency libraries can be
+downloaded and built using the `prepare_deps` script, especially in CI jobs.
+
 Although my development environment is in Windows (primarily [Notepad++](
 https://notepad-plus-plus.org/) enhanced with some humble [NppExec](
 https://sourceforge.net/projects/npp-plugins/files/NppExec/) scripts), I tried
