@@ -4,12 +4,12 @@
 
 namespace cryptopals {
 
-EncryptionMode detectEncryptionMode(
-        void (* blackBox)(std::ostream &, std::istream &))
+EncryptionMode detectEncryptionMode(void (*blackBox)(std::ostream &,
+                                                     std::istream &))
 {
     std::ostringstream cipherTextStream;
     std::istringstream plainTextStream(
-            std::string(5 * CryptoPP::AES::BLOCKSIZE, '0'));
+        std::string(5 * CryptoPP::AES::BLOCKSIZE, '0'));
     blackBox(cipherTextStream, plainTextStream);
 
     cipherTextStream.flush();
@@ -24,4 +24,4 @@ EncryptionMode detectEncryptionMode(
         return EncryptionMode::ECB;
 }
 
-}  // end namespace cryptopals
+}  // namespace cryptopals

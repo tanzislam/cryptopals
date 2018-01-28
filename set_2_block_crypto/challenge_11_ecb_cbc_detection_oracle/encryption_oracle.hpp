@@ -8,6 +8,6 @@ namespace cryptopals {
 
 void encryptionOracle(std::ostream & outputStream, std::istream & inputStream);
 
-}  // end namespace cryptopals
+}  // namespace cryptopals
 
 #endif

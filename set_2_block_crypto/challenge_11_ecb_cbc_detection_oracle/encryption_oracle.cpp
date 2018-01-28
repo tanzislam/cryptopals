@@ -17,13 +17,13 @@ void encryptionOracle(std::ostream & outputStream, std::istream & inputStream)
     std::uniform_int_distribution<unsigned short> prefixAndSuffixLength(5, 10);
 
     std::istringstream prefix(
-			generateRandomBytes(prefixAndSuffixLength(getRandomNumbers())));
+        generateRandomBytes(prefixAndSuffixLength(getRandomNumbers())));
 
     cat_streambuf prefixThenInput(prefix, inputStream);
     std::istream prefixAndInput(&prefixThenInput);
 
     std::istringstream suffix(
-			generateRandomBytes(prefixAndSuffixLength(getRandomNumbers())));
+        generateRandomBytes(prefixAndSuffixLength(getRandomNumbers())));
 
     cat_streambuf prefixThenInputThenSuffix(prefixAndInput, suffix);
     std::istream prefixAndInputAndSuffix(&prefixThenInputThenSuffix);
@@ -46,4 +46,4 @@ void encryptionOracle(std::ostream & outputStream, std::istream & inputStream)
     }
 }
 
-}  // end namespace cryptopals
+}  // namespace cryptopals
