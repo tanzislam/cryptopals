@@ -97,7 +97,7 @@ TEST(EncodeBase64, EncodesThreeBytes)
 TEST(EncodeBase64, DiscardsIncompleteInput)
 {
     std::ostringstream outputStream;
-    outputStream << cryptopals::encode_base64({ });
+    outputStream << cryptopals::encode_base64({});
     EXPECT_EQ(0u, outputStream.str().length());
     EXPECT_TRUE(outputStream.fail());
 }
@@ -126,9 +126,8 @@ TEST(ConvertHexToBase64, ConvertsHexToBase64)
                                    "68726f6f6d");
     cryptopals::convert_hex_to_base64(outputStream, inputStream);
     EXPECT_EQ(
-            "SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t",
-            outputStream.str()
-    );
+        "SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t",
+        outputStream.str());
     EXPECT_FALSE(outputStream.fail());
 }
 
