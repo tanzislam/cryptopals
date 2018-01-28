@@ -17,14 +17,11 @@ void aes_cbc_decrypt(std::ostream & outputStream,
     pkcs7_unpad_streambuf pkcs7Unpadder(outputStream, CryptoPP::AES::BLOCKSIZE);
     std::ostream pkcs7UnpaddedOutput(&pkcs7Unpadder);
     char prevInput[CryptoPP::AES::BLOCKSIZE];
-    for (
-            std::istringstream prevInputStream(
-                    std::string(initializationVector, CryptoPP::AES::BLOCKSIZE)
-            );
-            inputStream;
-            prevInputStream.clear(),
-                prevInputStream.str(std::string(prevInput, sizeof prevInput))
-    ) {
+    for (std::istringstream prevInputStream(
+             std::string(initializationVector, CryptoPP::AES::BLOCKSIZE));
+         inputStream;
+         prevInputStream.clear(),
+             prevInputStream.str(std::string(prevInput, sizeof prevInput))) {
         std::ostrstream thisInputSaver(prevInput, sizeof prevInput);
         tee_streambuf teeInput(inputStream, thisInputSaver);
         std::istream teeInputStream(&teeInput);
@@ -36,4 +33,4 @@ void aes_cbc_decrypt(std::ostream & outputStream,
     }
 }
 
-}  // close namespace cryptopals
+}  // namespace cryptopals

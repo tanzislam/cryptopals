@@ -12,6 +12,6 @@ void aes_ecb_encrypt(std::ostream & outputStream,
                      const std::string & key,
                      bool expectPadding = true);
 
-}  // close namespace cryptopals
+}  // namespace cryptopals
 
 #endif

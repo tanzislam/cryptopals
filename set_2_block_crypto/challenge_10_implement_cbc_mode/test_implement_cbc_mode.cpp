@@ -136,9 +136,8 @@ TEST(AesCbcMode, CanDecrypt)
     cryptopals::aes_cbc_decrypt(std::cout,
                                 std::istream(&base64Decoder).seekg(0),
                                 "YELLOW SUBMARINE",
-                                std::array<char,
-                                           CryptoPP::AES::BLOCKSIZE>({0})
-                                                   .data());
+                                std::array<char, CryptoPP::AES::BLOCKSIZE>({0})
+                                    .data());
     EXPECT_TRUE(challenge10File.eof());
 }
 
@@ -150,15 +149,13 @@ TEST(AesCbcMode, CanEncrypt)
     cryptopals::aes_cbc_encrypt(encryptedStream,
                                 inputStream,
                                 key,
-                                std::array<char,
-                                           CryptoPP::AES::BLOCKSIZE>({0})
-                                                   .data());
+                                std::array<char, CryptoPP::AES::BLOCKSIZE>({0})
+                                    .data());
     std::ostringstream decryptionResult;
     cryptopals::aes_cbc_decrypt(decryptionResult,
                                 encryptedStream,
                                 key,
-                                std::array<char,
-                                           CryptoPP::AES::BLOCKSIZE>({0})
-                                                   .data());
+                                std::array<char, CryptoPP::AES::BLOCKSIZE>({0})
+                                    .data());
     EXPECT_EQ(inputStream.str(), decryptionResult.str());
 }
