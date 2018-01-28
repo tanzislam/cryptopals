@@ -9,13 +9,13 @@ class HunspellSingleton
 {
     HunspellSingleton();
     HunspellSingleton(const HunspellSingleton &);
-    HunspellSingleton & operator=(const HunspellSingleton&);
+    HunspellSingleton & operator=(const HunspellSingleton &);
     ~HunspellSingleton();
 
   public:
     static Hunspell & inst();
 };
 
-}  // close namespace cryptopals
+}  // namespace cryptopals
 
 #endif

@@ -6,19 +6,16 @@
 
 namespace cryptopals {
 
-std::pair<unsigned int, uint8_t>
-    break_single_byte_xor_cipher_recognize_words::do_break(
-        std::istream & cipherTextStream
-)
+std::pair<unsigned int, uint8_t> break_single_byte_xor_cipher_recognize_words::
+    do_break(std::istream & cipherTextStream)
 {
-    static constexpr size_t uint8_range =
-            std::numeric_limits<uint8_t>::max() + 1;
+    static constexpr size_t uint8_range = std::numeric_limits<uint8_t>::max()
+                                          + 1;
 
     std::string decryptedWord[uint8_range];
-    for (auto & str : decryptedWord)
-        str.reserve(30);
+    for (auto & str : decryptedWord) str.reserve(30);
 
-    unsigned int numRecognizedWords[uint8_range] = { };
+    unsigned int numRecognizedWords[uint8_range] = {};
     char cipherTextChar;
     while (cipherTextStream.get(cipherTextChar)) {
         uint8_t xorByte = 0u;
@@ -47,4 +44,4 @@ std::pair<unsigned int, uint8_t>
     return *winningXorByteItr;
 }
 
-}  // close namespace cryptopals
+}  // namespace cryptopals

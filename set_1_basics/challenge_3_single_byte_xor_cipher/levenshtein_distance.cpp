@@ -21,11 +21,10 @@ unsigned int levenshtein_distance(const char * str1, const char * str2)
             if (str1[i - 1] == str2[j - 1])
                 dist[j] = prev_dist[j - 1];
             else
-                dist[j] = 1 + std::min({ dist[j - 1],
-                                         prev_dist[j],
-                                         prev_dist[j - 1] });
+                dist[j] =
+                    1 + std::min({dist[j - 1], prev_dist[j], prev_dist[j - 1]});
     }
     return dist.back();
 }
 
-}  // close namespace cryptopals
+}  // namespace cryptopals

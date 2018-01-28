@@ -19,9 +19,8 @@ std::istream & operator>>(std::istream & input, const decode_hex & manipulator)
         return input;
     }
 
-    manipulator.d_value = std::stoul(hexInput.c_str(),
-                                     0,
-                                     1 << decode_hex::s_numBitsInHexDigit);
+    manipulator.d_value =
+        std::stoul(hexInput.c_str(), 0, 1 << decode_hex::s_numBitsInHexDigit);
     return input;
 }
 

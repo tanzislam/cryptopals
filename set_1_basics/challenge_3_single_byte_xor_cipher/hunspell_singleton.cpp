@@ -34,7 +34,7 @@ const char * getDictionaryPath()
     return dictionaryPath;
 }
 
-}  // close unnnamed namespace
+}  // namespace
 
 
 Hunspell & HunspellSingleton::inst()
@@ -43,4 +43,4 @@ Hunspell & HunspellSingleton::inst()
     return hunspell;
 }
 
-}  // close namespace cryptopals
+}  // namespace cryptopals
