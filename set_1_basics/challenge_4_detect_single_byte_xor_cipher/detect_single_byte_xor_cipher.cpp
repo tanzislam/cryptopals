@@ -9,14 +9,13 @@
 namespace cryptopals {
 
 std::tuple<unsigned int, unsigned int, uint8_t> detect_single_byte_xor_cipher(
-        std::ostream & output,
-        std::istream & input,
-        break_single_byte_xor_cipher & mechanism
-)
+    std::ostream & output,
+    std::istream & input,
+    break_single_byte_xor_cipher & mechanism)
 {
     std::map<unsigned int,
              std::tuple<unsigned int, std::istream::pos_type, uint8_t>>
-             scoreLinePosAndKeyMap;
+        scoreLinePosAndKeyMap;
 
     for (unsigned int lineNumber = 0; input; ++lineNumber) {
         try {
@@ -26,11 +25,9 @@ std::tuple<unsigned int, unsigned int, uint8_t> detect_single_byte_xor_cipher(
             decode_hex_streambuf hexDecoder(lineExtractStream);
             std::istream hexDecodedInputLine(&hexDecoder);
             std::pair<unsigned int, uint8_t> scoreAndXorKey =
-                    mechanism.do_break(hexDecodedInputLine);
+                mechanism.do_break(hexDecodedInputLine);
             scoreLinePosAndKeyMap[scoreAndXorKey.first] =
-                    std::make_tuple(lineNumber,
-                                    startPos,
-                                    scoreAndXorKey.second);
+                std::make_tuple(lineNumber, startPos, scoreAndXorKey.second);
         } catch (std::runtime_error &) {
             continue;
         }
@@ -56,4 +53,4 @@ std::tuple<unsigned int, unsigned int, uint8_t> detect_single_byte_xor_cipher(
                            std::get<2>(it->second));
 }
 
-}  // close namespace cryptopals
+}  // namespace cryptopals

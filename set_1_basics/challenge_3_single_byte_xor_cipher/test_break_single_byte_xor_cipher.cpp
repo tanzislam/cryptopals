@@ -20,16 +20,14 @@ TEST(LevenshteinDistance, ComputesDistanceCorrectly)
 
 
 void testBreakSingleByteXorCipher(
-        cryptopals::break_single_byte_xor_cipher & breaker
-)
+    cryptopals::break_single_byte_xor_cipher & breaker)
 {
     std::istringstream hexEncodedCipherText(
-        "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
-    );
+        "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736");
     cryptopals::decode_hex_streambuf hexDecoder(hexEncodedCipherText);
     std::istream hexDecodedCipherText(&hexDecoder);
     std::pair<unsigned int, uint8_t> scoreAndXorKeyByte =
-            breaker.do_break(hexDecodedCipherText);
+        breaker.do_break(hexDecodedCipherText);
     std::ostringstream plainTextOutput;
     breaker.rewind_and_decrypt_using_xor_byte(plainTextOutput,
                                               hexDecodedCipherText,
@@ -39,22 +37,19 @@ void testBreakSingleByteXorCipher(
     EXPECT_NE(0, plainTextOutput.str().size());
     std::cout << "XOR key byte was: " << std::hex << scoreAndXorKeyByte.second
               << std::dec << "\nMessage was: " << plainTextOutput.str()
-              << "\nScore was: " << scoreAndXorKeyByte.first
-              << std::endl;
+              << "\nScore was: " << scoreAndXorKeyByte.first << std::endl;
 }
 
 
 TEST(BreakSingleByteXorCipher, UsingCharacterFrequencyAlgorithm)
 {
     testBreakSingleByteXorCipher(
-            cryptopals::break_single_byte_xor_cipher_char_frequency().get_ref()
-    );
+        cryptopals::break_single_byte_xor_cipher_char_frequency().get_ref());
 }
 
 
 TEST(BreakSingleByteXorCipher, UsingWordRecognitionAlgorithm)
 {
     testBreakSingleByteXorCipher(
-            cryptopals::break_single_byte_xor_cipher_recognize_words().get_ref()
-    );
+        cryptopals::break_single_byte_xor_cipher_recognize_words().get_ref());
 }

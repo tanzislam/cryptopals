@@ -12,6 +12,6 @@ void aes_cbc_encrypt(std::ostream & outputStream,
                      const std::string & key,
                      const char * initializationVector);
 
-}  // close namespace cryptopals
+}  // namespace cryptopals
 
 #endif

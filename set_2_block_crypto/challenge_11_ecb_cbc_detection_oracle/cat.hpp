@@ -8,8 +8,7 @@
 
 namespace cryptopals {
 
-class cat_streambuf
-    : public std::streambuf, private boost::noncopyable
+class cat_streambuf : public std::streambuf, private boost::noncopyable
 {
     std::istream & d_inputStream1;
     std::istream & d_inputStream2;
@@ -39,6 +38,6 @@ class cat_streambuf
     cat_streambuf(std::istream & inputStream1, std::istream & inputStream2);
 };
 
-}  // end namespace cryptopals
+}  // namespace cryptopals
 
 #endif

@@ -13,15 +13,13 @@
 TEST(GenerateRandom, GeneratesRandomWithoutRepetition)
 {
     const std::string & random =
-            cryptopals::generateRandomBytes(CryptoPP::AES::BLOCKSIZE);
+        cryptopals::generateRandomBytes(CryptoPP::AES::BLOCKSIZE);
     boost::io::ios_flags_saver flagsSaver(std::cout, std::ios_base::hex);
     std::unordered_set<unsigned char> values;
-    std::for_each(random.begin(),
-                  random.end(),
-                  [& values] (unsigned char c) {
-                      std::cout << ' ' << int(c);
-                      values.insert(c);
-                  });
+    std::for_each(random.begin(), random.end(), [&values](unsigned char c) {
+        std::cout << ' ' << int(c);
+        values.insert(c);
+    });
     std::cout << std::endl;
     EXPECT_LT(random.size() - values.size(), 3);
 }
@@ -56,14 +54,14 @@ TEST(CatStreambuf, ConcatenatesStreamsAndRewinds)
 
 namespace cryptopals {
 extern EncryptionMode lastEncryptionMode;
-}  // end namespace cryptopals
+}  // namespace cryptopals
 
 TEST(EncryptionOracle, DetectsEncryptionMethod)
 {
     cryptopals::EncryptionMode encryptionMode;
     for (size_t i = 0; i < 50; ++i) {
         encryptionMode =
-                cryptopals::detectEncryptionMode(cryptopals::encryptionOracle);
+            cryptopals::detectEncryptionMode(cryptopals::encryptionOracle);
         EXPECT_EQ(encryptionMode, cryptopals::lastEncryptionMode);
     }
 }

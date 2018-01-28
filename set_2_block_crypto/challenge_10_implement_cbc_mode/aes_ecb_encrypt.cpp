@@ -11,20 +11,15 @@ void aes_ecb_encrypt(std::ostream & outputStream,
                      bool expectPadding)
 {
     CryptoPP::ECB_Mode<CryptoPP::AES>::Encryption aesEncryptor(
-            reinterpret_cast<const unsigned char *>(key.data()),
-            key.size()
-    );
+        reinterpret_cast<const unsigned char *>(key.data()), key.size());
     CryptoPP::FileSource(
-            inputStream,
-            true,
-            new CryptoPP::StreamTransformationFilter(
-                    aesEncryptor,
-                    new CryptoPP::FileSink(outputStream),
-                    expectPadding
-                            ? CryptoPP::BlockPaddingSchemeDef::DEFAULT_PADDING
-                            : CryptoPP::BlockPaddingSchemeDef::NO_PADDING
-            )
-    );
+        inputStream,
+        true,
+        new CryptoPP::StreamTransformationFilter(
+            aesEncryptor,
+            new CryptoPP::FileSink(outputStream),
+            expectPadding ? CryptoPP::BlockPaddingSchemeDef::DEFAULT_PADDING
+                          : CryptoPP::BlockPaddingSchemeDef::NO_PADDING));
 }
 
-}  // close namespace cryptopals
+}  // namespace cryptopals

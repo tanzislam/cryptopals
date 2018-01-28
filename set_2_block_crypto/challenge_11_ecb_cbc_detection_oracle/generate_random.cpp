@@ -5,7 +5,7 @@
 namespace cryptopals {
 
 static std::independent_bits_engine<std::mt19937, CHAR_BIT, unsigned short>
-		randomNumbers(time(nullptr));
+    randomNumbers(time(nullptr));
 
 
 std::string generateRandomBytes(size_t count)
@@ -16,11 +16,10 @@ std::string generateRandomBytes(size_t count)
 }
 
 
-std::independent_bits_engine<std::mt19937,
-                             CHAR_BIT,
-                             unsigned short> & getRandomNumbers()
+std::independent_bits_engine<std::mt19937, CHAR_BIT, unsigned short> &
+    getRandomNumbers()
 {
     return randomNumbers;
 }
 
-}  // end namespace cryptopals
+}  // namespace cryptopals

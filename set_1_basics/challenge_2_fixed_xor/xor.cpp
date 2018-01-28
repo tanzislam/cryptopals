@@ -5,10 +5,10 @@ namespace cryptopals {
 
 xor_streambuf::xor_streambuf(std::istream & inputStream1,
                              std::istream & inputStream2)
-    : d_inputStream1(inputStream1),
-      d_inputStream2(&inputStream2),
-      d_inputBuffer(),
-      d_outputStream(nullptr)
+        : d_inputStream1(inputStream1),
+          d_inputStream2(&inputStream2),
+          d_inputBuffer(),
+          d_outputStream(nullptr)
 {
     setg(nullptr, nullptr, nullptr);
 }
@@ -16,10 +16,10 @@ xor_streambuf::xor_streambuf(std::istream & inputStream1,
 
 xor_streambuf::xor_streambuf(std::ostream & outputStream,
                              std::istream & otherInputStream)
-    : d_inputStream1(otherInputStream),
-      d_inputStream2(nullptr),
-      d_inputBuffer(),
-      d_outputStream(&outputStream)
+        : d_inputStream1(otherInputStream),
+          d_inputStream2(nullptr),
+          d_inputBuffer(),
+          d_outputStream(&outputStream)
 {
     setp(nullptr, nullptr);
 }
@@ -49,8 +49,10 @@ std::streambuf::int_type xor_streambuf::overflow(std::streambuf::int_type ch)
     assert((!pptr() && !epptr()) || (pptr() && epptr() && pptr() == epptr()));
     char otherInput;
     if (d_inputStream1.get(otherInput)) {
-        if (*d_outputStream << char(ch ^ otherInput)) return 1;
-        else d_inputStream1.unget();
+        if (*d_outputStream << char(ch ^ otherInput))
+            return 1;
+        else
+            d_inputStream1.unget();
     }
     return traits_type::eof();
 }
@@ -62,12 +64,10 @@ std::streambuf::pos_type xor_streambuf::seekoff(off_type off,
 {
     assert(off == 0);
     assert(dir == std::ios_base::cur);
-    assert(d_inputStream2
-            ? which == std::ios_base::in
-            : which == std::ios_base::out);
-    return which == std::ios_base::in
-            ? d_inputStream2->tellg()
-            : d_outputStream->tellp();
+    assert(d_inputStream2 ? which == std::ios_base::in
+                          : which == std::ios_base::out);
+    return which == std::ios_base::in ? d_inputStream2->tellg()
+                                      : d_outputStream->tellp();
 }
 
-}  // close namespace cryptopals
+}  // namespace cryptopals

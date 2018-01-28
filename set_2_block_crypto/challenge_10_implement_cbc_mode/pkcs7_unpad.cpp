@@ -15,7 +15,7 @@ void pkcs7_unpad_streambuf::resetInputBlock()
 
 pkcs7_unpad_streambuf::pkcs7_unpad_streambuf(std::istream & inputStream,
                                              unsigned int blockSize)
-    : d_blockSize(blockSize), d_inputStream(&inputStream), d_outputStream(0)
+        : d_blockSize(blockSize), d_inputStream(&inputStream), d_outputStream(0)
 {
     if (!*d_inputStream || d_inputStream->tellg() != std::streampos(0))
         throw std::ios_base::failure("Cannot use already-read inputStream");
@@ -27,35 +27,30 @@ pkcs7_unpad_streambuf::pkcs7_unpad_streambuf(std::istream & inputStream,
 
 
 std::streambuf::pos_type pkcs7_unpad_streambuf::seekpos(
-        std::streambuf::pos_type pos,
-        std::ios_base::openmode which
-)
+    std::streambuf::pos_type pos,
+    std::ios_base::openmode which)
 {
     assert(pos == std::streampos(0));
     assert(which == std::ios_base::in);
-    return pos == std::streampos(0)
-            && which == std::ios_base::in
-            && (d_inputStream->clear(), d_inputStream->seekg(pos))
-        ? (resetInputBlock(), pos)
-        : std::streambuf::seekpos(pos, which);
+    return pos == std::streampos(0) && which == std::ios_base::in
+                   && (d_inputStream->clear(), d_inputStream->seekg(pos))
+               ? (resetInputBlock(), pos)
+               : std::streambuf::seekpos(pos, which);
 }
 
 
 std::streambuf::pos_type pkcs7_unpad_streambuf::seekoff(
-        std::streambuf::off_type off,
-        std::ios_base::seekdir dir,
-        std::ios_base::openmode which
-)
+    std::streambuf::off_type off,
+    std::ios_base::seekdir dir,
+    std::ios_base::openmode which)
 {
     assert(off == 0);
     assert(dir == std::ios_base::cur);
     assert(which == std::ios_base::in);
-    return off == 0
-            && dir == std::ios_base::cur
-            && which == std::ios_base::in
-        ? d_inputStream->rdbuf()->pubseekoff(off, dir, which)
-                - std::streamoff(d_currentBlock + d_blockSize - gptr())
-        : std::streambuf::seekoff(off, dir, which);
+    return off == 0 && dir == std::ios_base::cur && which == std::ios_base::in
+               ? d_inputStream->rdbuf()->pubseekoff(off, dir, which)
+                     - std::streamoff(d_currentBlock + d_blockSize - gptr())
+               : std::streambuf::seekoff(off, dir, which);
 }
 
 
@@ -66,11 +61,10 @@ char * pkcs7_unpad_streambuf::findFirstPaddingByte() const
     if (numPaddingBytes > d_blockSize)
         throw std::ios_base::failure("Invalid PKCS#7 padding byte");
 
-    char * firstPaddingByte =
-            d_currentBlock + d_blockSize - numPaddingBytes;
+    char * firstPaddingByte = d_currentBlock + d_blockSize - numPaddingBytes;
     if (std::any_of(firstPaddingByte,
                     d_currentBlock + d_blockSize,
-                    [numPaddingBytes](char c){
+                    [numPaddingBytes](char c) {
                         return unsigned(c) != numPaddingBytes;
                     }))
         throw std::ios_base::failure("Inconsistent PKCS#7 padding");
@@ -109,7 +103,9 @@ void pkcs7_unpad_streambuf::resetOutputBlock()
 
 pkcs7_unpad_streambuf::pkcs7_unpad_streambuf(std::ostream & outputStream,
                                              unsigned int blockSize)
-    : d_blockSize(blockSize), d_inputStream(0), d_outputStream(&outputStream)
+        : d_blockSize(blockSize),
+          d_inputStream(0),
+          d_outputStream(&outputStream)
 {
     if (d_blockSize <= 1)
         throw std::ios_base::failure("Block size must be greater than 1");
@@ -129,8 +125,7 @@ std::streambuf::int_type pkcs7_unpad_streambuf::overflow(int_type ch)
 {
     assert(d_outputStream);
     assert((!pptr() && !epptr()) || (pptr() && epptr() && pptr() == epptr()));
-    if (ch == traits_type::eof())
-        return !traits_type::eof();
+    if (ch == traits_type::eof()) return !traits_type::eof();
 
     try {
         emitBuffer(pptr());
@@ -145,15 +140,14 @@ std::streambuf::int_type pkcs7_unpad_streambuf::overflow(int_type ch)
 
 pkcs7_unpad_streambuf::~pkcs7_unpad_streambuf()
 {
-    if (d_outputStream && pptr() != pbase())
-        try {
+    if (d_outputStream && pptr() != pbase()) try {
             if (pptr() != epptr())
                 throw std::ios_base::failure("Sync after incomplete block");
             emitBuffer(findFirstPaddingByte());
         } catch (...) {
             d_outputStream->setstate(std::ios_base::failbit);
         }
-    delete [] d_currentBlock;
+    delete[] d_currentBlock;
 }
 
-}  // close namespace cryptopals
+}  // namespace cryptopals

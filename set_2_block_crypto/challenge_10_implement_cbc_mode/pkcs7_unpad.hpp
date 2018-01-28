@@ -8,8 +8,7 @@
 
 namespace cryptopals {
 
-class pkcs7_unpad_streambuf
-    : public std::streambuf
+class pkcs7_unpad_streambuf : public std::streambuf
 {
     char * d_currentBlock;
     const unsigned int d_blockSize;
@@ -47,6 +46,6 @@ class pkcs7_unpad_streambuf
     ~pkcs7_unpad_streambuf();
 };
 
-}  // close namespace cryptopals
+}  // namespace cryptopals
 
 #endif

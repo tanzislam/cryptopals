@@ -7,11 +7,11 @@ namespace cryptopals {
 
 pkcs7_pad_streambuf::pkcs7_pad_streambuf(std::istream & inputStream,
                                          unsigned int blockSize)
-    : d_inputStream(&inputStream),
-      d_buffer(0),
-      d_paddingBuffer(nullptr),
-      d_inputLength(0u),
-      d_blockSize(blockSize)
+        : d_inputStream(&inputStream),
+          d_buffer(0),
+          d_paddingBuffer(nullptr),
+          d_inputLength(0u),
+          d_blockSize(blockSize)
 {
     if (!*d_inputStream || inputStream.tellg() != std::streampos(0))
         throw std::ios_base::failure("Cannot use already-read inputStream");
@@ -22,53 +22,43 @@ pkcs7_pad_streambuf::pkcs7_pad_streambuf(std::istream & inputStream,
 
 
 std::streambuf::pos_type pkcs7_pad_streambuf::seekpos(
-        std::streambuf::pos_type pos,
-        std::ios_base::openmode which
-)
+    std::streambuf::pos_type pos,
+    std::ios_base::openmode which)
 {
     assert(pos == std::streampos(0));
     assert(which == std::ios_base::in);
-    return pos == std::streampos(0)
-            && which == std::ios_base::in
-            && (d_inputStream->clear(), d_inputStream->seekg(pos))
-        ? (
-                delete [] d_paddingBuffer,
-                d_paddingBuffer = nullptr,
-                setg(nullptr, nullptr, nullptr),
-                d_inputLength = 0,
-                pos
-        )
-        : std::streambuf::seekpos(pos, which);
+    return pos == std::streampos(0) && which == std::ios_base::in
+                   && (d_inputStream->clear(), d_inputStream->seekg(pos))
+               ? (delete[] d_paddingBuffer,
+                  d_paddingBuffer = nullptr,
+                  setg(nullptr, nullptr, nullptr),
+                  d_inputLength = 0,
+                  pos)
+               : std::streambuf::seekpos(pos, which);
 }
 
 
 std::streambuf::pos_type pkcs7_pad_streambuf::seekoff(
-        std::streambuf::off_type off,
-        std::ios_base::seekdir dir,
-        std::ios_base::openmode which
-)
+    std::streambuf::off_type off,
+    std::ios_base::seekdir dir,
+    std::ios_base::openmode which)
 {
     assert(off == 0);
     assert(dir == std::ios_base::cur);
     assert(which == std::ios_base::in);
-    return off == 0
-            && dir == std::ios_base::cur
-            && which == std::ios_base::in
-        ? (
-                d_paddingBuffer
-                ? std::streampos(d_inputLength + gptr() - d_paddingBuffer)
-                : std::streampos(d_inputStream->tellg()
-                                 - std::streamoff(egptr() - gptr()))
-        )
-        : std::streambuf::seekoff(off, dir, which);
+    return off == 0 && dir == std::ios_base::cur && which == std::ios_base::in
+               ? (d_paddingBuffer
+                      ? std::streampos(d_inputLength + gptr() - d_paddingBuffer)
+                      : std::streampos(d_inputStream->tellg()
+                                       - std::streamoff(egptr() - gptr())))
+               : std::streambuf::seekoff(off, dir, which);
 }
 
 
 std::streambuf::int_type pkcs7_pad_streambuf::underflow()
 {
     assert((!gptr() && !egptr()) || (gptr() && egptr() && gptr() == egptr()));
-    if (d_paddingBuffer)
-        return std::streambuf::traits_type::eof();
+    if (d_paddingBuffer) return std::streambuf::traits_type::eof();
 
     try {
         boost::io::ios_exception_saver exceptionsSaver(*d_inputStream,
@@ -87,7 +77,8 @@ std::streambuf::int_type pkcs7_pad_streambuf::underflow()
                  d_paddingBuffer,
                  d_paddingBuffer + paddingBufferSize);
             return std::streambuf::traits_type::to_int_type(*d_paddingBuffer);
-        } else return std::streambuf::traits_type::eof();
+        } else
+            return std::streambuf::traits_type::eof();
     } catch (...) {
         return std::streambuf::traits_type::eof();
     }
@@ -96,7 +87,7 @@ std::streambuf::int_type pkcs7_pad_streambuf::underflow()
 
 pkcs7_pad_streambuf::~pkcs7_pad_streambuf()
 {
-    delete [] d_paddingBuffer;
+    delete[] d_paddingBuffer;
 }
 
-}  // close namespace cryptopals
+}  // namespace cryptopals

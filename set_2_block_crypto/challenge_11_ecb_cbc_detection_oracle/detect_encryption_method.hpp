@@ -8,9 +8,9 @@ namespace cryptopals {
 
 enum struct EncryptionMode { ECB, CBC };
 
-EncryptionMode detectEncryptionMode(
-        void (* blackBox)(std::ostream &, std::istream &));
+EncryptionMode detectEncryptionMode(void (*blackBox)(std::ostream &,
+                                                     std::istream &));
 
-}  // end namespace cryptopals
+}  // namespace cryptopals
 
 #endif

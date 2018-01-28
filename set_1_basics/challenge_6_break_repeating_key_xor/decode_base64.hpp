@@ -8,13 +8,11 @@
 
 namespace cryptopals {
 
-class decode_base64
-    : public base64_common
+class decode_base64 : public base64_common
 {
   public:
     typedef base64_common::binary_t output_t;
-    explicit decode_base64(output_t & output)
-        : d_output(output) { }
+    explicit decode_base64(output_t & output) : d_output(output) {}
 
   private:
     output_t & d_output;
@@ -28,8 +26,7 @@ std::istream & operator>>(std::istream & input,
                           const decode_base64 & manipulator);
 
 
-class decode_base64_streambuf
-    : public std::streambuf
+class decode_base64_streambuf : public std::streambuf
 {
     std::istream & d_inputStream;
     char d_buffer[3];
@@ -54,6 +51,6 @@ class decode_base64_streambuf
     explicit decode_base64_streambuf(std::istream & inputStream);
 };
 
-}  // close namespace cryptopals
+}  // namespace cryptopals
 
 #endif

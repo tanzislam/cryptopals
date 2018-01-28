@@ -23,32 +23,29 @@ std::multimap<double, unsigned int> sortKeySizeByScore(std::istream & input)
                 portion2 += portion3.substr(0, 2), portion3.erase(0, 2),
                 portion1 += portion2.substr(0, 1), portion2.erase(0, 1)
     ) {
-        double score1 =
-                1000.00 - hamming_distance(portion1.c_str(), portion2.c_str())
-                                / static_cast<double>(portion1.size());
-        double score2 =
-                1000.00 - hamming_distance(portion3.c_str(), portion4.c_str())
-                                / static_cast<double>(portion3.size());
+        double score1 = 1000.00
+                        - hamming_distance(portion1.c_str(), portion2.c_str())
+                              / static_cast<double>(portion1.size());
+        double score2 = 1000.00
+                        - hamming_distance(portion3.c_str(), portion4.c_str())
+                              / static_cast<double>(portion3.size());
         keySizeByScoreMap.emplace((score1 + score2) / 2.0, portion1.size());
     }
     return keySizeByScoreMap;
 }
 
-}  // close unnamed namespace
+}  // namespace
 
 
 std::pair<unsigned int, std::string> break_repeating_key_xor_cipher(
-        std::istream & inputStream
-)
+    std::istream & inputStream)
 {
     const std::multimap<double, unsigned int> & keySizeByScoreMap =
-            sortKeySizeByScore(inputStream);
+        sortKeySizeByScore(inputStream);
     std::pair<unsigned int, std::string> winningXorKey;
-    for (
-            auto keySizeByScoreMapIt = keySizeByScoreMap.rbegin();
-            keySizeByScoreMapIt != keySizeByScoreMap.rend();
-            ++keySizeByScoreMapIt
-    ) {
+    for (auto keySizeByScoreMapIt = keySizeByScoreMap.rbegin();
+         keySizeByScoreMapIt != keySizeByScoreMap.rend();
+         ++keySizeByScoreMapIt) {
         unsigned int keySize = keySizeByScoreMapIt->second;
         try {
             std::string xorKey;
@@ -61,8 +58,7 @@ std::pair<unsigned int, std::string> break_repeating_key_xor_cipher(
                 std::istream everyNthCharacter(&charSkip);
                 auto xorKeyWithScore =
                     break_single_byte_xor_cipher_char_frequency().do_break(
-                            everyNthCharacter
-                    );
+                        everyNthCharacter);
                 xorKeyScore += xorKeyWithScore.first;
                 xorKey += xorKeyWithScore.second;
             }
@@ -95,4 +91,4 @@ void rewind_and_decrypt_using_repeating_xor_key(std::ostream & outputStream,
     std::istream(&xorCombiner).get(*outputStream.rdbuf(), '\0');
 }
 
-}  // close namespace cryptopals
+}  // namespace cryptopals

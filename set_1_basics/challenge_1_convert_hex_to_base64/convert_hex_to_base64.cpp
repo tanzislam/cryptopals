@@ -11,4 +11,4 @@ void convert_hex_to_base64(std::ostream & output, std::istream & input)
     std::istream(&hexDecoder).get(base64Encoder, '\0');
 }
 
-}  // close namespace cryptopals
+}  // namespace cryptopals

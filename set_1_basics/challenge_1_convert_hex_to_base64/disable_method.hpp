@@ -9,30 +9,27 @@
 #include <cassert>
 
 #define DISABLE_METHOD(declaration) \
-declaration \
-{ \
-    assert(false); \
-    return 0; \
-}
+    declaration                     \
+    {                               \
+        assert(false);              \
+        return 0;                   \
+    }
 
 
 #define DISABLE_VOID_METHOD(declaration) \
-declaration \
-{ \
-    assert(false); \
-}
+    declaration { assert(false); }
 
 
 // This default sync() method is meant to call .flush() on the connected ostream
-#define DEFINE_DEFAULT_SYNC_METHOD(outputStreamPtr) \
-int sync() \
-{ \
-    assert(outputStreamPtr); \
-    try { \
-        return (outputStreamPtr)->flush() ? 0 : -1; \
-    } catch (...) { \
-        return -1; \
-    } \
-}
+#define DEFINE_DEFAULT_SYNC_METHOD(outputStreamPtr)     \
+    int sync()                                          \
+    {                                                   \
+        assert(outputStreamPtr);                        \
+        try {                                           \
+            return (outputStreamPtr)->flush() ? 0 : -1; \
+        } catch (...) {                                 \
+            return -1;                                  \
+        }                                               \
+    }
 
 #endif

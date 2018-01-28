@@ -14,8 +14,7 @@ class encode_hex
     friend std::ostream & operator<<(std::ostream &, const encode_hex &);
 
   public:
-    explicit encode_hex(const uint8_t & value)
-        : d_value(value) { }
+    explicit encode_hex(const uint8_t & value) : d_value(value) {}
 };
 
 
@@ -23,8 +22,7 @@ std::ostream & operator<<(std::ostream & output,
                           const encode_hex & manipulator);
 
 
-class encode_hex_streambuf
-    : public std::streambuf
+class encode_hex_streambuf : public std::streambuf
 {
     std::ostream & d_outputStream;
 
@@ -46,6 +44,6 @@ class encode_hex_streambuf
     explicit encode_hex_streambuf(std::ostream & outputStream);
 };
 
-}  // close namespace cryptopals
+}  // namespace cryptopals
 
 #endif

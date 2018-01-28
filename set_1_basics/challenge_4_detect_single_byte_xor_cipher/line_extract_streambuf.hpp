@@ -7,8 +7,7 @@
 
 namespace cryptopals {
 
-class line_extract_streambuf
-    : public std::streambuf
+class line_extract_streambuf : public std::streambuf
 {
     std::istream & d_inputStream;
     char d_buffer;
@@ -39,6 +38,6 @@ class line_extract_streambuf
     explicit line_extract_streambuf(std::istream & inputStream);
 };
 
-}  // close namespace cryptopals
+}  // namespace cryptopals
 
 #endif

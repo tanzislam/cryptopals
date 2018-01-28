@@ -35,13 +35,10 @@ TEST(DecodeBase64Test, ComparisonWithCryptoPP)
     {
         boost::asio::ip::tcp::iostream challenge7File("cryptopals.com", "http");
         challenge7File << "GET /static/challenge-data/7.txt\r\n" << std::flush;
-        CryptoPP::FileSource(
-                challenge7File,
-                true,
-                new CryptoPP::Base64Decoder(
-                       new CryptoPP::StringSink(output2)
-                )
-        );
+        CryptoPP::FileSource(challenge7File,
+                             true,
+                             new CryptoPP::Base64Decoder(
+                                 new CryptoPP::StringSink(output2)));
     }
     EXPECT_EQ(output1, output2);
 }

@@ -17,13 +17,12 @@ class break_single_byte_xor_cipher
 
     /// @return Pair of score and XOR byte
     virtual std::pair<unsigned int, uint8_t> do_break(
-            std::istream & cipherTextStream
-    ) = 0;
+        std::istream & cipherTextStream) = 0;
 
-    virtual ~break_single_byte_xor_cipher() { }
+    virtual ~break_single_byte_xor_cipher() {}
     break_single_byte_xor_cipher & get_ref() { return *this; }
 };
 
-}  // close namespace cryptopals
+}  // namespace cryptopals
 
 #endif

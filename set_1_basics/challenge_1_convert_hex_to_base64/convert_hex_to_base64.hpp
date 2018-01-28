@@ -7,6 +7,6 @@ namespace cryptopals {
 
 void convert_hex_to_base64(std::ostream & output, std::istream & input);
 
-}  // close namespace cryptopals
+}  // namespace cryptopals
 
 #endif

@@ -7,12 +7,12 @@
 namespace cryptopals {
 
 class break_single_byte_xor_cipher_char_frequency
-    : public break_single_byte_xor_cipher
+        : public break_single_byte_xor_cipher
 {
   public:
     std::pair<unsigned int, uint8_t> do_break(std::istream & cipherTextStream);
 };
 
-}  // close namespace cryptopals
+}  // namespace cryptopals
 
 #endif

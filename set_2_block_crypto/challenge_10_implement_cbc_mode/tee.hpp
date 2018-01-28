@@ -8,11 +8,11 @@
 
 namespace cryptopals {
 
-class tee_streambuf
-    : public std::streambuf
+class tee_streambuf : public std::streambuf
 {
     std::istream * d_inputStream;
-    std::ostream & d_teeStream, * d_teeStream2;
+    std::ostream & d_teeStream;
+    std::ostream * d_teeStream2;
     char d_inputBuffer;
 
   protected:
@@ -34,6 +34,6 @@ class tee_streambuf
     tee_streambuf(std::ostream & teeStream1, std::ostream & teeStream2);
 };
 
-}  // close namespace cryptopals
+}  // namespace cryptopals
 
 #endif

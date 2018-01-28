@@ -21,8 +21,7 @@ typedef std::map<uint8_t, charFrequencyMap_t> xorByteToCharFrequencyMap_t;
 
 
 xorByteToCharFrequencyMap_t getXorByteToCharFrequencyMap(
-        std::istream & cipherTextStream
-)
+    std::istream & cipherTextStream)
 {
     xorByteToCharFrequencyMap_t xorByteToCharFrequencyMap;
     char cipherTextByte;
@@ -47,13 +46,13 @@ unsigned int characterFrequencyScore(const charFrequencyMap_t & charFrequencies)
             ++numControlChar;
         else if (std::isupper(entry.first)) {
             charFrequencyMap_t::const_iterator counterpartEntry =
-                    charFrequencies.find(lowercaseEquivalentChar);
+                charFrequencies.find(lowercaseEquivalentChar);
             if (counterpartEntry != charFrequencies.end())
                 uppercaseAndLowercaseCombinedFrequency +=
-                        counterpartEntry->second;
+                    counterpartEntry->second;
         } else if (std::islower(entry.first)) {
-            if (charFrequencies.find(std::toupper(entry.first)) !=
-                    charFrequencies.end())
+            if (charFrequencies.find(std::toupper(entry.first))
+                != charFrequencies.end())
                 // This lowercase character has already been counted as part of
                 // the corresponding uppercase character.
                 continue;
@@ -62,12 +61,11 @@ unsigned int characterFrequencyScore(const charFrequencyMap_t & charFrequencies)
             continue;
         } else if (ispunct(entry.first)) {
             numPunctuation += entry.second;
-        }
-        else continue;
+        } else
+            continue;
         characterMapByFrequency.insert(
-                std::make_pair(uppercaseAndLowercaseCombinedFrequency,
-                               lowercaseEquivalentChar)
-        );
+            std::make_pair(uppercaseAndLowercaseCombinedFrequency,
+                           lowercaseEquivalentChar));
     }
     characterMapByFrequency.insert(std::make_pair(numWhitespace, ' '));
 
@@ -75,31 +73,29 @@ unsigned int characterFrequencyScore(const charFrequencyMap_t & charFrequencies)
     charactersByFrequency.reserve(characterMapByFrequency.size());
     boost::range::push_back(charactersByFrequency,
                             characterMapByFrequency
-                                    | boost::adaptors::map_values
-                                    | boost::adaptors::reversed);
-    return 10000 - levenshtein_distance(charactersByFrequency.c_str(),
-                                        "etaoin shrdlucmfwypvbgkjqxz")
-                 - numPunctuation * 2
-                 - numControlChar * 50;
+                                | boost::adaptors::map_values
+                                | boost::adaptors::reversed);
+    return 10000
+           - levenshtein_distance(charactersByFrequency.c_str(),
+                                  "etaoin shrdlucmfwypvbgkjqxz")
+           - numPunctuation * 2 - numControlChar * 50;
 }
 
-}  // close unnamed namespace
+}  // namespace
 
 
 std::pair<unsigned int, uint8_t>
     break_single_byte_xor_cipher_char_frequency::do_break(
-        std::istream & cipherTextStream
-)
+        std::istream & cipherTextStream)
 {
     const xorByteToCharFrequencyMap_t & xorByteToCharFrequencyMap =
-            getXorByteToCharFrequencyMap(cipherTextStream);
+        getXorByteToCharFrequencyMap(cipherTextStream);
 
     std::multimap<unsigned int, uint8_t> xorByteByScore;
     for (const auto & xorByteEntry : xorByteToCharFrequencyMap)
         xorByteByScore.insert(
-                std::make_pair(characterFrequencyScore(xorByteEntry.second),
-                               xorByteEntry.first)
-        );
+            std::make_pair(characterFrequencyScore(xorByteEntry.second),
+                           xorByteEntry.first));
 
     auto winningXorByteItr = xorByteByScore.rbegin();
     if (winningXorByteItr == xorByteByScore.rend() || !winningXorByteItr->first)
@@ -107,4 +103,4 @@ std::pair<unsigned int, uint8_t>
     return *winningXorByteItr;
 }
 
-}  // close namespace cryptopals
+}  // namespace cryptopals

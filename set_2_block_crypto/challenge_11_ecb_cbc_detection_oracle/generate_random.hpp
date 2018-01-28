@@ -9,10 +9,9 @@ namespace cryptopals {
 
 std::string generateRandomBytes(size_t count);
 
-std::independent_bits_engine<std::mt19937,
-                             CHAR_BIT,
-                             unsigned short> & getRandomNumbers();
+std::independent_bits_engine<std::mt19937, CHAR_BIT, unsigned short> &
+    getRandomNumbers();
 
-}  // end namespace cryptopals
+}  // namespace cryptopals
 
 #endif
