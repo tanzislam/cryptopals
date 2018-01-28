@@ -7,15 +7,15 @@
 
 namespace cryptopals {
 
-class pkcs7_pad_streambuf
-    : public std::streambuf
+class pkcs7_pad_streambuf : public std::streambuf
 {
     std::istream * d_inputStream;
-    char d_buffer, * d_paddingBuffer;
+    char d_buffer;
+    char * d_paddingBuffer;
     unsigned int d_inputLength, d_blockSize;
 
     pkcs7_pad_streambuf(pkcs7_pad_streambuf &) = delete;
-    pkcs7_pad_streambuf & operator =(pkcs7_pad_streambuf &) = delete;
+    pkcs7_pad_streambuf & operator=(pkcs7_pad_streambuf &) = delete;
 
   protected:
     virtual int_type underflow();
@@ -42,6 +42,6 @@ class pkcs7_pad_streambuf
     ~pkcs7_pad_streambuf();
 };
 
-}  // close namespace cryptopals
+}  // namespace cryptopals
 
 #endif
