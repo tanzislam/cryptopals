@@ -84,8 +84,9 @@ unsigned int characterFrequencyScore(const charFrequencyMap_t & charFrequencies)
 }  // namespace
 
 
-std::pair<unsigned int, uint8_t> break_single_byte_xor_cipher_char_frequency::
-    do_break(std::istream & cipherTextStream)
+std::pair<unsigned int, uint8_t>
+    break_single_byte_xor_cipher_char_frequency::do_break(
+        std::istream & cipherTextStream)
 {
     const xorByteToCharFrequencyMap_t & xorByteToCharFrequencyMap =
         getXorByteToCharFrequencyMap(cipherTextStream);

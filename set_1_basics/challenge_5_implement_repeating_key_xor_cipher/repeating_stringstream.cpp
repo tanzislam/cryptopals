@@ -3,7 +3,7 @@
 namespace cryptopals {
 
 repeating_stringstream::repeating_stringbuf::int_type
-        repeating_stringstream::repeating_stringbuf::underflow()
+    repeating_stringstream::repeating_stringbuf::underflow()
 {
     if (egptr() > gptr() || pptr() > egptr()) {
         return std::stringbuf::underflow();
@@ -27,4 +27,4 @@ repeating_stringstream::~repeating_stringstream()
     std::ios::rdbuf(d_oldStreamBuf);
 }
 
-}  // close namespace cryptopals
+}  // namespace cryptopals

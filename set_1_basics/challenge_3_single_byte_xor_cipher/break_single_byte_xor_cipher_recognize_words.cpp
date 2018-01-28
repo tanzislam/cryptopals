@@ -6,8 +6,9 @@
 
 namespace cryptopals {
 
-std::pair<unsigned int, uint8_t> break_single_byte_xor_cipher_recognize_words::
-    do_break(std::istream & cipherTextStream)
+std::pair<unsigned int, uint8_t>
+    break_single_byte_xor_cipher_recognize_words::do_break(
+        std::istream & cipherTextStream)
 {
     static constexpr size_t uint8_range = std::numeric_limits<uint8_t>::max()
                                           + 1;
