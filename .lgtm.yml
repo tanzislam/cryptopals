@@ -1,3 +1,4 @@
+# https://lgtm.com/docs/lgtm/lgtm.yml-configuration-file
 path_classifiers:
     test:
         - "*/*/test_*.cpp"

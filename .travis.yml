@@ -1,3 +1,4 @@
+# https://docs.travis-ci.com/user/customizing-the-build/
 # IMPORTANT: Validate this file at http://lint.travis-ci.org/ before use!
 #
 # Environment Variables to set up in Travis settings:
