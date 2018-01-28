@@ -8,9 +8,8 @@ namespace cryptopals {
 
 ///@return Line number, starting offset in line, and repeat count
 std::tuple<unsigned int, unsigned int, unsigned int> detect_aes_in_ecb_mode(
-        std::istream & input
-);
+    std::istream & input);
 
-}  // close namespace cryptopals
+}  // namespace cryptopals
 
 #endif

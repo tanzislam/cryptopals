@@ -11,7 +11,7 @@ std::pair<unsigned int, unsigned int> detect_most_repeats(std::istream & input,
 {
     std::pair<unsigned int, unsigned int> maxRepeat;
     char * thisBlock = new char[size];
-    BOOST_SCOPE_EXIT_ALL(=) { delete [] thisBlock; };
+    BOOST_SCOPE_EXIT_ALL(=) { delete[] thisBlock; };
     std::vector<std::string> blocksReadSoFar;
     while (input.read(thisBlock, size)) {
         std::string thisBlockStr(thisBlock, size);
@@ -26,4 +26,4 @@ std::pair<unsigned int, unsigned int> detect_most_repeats(std::istream & input,
     return maxRepeat;
 }
 
-}  // close namespace cryptopals
+}  // namespace cryptopals

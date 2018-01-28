@@ -28,14 +28,13 @@ TEST(DetectAesInEcbMode, DetectsAesEcbByRepeatCount)
     std::istrstream challenge8File(fileContents.c_str(), fileContents.size());
 
     auto lineNumberOffsetAndRepeatCount =
-            cryptopals::detect_aes_in_ecb_mode(challenge8File);
+        cryptopals::detect_aes_in_ecb_mode(challenge8File);
     std::cout << "Line number with most repeated 16-byte block: #"
               << std::get<0>(lineNumberOffsetAndRepeatCount)
               << "\nThe 16-byte block occurred "
               << std::get<2>(lineNumberOffsetAndRepeatCount)
               << " times and started at character position "
-              << std::get<1>(lineNumberOffsetAndRepeatCount)
-              << std::endl;
+              << std::get<1>(lineNumberOffsetAndRepeatCount) << std::endl;
 
     EXPECT_GT(std::get<0>(lineNumberOffsetAndRepeatCount), 0);
     EXPECT_GT(std::get<1>(lineNumberOffsetAndRepeatCount), 0);

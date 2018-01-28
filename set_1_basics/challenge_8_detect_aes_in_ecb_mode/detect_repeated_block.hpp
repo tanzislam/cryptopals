@@ -10,6 +10,6 @@ namespace cryptopals {
 std::pair<unsigned int, unsigned int> detect_most_repeats(std::istream & input,
                                                           unsigned int size);
 
-}  // close namespace cryptopals
+}  // namespace cryptopals
 
 #endif

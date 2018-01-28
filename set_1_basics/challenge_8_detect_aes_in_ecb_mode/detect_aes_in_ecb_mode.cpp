@@ -6,8 +6,7 @@
 namespace cryptopals {
 
 std::tuple<unsigned int, unsigned int, unsigned int> detect_aes_in_ecb_mode(
-        std::istream & input
-)
+    std::istream & input)
 {
     auto lineNumberOffsetAndRepeatCount = std::make_tuple(0u, 0u, 0u);
     for (unsigned int lineNumber = 1; input; ++lineNumber) {
@@ -15,14 +14,14 @@ std::tuple<unsigned int, unsigned int, unsigned int> detect_aes_in_ecb_mode(
         std::istream thisLineStream(&thisLine);
         decode_hex_streambuf hexDecoder(thisLineStream);
         auto mostRepeats =
-                detect_most_repeats(std::istream(&hexDecoder).seekg(0), 16);
+            detect_most_repeats(std::istream(&hexDecoder).seekg(0), 16);
         if (mostRepeats.second > std::get<2>(lineNumberOffsetAndRepeatCount))
             lineNumberOffsetAndRepeatCount =
-                    std::make_tuple(lineNumber,
-                                    (mostRepeats.first - 1 * 2) + 1,
-                                    mostRepeats.second);
+                std::make_tuple(lineNumber,
+                                (mostRepeats.first - 1 * 2) + 1,
+                                mostRepeats.second);
     }
     return lineNumberOffsetAndRepeatCount;
 }
 
-}  // close namespace cryptopals
+}  // namespace cryptopals
