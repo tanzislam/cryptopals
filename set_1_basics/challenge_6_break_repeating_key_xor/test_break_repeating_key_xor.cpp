@@ -23,7 +23,8 @@ TEST(DecodeBase64, DecodesOneByte)
     cryptopals::decode_base64::output_t output;
     inputStream >> cryptopals::decode_base64(output);
     EXPECT_FALSE(inputStream.fail());
-    ASSERT_TRUE(output[0]); EXPECT_EQ('M', output[0].get());
+    ASSERT_TRUE(output[0]);
+    EXPECT_EQ('M', output[0].get());
     EXPECT_FALSE(output[1]);
     EXPECT_FALSE(output[2]);
 }
@@ -35,7 +36,8 @@ TEST(DecodeBase64, DecodesOneByteBoundaryCase)
     cryptopals::decode_base64::output_t output;
     inputStream >> cryptopals::decode_base64(output);
     EXPECT_FALSE(inputStream.fail());
-    ASSERT_TRUE(output[0]); EXPECT_EQ('L', output[0].get());
+    ASSERT_TRUE(output[0]);
+    EXPECT_EQ('L', output[0].get());
     EXPECT_FALSE(output[1]);
     EXPECT_FALSE(output[2]);
 }
@@ -47,8 +49,10 @@ TEST(DecodeBase64, DecodesTwoBytes)
     cryptopals::decode_base64::output_t output;
     inputStream >> cryptopals::decode_base64(output);
     EXPECT_FALSE(inputStream.fail());
-    ASSERT_TRUE(output[0]); EXPECT_EQ('M', output[0].get());
-    ASSERT_TRUE(output[1]); EXPECT_EQ('a', output[1].get());
+    ASSERT_TRUE(output[0]);
+    EXPECT_EQ('M', output[0].get());
+    ASSERT_TRUE(output[1]);
+    EXPECT_EQ('a', output[1].get());
     EXPECT_FALSE(output[2]);
 }
 
@@ -59,8 +63,10 @@ TEST(DecodeBase64, DecodesTwoBytesBoundaryCase)
     cryptopals::decode_base64::output_t output;
     inputStream >> cryptopals::decode_base64(output);
     EXPECT_FALSE(inputStream.fail());
-    ASSERT_TRUE(output[0]); EXPECT_EQ('m', output[0].get());
-    ASSERT_TRUE(output[1]); EXPECT_EQ('`', output[1].get());
+    ASSERT_TRUE(output[0]);
+    EXPECT_EQ('m', output[0].get());
+    ASSERT_TRUE(output[1]);
+    EXPECT_EQ('`', output[1].get());
     EXPECT_FALSE(output[2]);
 }
 
@@ -71,9 +77,12 @@ TEST(DecodeBase64, DecodesThreeBytes)
     cryptopals::decode_base64::output_t output;
     inputStream >> cryptopals::decode_base64(output);
     EXPECT_FALSE(inputStream.fail());
-    ASSERT_TRUE(output[0]); EXPECT_EQ('M', output[0].get());
-    ASSERT_TRUE(output[1]); EXPECT_EQ('a', output[1].get());
-    ASSERT_TRUE(output[2]); EXPECT_EQ('n', output[2].get());
+    ASSERT_TRUE(output[0]);
+    EXPECT_EQ('M', output[0].get());
+    ASSERT_TRUE(output[1]);
+    EXPECT_EQ('a', output[1].get());
+    ASSERT_TRUE(output[2]);
+    EXPECT_EQ('n', output[2].get());
 }
 
 
@@ -84,9 +93,10 @@ TEST(DecodeBase64StreamBuf, ComputesPositionsAndOffsets)
     EXPECT_EQ(4, inputStream.tellg());
 
     cryptopals::decode_base64_streambuf base64Decoder(inputStream);
-    EXPECT_EQ(0, base64Decoder.pubseekoff(0,
-                                          std::ios_base::cur,
-                                          std::ios_base::in));
+    EXPECT_EQ(0,
+              base64Decoder.pubseekoff(0,
+                                       std::ios_base::cur,
+                                       std::ios_base::in));
 
     std::istream base64DecodedInput(&base64Decoder);
     EXPECT_EQ(0, base64DecodedInput.tellg());
@@ -141,7 +151,7 @@ TEST(BreakRepeatingKeyXor, BreaksRepeatingKeyXorCipher)
     cryptopals::decode_base64_streambuf base64Decoder(fileRead);
     std::istream base64DecodedInput(&base64Decoder);
     const std::pair<unsigned int, std::string> & xorKey =
-            cryptopals::break_repeating_key_xor_cipher(base64DecodedInput);
+        cryptopals::break_repeating_key_xor_cipher(base64DecodedInput);
     cryptopals::rewind_and_decrypt_using_repeating_xor_key(std::cout,
                                                            base64DecodedInput,
                                                            xorKey.second);

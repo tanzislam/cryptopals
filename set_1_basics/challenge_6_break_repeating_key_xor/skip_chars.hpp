@@ -7,8 +7,7 @@
 
 namespace cryptopals {
 
-class skip_chars_streambuf
-    : public std::streambuf
+class skip_chars_streambuf : public std::streambuf
 {
     std::istream & d_inputStream;
     char d_buffer;
@@ -34,6 +33,6 @@ class skip_chars_streambuf
                          unsigned int skipLength);
 };
 
-}  // close namespace cryptopals
+}  // namespace cryptopals
 
 #endif

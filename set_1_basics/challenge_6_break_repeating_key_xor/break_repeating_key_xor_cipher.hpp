@@ -9,13 +9,12 @@
 namespace cryptopals {
 
 std::pair<unsigned int, std::string> break_repeating_key_xor_cipher(
-        std::istream & inputStream
-);
+    std::istream & inputStream);
 
 void rewind_and_decrypt_using_repeating_xor_key(std::ostream & outputStream,
                                                 std::istream & cipherTextStream,
                                                 const std::string & xorKey);
 
-}  // close namespace cryptopals
+}  // namespace cryptopals
 
 #endif

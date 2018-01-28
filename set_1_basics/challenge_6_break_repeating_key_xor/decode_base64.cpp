@@ -33,26 +33,22 @@ std::istream & operator>>(std::istream & input,
         input >> base64Digit;
         if (!input) input.setstate(std::ios_base::failbit);
         manipulator.d_output[0] = decode_base64::convertFromBase64(base64Digit)
-                                  << (
-                                        decode_base64::s_numBitsInOctet
-                                        - decode_base64::s_numBitsInBase64Digit
-                                     );
+                                  << (decode_base64::s_numBitsInOctet
+                                      - decode_base64::s_numBitsInBase64Digit);
 
         input >> base64Digit;
         if (!input) input.setstate(std::ios_base::failbit);
         uint8_t value = decode_base64::convertFromBase64(base64Digit);
         static const size_t s_numRemainingBitsInFirstOctet =
-                decode_base64::s_numBitsInOctet
-                - decode_base64::s_numBitsInBase64Digit;
+            decode_base64::s_numBitsInOctet
+            - decode_base64::s_numBitsInBase64Digit;
         static const size_t s_numBitsInSecondOctet =
-                decode_base64::s_numBitsInBase64Digit
-                - s_numRemainingBitsInFirstOctet;
+            decode_base64::s_numBitsInBase64Digit
+            - s_numRemainingBitsInFirstOctet;
         manipulator.d_output[0].get() += value >> s_numBitsInSecondOctet;
-        manipulator.d_output[1] = (value & ((1u << s_numBitsInSecondOctet) - 1))
-                                  << (
-                                        decode_base64::s_numBitsInOctet
-                                        - s_numBitsInSecondOctet
-                                     );
+        manipulator.d_output[1] =
+            (value & ((1u << s_numBitsInSecondOctet) - 1))
+            << (decode_base64::s_numBitsInOctet - s_numBitsInSecondOctet);
 
         input >> base64Digit;
         if (!input) input.setstate(std::ios_base::failbit);
@@ -68,16 +64,14 @@ std::istream & operator>>(std::istream & input,
 
         value = decode_base64::convertFromBase64(base64Digit);
         static const size_t s_numRemainingBitsInSecondOctet =
-                decode_base64::s_numBitsInOctet - s_numBitsInSecondOctet;
+            decode_base64::s_numBitsInOctet - s_numBitsInSecondOctet;
         static const size_t s_numBitsInThirdOctet =
-                decode_base64::s_numBitsInBase64Digit
-                - s_numRemainingBitsInSecondOctet;
+            decode_base64::s_numBitsInBase64Digit
+            - s_numRemainingBitsInSecondOctet;
         manipulator.d_output[1].get() += value >> s_numBitsInThirdOctet;
-        manipulator.d_output[2] = (value & ((1u << s_numBitsInThirdOctet) - 1))
-                                  << (
-                                        decode_base64::s_numBitsInOctet
-                                        - s_numBitsInThirdOctet
-                                     );
+        manipulator.d_output[2] =
+            (value & ((1u << s_numBitsInThirdOctet) - 1))
+            << (decode_base64::s_numBitsInOctet - s_numBitsInThirdOctet);
 
         input >> base64Digit;
         if (!input) input.setstate(std::ios_base::failbit);
@@ -87,8 +81,8 @@ std::istream & operator>>(std::istream & input,
             manipulator.d_output[2].reset();
             return input;
         }
-        manipulator.d_output[2].get() += decode_base64
-                                            ::convertFromBase64(base64Digit);
+        manipulator.d_output[2].get() +=
+            decode_base64 ::convertFromBase64(base64Digit);
     } catch (...) {
         input.setstate(std::ios_base::failbit);
     }
@@ -97,45 +91,43 @@ std::istream & operator>>(std::istream & input,
 
 
 decode_base64_streambuf::decode_base64_streambuf(std::istream & inputStream)
-    : d_inputStream(inputStream), d_buffer(), d_startPos(inputStream.tellg())
+        : d_inputStream(inputStream),
+          d_buffer(),
+          d_startPos(inputStream.tellg())
 {
     setg(nullptr, nullptr, nullptr);
 }
 
 
 std::streambuf::pos_type decode_base64_streambuf::seekpos(
-        std::streambuf::pos_type pos,
-        std::ios_base::openmode which
-)
+    std::streambuf::pos_type pos,
+    std::ios_base::openmode which)
 {
     assert(pos % sizeof(d_buffer) == 0);
     assert(which == std::ios_base::in);
-    return pos % sizeof(d_buffer) == 0
-            && which == std::ios_base::in
-            && (d_inputStream.clear(),
-                d_inputStream.seekg(d_startPos + pos * 4 / 3))
-        ? pos
-        : std::streambuf::seekpos(pos, which);
+    return pos % sizeof(d_buffer) == 0 && which == std::ios_base::in
+                   && (d_inputStream.clear(),
+                       d_inputStream.seekg(d_startPos + pos * 4 / 3))
+               ? pos
+               : std::streambuf::seekpos(pos, which);
 }
 
 
 std::streambuf::pos_type decode_base64_streambuf::seekoff(
-        std::streambuf::off_type off,
-        std::ios_base::seekdir dir,
-        std::ios_base::openmode which
-)
+    std::streambuf::off_type off,
+    std::ios_base::seekdir dir,
+    std::ios_base::openmode which)
 {
     assert(abs(off) % sizeof(d_buffer) == 0);
     assert(dir == std::ios_base::cur);
     assert(which == std::ios_base::in);
-    return abs(off) % sizeof(d_buffer) == 0
-            && dir == std::ios_base::cur
-            && which == std::ios_base::in
-            && -off <= (d_inputStream.tellg() - d_startPos) * 3 / 4
-            && (d_inputStream.clear(),
-                d_inputStream.seekg(off * 4 / 3, dir))
-        ? std::streampos((d_inputStream.tellg() - d_startPos) * 3 / 4)
-        : std::streambuf::seekoff(off, dir, which);
+    return abs(off) % sizeof(d_buffer) == 0 && dir == std::ios_base::cur
+                   && which == std::ios_base::in
+                   && -off <= (d_inputStream.tellg() - d_startPos) * 3 / 4
+                   && (d_inputStream.clear(),
+                       d_inputStream.seekg(off * 4 / 3, dir))
+               ? std::streampos((d_inputStream.tellg() - d_startPos) * 3 / 4)
+               : std::streambuf::seekoff(off, dir, which);
 }
 
 
@@ -157,7 +149,8 @@ std::streambuf::int_type decode_base64_streambuf::underflow()
         d_buffer[2] = output[2].get();
         setg(d_buffer, d_buffer, d_buffer + 3);
         return std::streambuf::traits_type::to_int_type(*d_buffer);
-    } else return std::streambuf::traits_type::eof();
+    } else
+        return std::streambuf::traits_type::eof();
 }
 
-}  // close namespace cryptopals
+}  // namespace cryptopals

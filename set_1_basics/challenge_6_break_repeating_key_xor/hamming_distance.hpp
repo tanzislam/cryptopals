@@ -5,6 +5,6 @@ namespace cryptopals {
 
 unsigned int hamming_distance(const char * input1, const char * input2);
 
-}  // close namespace cryptopals
+}  // namespace cryptopals
 
 #endif

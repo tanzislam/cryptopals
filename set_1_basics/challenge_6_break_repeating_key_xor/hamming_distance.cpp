@@ -14,4 +14,4 @@ unsigned int hamming_distance(const char * input1, const char * input2)
     return numBitsDifferent;
 }
 
-}  // close namespace cryptopals
+}  // namespace cryptopals
