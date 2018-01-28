@@ -8,8 +8,7 @@
 
 namespace cryptopals {
 
-class xor_streambuf
-    : public std::streambuf
+class xor_streambuf : public std::streambuf
 {
     std::istream & d_inputStream1;
     std::istream * d_inputStream2;
@@ -38,6 +37,6 @@ class xor_streambuf
     xor_streambuf(std::ostream & outputStream, std::istream & otherInputStream);
 };
 
-}  // close namespace cryptopals
+}  // namespace cryptopals
 
 #endif

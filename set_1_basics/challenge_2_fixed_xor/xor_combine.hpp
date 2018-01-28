@@ -9,6 +9,6 @@ void xor_combine(std::ostream & hexEncodedOutputStream,
                  std::istream & hexEncodedInputStream1,
                  std::istream & hexEncodedInputStream2);
 
-}  // close namespace cryptopals
+}  // namespace cryptopals
 
 #endif

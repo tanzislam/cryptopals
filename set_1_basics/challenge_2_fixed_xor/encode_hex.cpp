@@ -5,12 +5,11 @@
 
 namespace cryptopals {
 
-std::ostream & operator<<(std::ostream & output,
-                          const encode_hex & manipulator)
+std::ostream & operator<<(std::ostream & output, const encode_hex & manipulator)
 {
     boost::io::ios_flags_saver flagsSaver(output,
                                           std::ios_base::hex
-                                                | std::ios_base::right);
+                                              | std::ios_base::right);
     boost::io::ios_fill_saver fillSaver(output, '0');
     output.width(2);
     output << std::noshowbase << int(manipulator.d_value);
@@ -19,14 +18,14 @@ std::ostream & operator<<(std::ostream & output,
 
 
 encode_hex_streambuf::encode_hex_streambuf(std::ostream & outputStream)
-    : d_outputStream(outputStream)
+        : d_outputStream(outputStream)
 {
     setp(nullptr, nullptr);
 }
 
 
-std::streambuf::int_type
-        encode_hex_streambuf::overflow(std::streambuf::int_type value)
+std::streambuf::int_type encode_hex_streambuf::overflow(
+    std::streambuf::int_type value)
 {
     assert((!pptr() && !epptr()) || (pptr() && epptr() && pptr() == epptr()));
     if (traits_type::eq_int_type(value, traits_type::eof())) return 1;
@@ -37,4 +36,4 @@ std::streambuf::int_type
     }
 }
 
-}  // close namespace cryptopals
+}  // namespace cryptopals
