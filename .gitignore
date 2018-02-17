@@ -13,6 +13,7 @@ __history
 __recovery
 *.tmp
 *.swp
+*.sav
 *.dll
 *.so
 deps

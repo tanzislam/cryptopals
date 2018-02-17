@@ -2,7 +2,9 @@
 
 DEPDIR := deps
 DEPEXT := dep
-$(shell env mkdir -p $(DEPDIR))
+ifeq "" "$(filter clean print-%,$(MAKECMDGOALS))"
+    $(shell env mkdir -p $(DEPDIR))
+endif
 DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.T$(DEPEXT)
 
 COMPILE.c = $(CC) $(DEPFLAGS) $(CFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c
