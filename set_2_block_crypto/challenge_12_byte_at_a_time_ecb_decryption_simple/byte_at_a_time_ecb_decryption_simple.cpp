@@ -64,7 +64,8 @@ char find_suffix_byte(EcbOracle ecbOracle,
                                   blockSize,
                                   blockIdx);
     std::ostringstream outputStream;
-    ecbOracle(outputStream, std::istringstream(leadingBytes).seekg(0));
+    std::istringstream inputStream(leadingBytes);
+    ecbOracle(outputStream, inputStream);
     return lastBytesDict.at(
         outputStream.str().substr(blockSize * blockIdx, blockSize));
 }

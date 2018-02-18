@@ -30,9 +30,8 @@ void ecbEncryptOracle(std::ostream & outputStream, std::istream & inputStream)
 
     pkcs7_pad_streambuf paddedInputAndSuffix(inputAndSuffixStream,
                                              CryptoPP::AES::BLOCKSIZE);
-    aes_ecb_encrypt(outputStream,
-                    std::istream(&paddedInputAndSuffix).seekg(0),
-                    key);
+    std::istream paddedInputAndSuffixStream(&paddedInputAndSuffix);
+    aes_ecb_encrypt(outputStream, paddedInputAndSuffixStream, key);
 }
 
 }  // namespace cryptopals

@@ -28,7 +28,7 @@ extern const char * const base64EncodedSuffix;
 TEST(EcbEncryptionOracle, FindsSuffixByte)
 {
     cryptopals::decode_base64::output_t output;
-    std::istrstream(cryptopals::base64EncodedSuffix)
+    std::istrstream(cryptopals::base64EncodedSuffix).seekg(0)
         >> cryptopals::decode_base64(output);
     auto suffixByte = cryptopals::find_suffix_byte(cryptopals::ecbEncryptOracle,
                                                    std::string(),
