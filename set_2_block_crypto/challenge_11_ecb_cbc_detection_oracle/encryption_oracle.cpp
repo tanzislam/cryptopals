@@ -3,7 +3,6 @@
 #include <sstream>
 #include "cat.hpp"
 #include <aes.h>
-#include "pkcs7_pad.hpp"
 #include "aes_ecb_encrypt.hpp"
 #include "aes_cbc_encrypt.hpp"
 
@@ -31,11 +30,8 @@ void encryptionOracle(std::ostream & outputStream, std::istream & inputStream)
     std::uniform_int_distribution<unsigned short> decideEncryptionMethod(0, 1);
     if (decideEncryptionMethod(getRandomNumbers())) {
         lastEncryptionMode = EncryptionMode::ECB;
-        pkcs7_pad_streambuf pkcs7Padder(prefixAndInputAndSuffix,
-                                        CryptoPP::AES::BLOCKSIZE);
-        std::istream pkcs7PaddedInput(&pkcs7Padder);
         aes_ecb_encrypt(outputStream,
-                        pkcs7PaddedInput,
+                        prefixAndInputAndSuffix,
                         generateRandomBytes(CryptoPP::AES::BLOCKSIZE));
     } else {
         lastEncryptionMode = EncryptionMode::CBC;

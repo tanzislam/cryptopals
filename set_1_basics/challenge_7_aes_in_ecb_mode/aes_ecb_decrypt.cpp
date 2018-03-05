@@ -8,7 +8,7 @@ namespace cryptopals {
 void aes_ecb_decrypt(std::ostream & outputStream,
                      std::istream & inputStream,
                      const std::string & key,
-                     bool expectPadding)
+                     bool unpadOutput)
 {
     CryptoPP::ECB_Mode<CryptoPP::AES>::Decryption aesDecryptor(
         reinterpret_cast<const unsigned char *>(key.data()), key.size());
@@ -18,8 +18,8 @@ void aes_ecb_decrypt(std::ostream & outputStream,
         new CryptoPP::StreamTransformationFilter(
             aesDecryptor,
             new CryptoPP::FileSink(outputStream),
-            expectPadding ? CryptoPP::BlockPaddingSchemeDef::DEFAULT_PADDING
-                          : CryptoPP::BlockPaddingSchemeDef::NO_PADDING));
+            unpadOutput ? CryptoPP::BlockPaddingSchemeDef::DEFAULT_PADDING
+                        : CryptoPP::BlockPaddingSchemeDef::NO_PADDING));
 }
 
 }  // namespace cryptopals

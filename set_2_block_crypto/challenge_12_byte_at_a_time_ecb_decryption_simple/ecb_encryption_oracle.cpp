@@ -4,7 +4,6 @@
 #include <strstream>
 #include "decode_base64.hpp"
 #include "cat.hpp"
-#include "pkcs7_pad.hpp"
 #include "aes_ecb_encrypt.hpp"
 
 namespace cryptopals {
@@ -28,10 +27,7 @@ void ecbEncryptOracle(std::ostream & outputStream, std::istream & inputStream)
     cat_streambuf inputAndSuffix(inputStream, suffixStream);
     std::istream inputAndSuffixStream(&inputAndSuffix);
 
-    pkcs7_pad_streambuf paddedInputAndSuffix(inputAndSuffixStream,
-                                             CryptoPP::AES::BLOCKSIZE);
-    std::istream paddedInputAndSuffixStream(&paddedInputAndSuffix);
-    aes_ecb_encrypt(outputStream, paddedInputAndSuffixStream, key);
+    aes_ecb_encrypt(outputStream, inputAndSuffixStream, key);
 }
 
 }  // namespace cryptopals

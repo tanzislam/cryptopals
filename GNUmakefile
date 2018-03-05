@@ -2,6 +2,7 @@ this_makefile_dir := $(dir $(lastword $(MAKEFILE_LIST)))
 mkfiles := $(wildcard $(this_makefile_dir)*/*/GNUmakefile)
 VPATH := $(patsubst $(this_makefile_dir)%,%,$(sort $(dir $(mkfiles))))
 
+# https://blog.melski.net/2010/11/30/makefile-hacks-print-the-value-of-any-var
 # '%' is a metacharacter in Windows batch files (which GNU Make uses when
 # launching processes under cmd.exe), so we escape it and later correct it.
 SRCS := $(sort $(foreach \

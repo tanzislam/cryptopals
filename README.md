@@ -53,10 +53,10 @@ To build these solutions you will need:
 
  - [Hunspell](https://hunspell.github.io/). I used the "master" branch at commit
    4a90abe87.
-   - On Windows 7 / MinGW-w64 I had to first install `libtool` (by running
-     `pacman -S libtool` in an admin-mode MSYS2 window), and then I could run
-     `autoreconf -vfi && ./configure && mingw32-make` in a MinGW-w64 Win64
-      Shell.
+   - On Windows 7 / MinGW-w64 I had to first install `mingw-w64-x86_64-libtool`
+     (by running `pacman -S mingw-w64-x86_64-libtool` in an admin-mode MSYS2
+     window), and then I could run
+     `autoreconf -vfi && ./configure && mingw32-make` in a MinGW 64-bit Shell.
    - On macOS Sierra / Homebrew I had to first obtain the GNU Autotools
      packages: `automake`, `libtool`, and `gettext`. I also had to export the
      `LDFLAGS` and `CPPFLAGS` environment variables to what `brew` specified
@@ -125,7 +125,7 @@ produce the combined test program called `test`.
 **NOTES:**
  - None of the above variables may have spaces in them. So, on Windows you can't
    use `C:\Program Files\...`, but `C:\Users\UsernameWithoutSpace\Documents\etc`
-   is good.
+   is good. You can work around this restriction by creating directory symlinks.
  - The above variables do not have to be **environment variables**, but can
    instead be specified in the GNU Make command line as [overrides](
    https://www.gnu.org/software/make/manual/make.html#Overriding).

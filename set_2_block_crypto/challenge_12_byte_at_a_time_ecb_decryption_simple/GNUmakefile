@@ -1,7 +1,6 @@
 VPATH = \
 ../challenge_11_ecb_cbc_detection_oracle \
 ../challenge_10_implement_cbc_mode \
-../challenge_9_implement_pkcs7_padding \
 ../../set_1_basics/challenge_6_break_repeating_key_xor \
 ../../set_1_basics/challenge_1_convert_hex_to_base64
 
@@ -10,7 +9,6 @@ ecb_encryption_oracle.cpp \
 generate_random.cpp \
 decode_base64.cpp \
 cat.cpp \
-pkcs7_pad.cpp \
 aes_ecb_encrypt.cpp \
 test_byte_at_a_time_ecb_decryption_simple.cpp \
 detect_encryption_method.cpp \

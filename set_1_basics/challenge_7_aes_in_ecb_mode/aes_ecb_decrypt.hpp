@@ -10,7 +10,7 @@ namespace cryptopals {
 void aes_ecb_decrypt(std::ostream & outputStream,
                      std::istream & inputStream,
                      const std::string & key,
-                     bool expectPadding = true);
+                     bool unpadOutput = true);
 
 }  // namespace cryptopals
 
