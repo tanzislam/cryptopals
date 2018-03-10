@@ -1,5 +1,6 @@
 #include "forge_admin_profile.hpp"
-#include <strstream>
+#include <boost/iostreams/device/array.hpp>
+#include <boost/iostreams/stream.hpp>
 #include "pkcs7_pad.hpp"
 #include <aes.h>
 #include <boost/range/size.hpp>
@@ -14,7 +15,9 @@ std::string forge_admin_profile(
     // Encrypting: email=          admin...........&uid=10&role=user............
     //             |               |               |               |
     // (Here, a "." is a PKCS#7 padding character.)
-    std::istrstream targetRole("admin");
+    static const char admin[] = "admin";
+    boost::iostreams::stream<boost::iostreams::array_source>
+        targetRole(admin, sizeof admin - 1);
     pkcs7_pad_streambuf padder(targetRole, CryptoPP::AES::BLOCKSIZE);
     const auto encryptedSample = userProfileServer(
         std::string(CryptoPP::AES::BLOCKSIZE - boost::size("email=") + 1, ' ')

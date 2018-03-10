@@ -2,7 +2,8 @@
 #include <sstream>
 #include "detect_repeated_block.hpp"
 #include <boost/asio.hpp>
-#include <strstream>
+#include <boost/iostreams/device/array.hpp>
+#include <boost/iostreams/stream.hpp>
 #include "detect_aes_in_ecb_mode.hpp"
 #include <iostream>
 
@@ -25,7 +26,8 @@ TEST(DetectAesInEcbMode, DetectsAesEcbByRepeatCount)
         challenge8File << "GET /static/challenge-data/8.txt\r\n" << std::flush;
         std::getline(challenge8File, fileContents, '\0');
     }
-    std::istrstream challenge8File(fileContents.c_str(), fileContents.size());
+    boost::iostreams::stream<boost::iostreams::array_source>
+        challenge8File(fileContents.c_str(), fileContents.size());
 
     auto lineNumberOffsetAndRepeatCount =
         cryptopals::detect_aes_in_ecb_mode(challenge8File);

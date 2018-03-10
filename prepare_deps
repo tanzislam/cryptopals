@@ -77,4 +77,5 @@ build_boost &
 build_gtest &
 build_hunspell &
 build_cryptopp &
+download_scowl_for_hunspell &
 wait

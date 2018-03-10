@@ -5,7 +5,8 @@
 #include <string>
 #include "skip_chars.hpp"
 #include <boost/asio.hpp>
-#include <strstream>
+#include <boost/iostreams/device/array.hpp>
+#include <boost/iostreams/stream.hpp>
 #include "break_repeating_key_xor_cipher.hpp"
 #include <iostream>
 
@@ -147,7 +148,8 @@ TEST(BreakRepeatingKeyXor, BreaksRepeatingKeyXorCipher)
         challenge6File << "GET /static/challenge-data/6.txt\r\n" << std::flush;
         std::getline(challenge6File, fileContents, '\0');
     }
-    std::istrstream fileRead(fileContents.c_str(), fileContents.size());
+    boost::iostreams::stream<boost::iostreams::array_source>
+        fileRead(fileContents.c_str(), fileContents.size());
     cryptopals::decode_base64_streambuf base64Decoder(fileRead);
     std::istream base64DecodedInput(&base64Decoder);
     const std::pair<unsigned int, std::string> & xorKey =

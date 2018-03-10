@@ -3,7 +3,8 @@
 #include <aes.h>
 #include <sstream>
 #include "xor.hpp"
-#include <strstream>
+#include <boost/iostreams/device/array.hpp>
+#include <boost/iostreams/stream.hpp>
 #include "tee.hpp"
 #include "aes_ecb_encrypt.hpp"
 
@@ -21,10 +22,11 @@ void aes_cbc_encrypt(std::ostream & outputStream,
              std::string(initializationVector, CryptoPP::AES::BLOCKSIZE));
          pkcs7PaddedInput;
          prevResultStream.clear(),
-             prevResultStream.str(std::string(prevResult, sizeof prevResult))) {
+         prevResultStream.str(std::string(prevResult, sizeof prevResult))) {
         xor_streambuf xorCombiner(pkcs7PaddedInput, prevResultStream);
         std::istream xorCombinedInput(&xorCombiner);
-        std::ostrstream thisOutputSaver(prevResult, sizeof prevResult);
+        boost::iostreams::stream<boost::iostreams::array_sink>
+            thisOutputSaver(prevResult, sizeof prevResult);
         tee_streambuf teeOutput(thisOutputSaver, outputStream);
         aes_ecb_encrypt(std::ostream(&teeOutput).flush(),
                         xorCombinedInput,

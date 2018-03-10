@@ -61,7 +61,7 @@ To build these solutions you will need:
      packages: `automake`, `libtool`, and `gettext`. I also had to export the
      `LDFLAGS` and `CPPFLAGS` environment variables to what `brew` specified
      when installing `gettext`. After that I could run the standard steps.
-   - You will also need an English dictionary for Hunspell (specifically the
+   - You will also need an English dictionary for Hunspell -- specifically the
      `.dic` and `.aff` files. Get one from [SCOWL](http://wordlist.aspell.net/).
 
  - [Crypto++](http://www.cryptopp.com/). I used the "master" branch at commit

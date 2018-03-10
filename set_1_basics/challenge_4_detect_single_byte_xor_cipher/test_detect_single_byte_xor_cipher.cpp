@@ -3,7 +3,8 @@
 #include "line_extract_streambuf.hpp"
 #include <string>
 #include <boost/asio.hpp>
-#include <strstream>
+#include <boost/iostreams/device/array.hpp>
+#include <boost/iostreams/stream.hpp>
 #include "detect_single_byte_xor_cipher.hpp"
 #include "break_single_byte_xor_cipher_recognize_words.hpp"
 #include "break_single_byte_xor_cipher_char_frequency.hpp"
@@ -121,7 +122,8 @@ void testDetectSingleByteXorCipher(
         challenge4File << "GET /static/challenge-data/4.txt\r\n" << std::flush;
         std::getline(challenge4File, fileContents, '\0');
     }
-    std::istrstream fileRead(fileContents.c_str(), fileContents.size());
+    boost::iostreams::stream<boost::iostreams::array_source>
+        fileRead(fileContents.c_str(), fileContents.size());
     auto lineNumberScoreAndXorByte =
         cryptopals::detect_single_byte_xor_cipher(std::cout, fileRead, breaker);
     EXPECT_NE(0, std::get<1>(lineNumberScoreAndXorByte));

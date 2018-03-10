@@ -2,7 +2,8 @@
 #include "pkcs7_unpad.hpp"
 #include <aes.h>
 #include <sstream>
-#include <strstream>
+#include <boost/iostreams/device/array.hpp>
+#include <boost/iostreams/stream.hpp>
 #include "tee.hpp"
 #include "xor.hpp"
 #include "aes_ecb_decrypt.hpp"
@@ -21,8 +22,9 @@ void aes_cbc_decrypt(std::ostream & outputStream,
              std::string(initializationVector, CryptoPP::AES::BLOCKSIZE));
          inputStream;
          prevInputStream.clear(),
-             prevInputStream.str(std::string(prevInput, sizeof prevInput))) {
-        std::ostrstream thisInputSaver(prevInput, sizeof prevInput);
+         prevInputStream.str(std::string(prevInput, sizeof prevInput))) {
+        boost::iostreams::stream<boost::iostreams::array_sink> thisInputSaver(
+            prevInput);
         tee_streambuf teeInput(inputStream, thisInputSaver);
         std::istream teeInputStream(&teeInput);
         xor_streambuf xorCombiner(pkcs7UnpaddedOutput, prevInputStream);

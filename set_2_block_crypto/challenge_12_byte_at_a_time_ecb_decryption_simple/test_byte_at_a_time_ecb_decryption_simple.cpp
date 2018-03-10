@@ -4,7 +4,9 @@
 #include "ecb_encryption_oracle.hpp"
 #include "detect_encryption_method.hpp"
 #include "decode_base64.hpp"
-#include <strstream>
+#include <boost/iostreams/device/array.hpp>
+#include <boost/iostreams/stream.hpp>
+#include <cstring>
 #include <iostream>
 
 TEST(EcbEncryptionOracle, HasAesBlockSize)
@@ -28,7 +30,10 @@ extern const char * const base64EncodedSuffix;
 TEST(EcbEncryptionOracle, FindsSuffixByte)
 {
     cryptopals::decode_base64::output_t output;
-    std::istrstream(cryptopals::base64EncodedSuffix).seekg(0)
+    boost::iostreams::stream<boost::iostreams::array_source>(
+        cryptopals::base64EncodedSuffix,
+        std::strlen(cryptopals::base64EncodedSuffix))
+            .seekg(0)
         >> cryptopals::decode_base64(output);
     auto suffixByte = cryptopals::find_suffix_byte(cryptopals::ecbEncryptOracle,
                                                    std::string(),
@@ -40,7 +45,9 @@ TEST(EcbEncryptionOracle, FindsSuffixByte)
 
 TEST(EcbEncryptionOracle, FindsSuffix)
 {
-    std::istrstream encodedSuffix(cryptopals::base64EncodedSuffix);
+    boost::iostreams::stream<boost::iostreams::array_source>
+        encodedSuffix(cryptopals::base64EncodedSuffix,
+                      std::strlen(cryptopals::base64EncodedSuffix));
     std::string output;
     cryptopals::decode_base64_streambuf decoder(encodedSuffix);
     std::getline(std::istream(&decoder), output, '\0');

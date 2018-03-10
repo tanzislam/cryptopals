@@ -3,7 +3,8 @@
 #include "pkcs7_unpad.hpp"
 #include <string>
 #include <boost/asio.hpp>
-#include <strstream>
+#include <boost/iostreams/device/array.hpp>
+#include <boost/iostreams/stream.hpp>
 #include "decode_base64.hpp"
 #include <aes.h>
 #include "aes_cbc_decrypt.hpp"
@@ -131,7 +132,8 @@ TEST(AesCbcMode, CanDecrypt)
                         << std::flush;
         std::getline(challenge10File, fileContents, '\0');
     }
-    std::istrstream challenge10File(fileContents.c_str(), fileContents.size());
+    boost::iostreams::stream<boost::iostreams::array_source>
+        challenge10File(fileContents.c_str(), fileContents.size());
     cryptopals::decode_base64_streambuf base64Decoder(challenge10File);
     cryptopals::aes_cbc_decrypt(std::cout,
                                 std::istream(&base64Decoder).seekg(0),

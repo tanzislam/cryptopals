@@ -1,8 +1,10 @@
 #include "ecb_encryption_oracle.hpp"
 #include "generate_random.hpp"
 #include <aes.h>
-#include <strstream>
+#include <boost/iostreams/device/array.hpp>
+#include <boost/iostreams/stream.hpp>
 #include "decode_base64.hpp"
+#include <cstring>
 #include "cat.hpp"
 #include "aes_ecb_encrypt.hpp"
 
@@ -19,7 +21,9 @@ void ecbEncryptOracle(std::ostream & outputStream, std::istream & inputStream)
 {
     static auto key = generateRandomBytes(CryptoPP::AES::BLOCKSIZE);
 
-    std::istrstream base64EncodedSuffixStream(base64EncodedSuffix);
+    boost::iostreams::stream<boost::iostreams::array_source>
+        base64EncodedSuffixStream(base64EncodedSuffix,
+                                  std::strlen(base64EncodedSuffix));
 
     decode_base64_streambuf suffix(base64EncodedSuffixStream);
     std::istream suffixStream(&suffix);
