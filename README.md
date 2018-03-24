@@ -21,8 +21,7 @@
 </a>
 
 These are my solutions to the interesting challenges at [the cryptopals crypto
-challenges](https://cryptopals.com). All solutions are coded in modern C++ and
-Boost.
+challenges](https://cryptopals.com). All solutions are coded in C++11 and Boost.
 
 ## Requirements
 

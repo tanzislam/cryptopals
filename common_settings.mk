@@ -20,8 +20,8 @@ endif
 this_plugin := $(lastword $(MAKEFILE_LIST))
 .DELETE_ON_ERROR :
 CXX = g++
-CPP_STANDARD = -std=c++14 -pthread
-CPP_QUALITY_CHECKS = -Wc++14-compat -pedantic -Wall -Wextra
+CPP_STANDARD = -std=c++11 -pthread
+CPP_QUALITY_CHECKS = -pedantic -pedantic-errors -Wall -Wextra
 CPP_OPTIMIZATIONS = -O3 -ffunction-sections -fdata-sections
 CPPFLAGS = $(CPP_STANDARD) $(CPP_QUALITY_CHECKS) $(CPP_OPTIMIZATIONS)
 CXXFLAGS := -isystem $(BOOST_DIR) \

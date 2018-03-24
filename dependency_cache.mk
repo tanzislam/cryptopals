@@ -48,7 +48,7 @@ ifneq "" "$(IS_WINDOWS_PLATFORM)"
 	    $(file > $(DEPDIR)/$*.T$(LDEPEXT),$(shell \
             $(info Preprocessing $< for library dependencies) \
             $(CXX) $(CPP_STANDARD) $(CXXFLAGS) \
-                -E -w -D_MSC_VER -D__GCCXML__ $< \
+                -E -w -D_MSC_VER=1310 -D__GCCXML__ $< \
             | grep -E "\# *pragma +comment.*lib" \
             | cut -f 2 -d \" \
         ))
@@ -66,3 +66,4 @@ clean : clean_deps
 .PHONY : clean_deps
 clean_deps :
 	rm -f $(wildcard $(DEPDIR)/*.$(DEPEXT) $(DEPDIR)/*.$(LDEPEXT))
+	rmdir $(DEPDIR) || true
