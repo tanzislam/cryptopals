@@ -7,12 +7,17 @@
   <img alt="Coverity Scan Build Status"
        src="https://scan.coverity.com/projects/10143/badge.svg"/>
 </a> <a href="https://www.codacy.com/app/tanzislam/cryptopals">
-  <img src=
+  <img alt="Codacy"
+       src=
    "https://api.codacy.com/project/badge/Grade/0eefb6418259474191b5611351e02dee"
   />
 </a> <a href="https://sonarcloud.io/dashboard?id=tanzislam_cryptopals">
   <img alt="SonarCloud"
        src="https://sonarcloud.io/api/badges/gate?key=tanzislam_cryptopals"/>
+</a> <a href="https://www.codefactor.io/repository/github/tanzislam/cryptopals">
+  <img alt="CodeFactor"
+       src=
+   "https://www.codefactor.io/repository/github/tanzislam/cryptopals/badge"/>
 </a>
 
 These are my solutions to the interesting challenges at [the cryptopals crypto
