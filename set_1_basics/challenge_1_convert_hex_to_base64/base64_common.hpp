@@ -1,7 +1,7 @@
 #ifndef INCLUDED_BASE64_COMMON
 #define INCLUDED_BASE64_COMMON
 
-#include <boost/math/common_factor_ct.hpp>
+#include <boost/integer/common_factor_ct.hpp>
 #include <array>
 #include <boost/optional.hpp>
 
@@ -13,8 +13,8 @@ struct base64_common {
     static const size_t s_numBitsInOctet = 8;
 
     static const size_t s_numBitsPerOperation =
-        boost::math::static_lcm<s_numBitsInBase64Digit,
-                                s_numBitsInOctet>::value;
+        boost::integer::static_lcm<s_numBitsInBase64Digit,
+                                   s_numBitsInOctet>::value;
     static const size_t s_numOctetsPerOperation = s_numBitsPerOperation
                                                   / s_numBitsInOctet;
 
