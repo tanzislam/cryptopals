@@ -18,6 +18,10 @@
   <img alt="CodeFactor"
        src=
    "https://www.codefactor.io/repository/github/tanzislam/cryptopals/badge"/>
+</a> <a href="https://www.kiuwan.com/github/tanzislam/cryptopals">
+  <img alt="Kiuwan"
+       src=
+   "https://www.kiuwan.com/github/tanzislam/cryptopals/badges/security.svg"/>
 </a>
 
 These are my solutions to the interesting challenges at [the cryptopals crypto
