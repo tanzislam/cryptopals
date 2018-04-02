@@ -10,11 +10,11 @@ extraction:
     cpp:
         prepare:
             packages:
-                - g++-7
+                - g++-6
         after_prepare:
             - mkdir -p $LGTM_WORKSPACE/latest-gcc-symlinks
-            - ln -s /usr/bin/g++-7 $LGTM_WORKSPACE/latest-gcc-symlinks/g++
-            - ln -s /usr/bin/gcc-7 $LGTM_WORKSPACE/latest-gcc-symlinks/gcc
+            - ln -s /usr/bin/g++-6 $LGTM_WORKSPACE/latest-gcc-symlinks/g++
+            - ln -s /usr/bin/gcc-6 $LGTM_WORKSPACE/latest-gcc-symlinks/gcc
             - export PATH=$LGTM_WORKSPACE/latest-gcc-symlinks:$PATH
             - export GNU_MAKE=make
         configure:
