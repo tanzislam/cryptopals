@@ -17,6 +17,7 @@ extraction:
             - ln -s /usr/bin/gcc-6 $LGTM_WORKSPACE/latest-gcc-symlinks/gcc
             - export PATH=$LGTM_WORKSPACE/latest-gcc-symlinks:$PATH
             - export GNU_MAKE=make
+            - export GIT=true
         configure:
             command:
                 - pushd $LGTM_WORKSPACE

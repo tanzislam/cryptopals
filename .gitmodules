@@ -1,0 +1,19 @@
+[submodule "boost"]
+    path = boost
+    url = https://github.com/boostorg/boost.git
+    branch = master
+
+[submodule "googletest"]
+    path = googletest
+    url = https://github.com/google/googletest.git
+    branch = master
+
+[submodule "hunspell"]
+    path = hunspell
+    url = https://github.com/hunspell/hunspell.git
+    branch = master
+
+[submodule "cryptopp"]
+    path = cryptopp
+    url = https://github.com/weidai11/cryptopp.git
+    branch = master
