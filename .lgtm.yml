@@ -5,6 +5,11 @@ path_classifiers:
     docs:
         - README.md
         - LICENSE.txt
+    library:
+        - boost
+        - cryptopp
+        - googletest
+        - hunspell
 
 extraction:
     cpp:
@@ -20,13 +25,12 @@ extraction:
             - export GIT=true
         configure:
             command:
-                - pushd $LGTM_WORKSPACE
-                - $LGTM_SRC/prepare_deps
-                - popd
-                - export BOOST_DIR=$LGTM_WORKSPACE/boost
-                - export GTEST_DIR=$LGTM_WORKSPACE/googletest
-                - export HUNSPELL_DIR=$LGTM_WORKSPACE/hunspell
-                - export CRYPTOPP_DIR=$LGTM_WORKSPACE/cryptopp
+                - ./prepare_deps
+        before_index:
+            - export BOOST_DIR=$LGTM_SRC/boost
+            - export GTEST_DIR=$LGTM_SRC/googletest
+            - export HUNSPELL_DIR=$LGTM_SRC/hunspell
+            - export CRYPTOPP_DIR=$LGTM_SRC/cryptopp
         index:
             build_command:
                 - $GNU_MAKE -k
