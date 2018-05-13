@@ -13,7 +13,7 @@
   />
 </a> <a href="https://sonarcloud.io/dashboard?id=tanzislam_cryptopals">
   <img alt="SonarCloud"
-       src="https://sonarcloud.io/api/badges/gate?key=tanzislam_cryptopals"/>
+       src="https://sonarcloud.io/api/project_badges/measure?project=tanzislam_cryptopals&metric=alert_status"/>
 </a> <a href="https://www.codefactor.io/repository/github/tanzislam/cryptopals">
   <img alt="CodeFactor"
        src=
@@ -60,7 +60,7 @@ To build these solutions you will need:
      Instructions. To do this on Windows you will need a UNIX-like set of
      utilities (see below).
    - On Windows / MinGW-w64 I had to specify a Makefile override:
-     `cd googletest/make; mingw32-make AR=gcc-ar`.
+     `cd googletest/make; mingw32-make AR=gcc-ar RANLIB=gcc-ranlib`.
 
  - [Hunspell](https://hunspell.github.io/). I used the "master" branch at commit
    4a90abe87.
@@ -81,7 +81,7 @@ To build these solutions you will need:
      `GNUmakefile`. To do this on Windows you will need a UNIX-like shell and
      set of utilities (see below).
    - On Windows / MinGW-w64 I had to specify a Makefile override:
-     `cd googletest/make; mingw32-make AR=gcc-ar`.
+     `cd googletest/make; mingw32-make AR=gcc-ar RANLIB=gcc-ranlib`.
 
 UNIX-like utilities on Windows are provided by any of the following:
  - [MSYS2](http://msys2.github.io/), or originally [MSYS](http://www.mingw.org/)
