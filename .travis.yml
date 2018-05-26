@@ -81,8 +81,8 @@ before_install:
         export GNU_MAKE=gmake;
     else
         export GNU_MAKE=make;
-        export AR=gcc-ar
-        export RANLIB=gcc-ranlib
+        export AR=gcc-ar-8;
+        export RANLIB=gcc-ranlib-8;
     fi
 - export GIT=git
 # Workaround for https://github.com/travis-ci/travis-ci/issues/3668

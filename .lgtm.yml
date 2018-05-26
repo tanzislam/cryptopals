@@ -21,6 +21,8 @@ extraction:
             - ln -s /usr/bin/g++-6 $LGTM_WORKSPACE/latest-gcc-symlinks/g++
             - ln -s /usr/bin/gcc-6 $LGTM_WORKSPACE/latest-gcc-symlinks/gcc
             - export PATH=$LGTM_WORKSPACE/latest-gcc-symlinks:$PATH
+            - export AR=gcc-ar-6
+            - export RANLIB=gcc-ranlib-6
             - export GNU_MAKE=make
             - export GIT=true
         configure:
