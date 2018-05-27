@@ -16,13 +16,12 @@ TEST(EcbEncryptionOracleWithPrefix, EncryptsUsingEcb)
 }
 
 
-const auto blockSizeAndPrefixLength =
-    cryptopals::find_block_size_and_prefix_length(
-        cryptopals::ecbEncryptOracle2);
-
-
 TEST(EcbEncryptionOracleWithPrefix, HasAesBlockSize)
 {
+    auto blockSizeAndPrefixLength =
+        cryptopals::find_block_size_and_prefix_length(
+            cryptopals::ecbEncryptOracle2);
+
     EXPECT_EQ(CryptoPP::AES::BLOCKSIZE, blockSizeAndPrefixLength.first);
     EXPECT_TRUE(5 <= blockSizeAndPrefixLength.second
                 && blockSizeAndPrefixLength.second <= 15);
@@ -43,6 +42,10 @@ TEST(EcbEncryptionOracleWithPrefix, FindsSuffixByte)
             .seekg(0)
         >> cryptopals::decode_base64(output);
 
+    auto blockSizeAndPrefixLength =
+        cryptopals::find_block_size_and_prefix_length(
+            cryptopals::ecbEncryptOracle2);
+
     auto suffixByte = cryptopals::find_suffix_byte_with_prefix(
         cryptopals::ecbEncryptOracle2,
         std::string(),
@@ -61,6 +64,11 @@ TEST(EcbEncryptionOracleWithPrefix, FindsSuffix)
     std::string output;
     cryptopals::decode_base64_streambuf decoder(encodedSuffix);
     std::getline(std::istream(&decoder), output, '\0');
+
+    auto blockSizeAndPrefixLength =
+        cryptopals::find_block_size_and_prefix_length(
+            cryptopals::ecbEncryptOracle2);
+
     auto suffix =
         cryptopals::find_suffix_with_prefix(cryptopals::ecbEncryptOracle2,
                                             blockSizeAndPrefixLength.first,
