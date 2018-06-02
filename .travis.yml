@@ -47,6 +47,7 @@ addons:
         - ubuntu-toolchain-r-test
         packages:
         - g++-8
+        - gdb
     coverity_scan:
         project:
             name: $TRAVIS_REPO_SLUG
@@ -99,6 +100,9 @@ install:
 - export HUNSPELL_DIR=$PWD/hunspell
 - export CRYPTOPP_DIR=$PWD/cryptopp
 
+before_script:
+- ulimit -c unlimited -S
+
 script:
 - >-
     if [[ "$TRAVIS_OS_NAME" == "osx" ]];
@@ -115,3 +119,15 @@ script:
 - export HUNSPELL_AFFIX_PATH=$HUNSPELL_DIR/en_US.aff
 - export HUNSPELL_DICT_PATH=$HUNSPELL_DIR/en_US.dic
 - ./test
+
+after_failure:
+# http://jsteemann.github.io/blog/2014/10/30/getting-core-dumps-of-failed-travisci-builds/
+- coreFile=$(find . -maxdepth 1 -name "*core*" | head -n 1)
+- >-
+    if [[ -f "$coreFile" ]];
+    then
+        gdb -c "$coreFile" test \
+            -ex "thread apply all bt" \
+            -ex "set pagination 0" \
+            -batch;
+    fi
