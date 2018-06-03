@@ -2,6 +2,7 @@
 #include <boost/io/ios_state.hpp>
 #include <algorithm>
 #include <cassert>
+#include <boost/scope_exit.hpp>
 
 namespace cryptopals {
 
@@ -65,7 +66,7 @@ char * pkcs7_unpad_streambuf::findFirstPaddingByte() const
     if (std::any_of(firstPaddingByte,
                     d_currentBlock + d_blockSize,
                     [numPaddingBytes](char c) {
-                        return unsigned(c) != numPaddingBytes;
+                        return static_cast<unsigned int>(c) != numPaddingBytes;
                     }))
         throw std::ios_base::failure("Inconsistent PKCS#7 padding");
 
@@ -140,6 +141,7 @@ std::streambuf::int_type pkcs7_unpad_streambuf::overflow(int_type ch)
 
 pkcs7_unpad_streambuf::~pkcs7_unpad_streambuf()
 {
+    BOOST_SCOPE_EXIT_ALL(this) { delete[] this->d_currentBlock; };
     if (d_outputStream && pptr() != pbase()) try {
             if (pptr() != epptr())
                 throw std::ios_base::failure("Sync after incomplete block");
@@ -147,7 +149,6 @@ pkcs7_unpad_streambuf::~pkcs7_unpad_streambuf()
         } catch (...) {
             d_outputStream->setstate(std::ios_base::failbit);
         }
-    delete[] d_currentBlock;
 }
 
 }  // namespace cryptopals
