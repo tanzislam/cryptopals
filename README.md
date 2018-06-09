@@ -24,7 +24,7 @@
    "https://www.kiuwan.com/github/tanzislam/cryptopals/badges/security.svg"/>
 </a> <a href="https://lgtm.com/projects/g/tanzislam/cryptopals">
   <img alt="lgtm"
-       src="https://img.shields.io/badge/dynamic/json.svg?label=lgtm&url=https%3A%2F%2Flgtm.com%2Fapi%2Fv0.1%2Fproject%2Fg%2Ftanzislam%2Fcryptopals%2Fdetails&query=%24.alerts&colorB=0000FF&suffix=%20alerts"/>
+       src="https://img.shields.io/lgtm/alerts/g/tanzislam/cryptopals.svg?logo=lgtm&logoWidth=18"/>
 </a>
 
 These are my solutions to the interesting challenges at [the cryptopals crypto
