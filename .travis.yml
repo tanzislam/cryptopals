@@ -15,11 +15,6 @@
 # - SONAR_PROJECTKEY: The SonarCloud project name. View it in your organization
 #                     at Administration -> Projects Management.
 # - SONAR_TOKEN: Create this SonarCloud access token in My Account -> Security.
-# - SONAR_GITHUB_TOKEN: A personal access token of a GitHub account that will
-#                       be used by SonarCloud to insert analysis results in pull
-#                       requests. Create it in GitHub Settings -> Personal
-#                       access tokens. It needs the public_repo and repo:status
-#                       scopes.
 #
 # Note: Encrypted environment variables aren't available to pull request builds.
 
@@ -59,7 +54,6 @@ addons:
         branch_pattern: master
     sonarcloud:
         organization: $SONAR_ORGANIZATION
-        github_token: $SONAR_GITHUB_TOKEN
 
 cache:
     directories:
@@ -105,7 +99,9 @@ before_script:
 
 script:
 - >-
-    if [[ "$TRAVIS_OS_NAME" == "osx" ]];
+    if [[ "$TRAVIS_OS_NAME" == "osx"  &&
+        ( "$TRAVIS_PULL_REQUEST" == "false" ||
+            "$TRAVIS_PULL_REQUEST_SLUG" == "$TRAVIS_REPO_SLUG" ) ]];
     then
         $GNU_MAKE -k clean;
         build-wrapper-macosx-x86 --out-dir bw-output $GNU_MAKE -kj 2;
