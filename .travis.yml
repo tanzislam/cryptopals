@@ -99,8 +99,8 @@ before_script:
 
 script:
 - >-
-    if [[ "$TRAVIS_OS_NAME" == "osx"  && \
-        ( "$TRAVIS_PULL_REQUEST" == "false" || \
+    if [[ "$TRAVIS_OS_NAME" == "osx"  &&
+        ( "$TRAVIS_PULL_REQUEST" == "false" ||
             "$TRAVIS_PULL_REQUEST_SLUG" == "$TRAVIS_REPO_SLUG" ) ]];
     then
         $GNU_MAKE -k clean;
