@@ -34,7 +34,7 @@ os:
 - osx
 
 dist: trusty
-osx_image: xcode9.3
+osx_image: xcode9.4
 
 addons:
     apt:
