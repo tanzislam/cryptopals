@@ -16,17 +16,21 @@ TEST(EcbEncryptionOracleWithPrefix, EncryptsUsingEcb)
 }
 
 
-const auto blockSizeAndPrefixLength =
-    cryptopals::find_block_size_and_prefix_length(
-        cryptopals::ecbEncryptOracle2);
+static const std::pair<unsigned int, unsigned int> & blockSizeAndPrefixLength()
+{
+    static const auto blockSizeAndPrefixLength =
+        cryptopals::find_block_size_and_prefix_length(
+            cryptopals::ecbEncryptOracle2);
+    return blockSizeAndPrefixLength;
+}
 
 
 TEST(EcbEncryptionOracleWithPrefix, HasAesBlockSize)
 {
-    EXPECT_EQ(CryptoPP::AES::BLOCKSIZE, blockSizeAndPrefixLength.first);
-    EXPECT_TRUE(5 <= blockSizeAndPrefixLength.second
-                && blockSizeAndPrefixLength.second <= 15);
-    std::cout << "Prefix length: " << blockSizeAndPrefixLength.second << '\n';
+    EXPECT_EQ(CryptoPP::AES::BLOCKSIZE, blockSizeAndPrefixLength().first);
+    EXPECT_TRUE(5 <= blockSizeAndPrefixLength().second
+                && blockSizeAndPrefixLength().second <= 15);
+    std::cout << "Prefix length: " << blockSizeAndPrefixLength().second << '\n';
 }
 
 
@@ -46,8 +50,8 @@ TEST(EcbEncryptionOracleWithPrefix, FindsSuffixByte)
     auto suffixByte = cryptopals::find_suffix_byte_with_prefix(
         cryptopals::ecbEncryptOracle2,
         std::string(),
-        blockSizeAndPrefixLength.first,
-        blockSizeAndPrefixLength.second);
+        blockSizeAndPrefixLength().first,
+        blockSizeAndPrefixLength().second);
     EXPECT_EQ(output[0].get(), suffixByte);
     std::cout << "Found Suffix Byte: " << suffixByte << '\n';
 }
@@ -63,8 +67,8 @@ TEST(EcbEncryptionOracleWithPrefix, FindsSuffix)
     std::getline(std::istream(&decoder), output, '\0');
     auto suffix =
         cryptopals::find_suffix_with_prefix(cryptopals::ecbEncryptOracle2,
-                                            blockSizeAndPrefixLength.first,
-                                            blockSizeAndPrefixLength.second);
+                                            blockSizeAndPrefixLength().first,
+                                            blockSizeAndPrefixLength().second);
     EXPECT_EQ(output, suffix);
     std::cout << "Found Suffix:\n" << suffix << '\n';
 }
