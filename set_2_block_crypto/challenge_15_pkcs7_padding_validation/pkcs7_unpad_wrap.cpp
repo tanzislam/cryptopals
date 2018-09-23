@@ -16,7 +16,7 @@ std::string unpad_pkcs7(const std::string & input)
 
     pkcs7_unpad_streambuf unpadder(instr, input.size());
     std::istream unpadStream(&unpadder);
-    // Exception on failbit should be enought, but Clang/libc++ demands badbit.
+    // Exception on failbit should be enough, but Clang/libc++ demands badbit.
     // https://stackoverflow.com/questions/35019687
     unpadStream.exceptions(std::istream::failbit | std::istream::badbit);
 

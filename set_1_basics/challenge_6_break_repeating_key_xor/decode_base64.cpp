@@ -118,10 +118,10 @@ std::streambuf::pos_type decode_base64_streambuf::seekoff(
     std::ios_base::seekdir dir,
     std::ios_base::openmode which)
 {
-    assert(abs(off) % sizeof(d_buffer) == 0);
+    assert(std::abs(off) % sizeof(d_buffer) == 0);
     assert(dir == std::ios_base::cur);
     assert(which == std::ios_base::in);
-    return abs(off) % sizeof(d_buffer) == 0 && dir == std::ios_base::cur
+    return std::abs(off) % sizeof(d_buffer) == 0 && dir == std::ios_base::cur
                    && which == std::ios_base::in
                    && -off <= (d_inputStream.tellg() - d_startPos) * 3 / 4
                    && (d_inputStream.clear(),
