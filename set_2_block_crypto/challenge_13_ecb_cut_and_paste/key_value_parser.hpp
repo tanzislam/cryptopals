@@ -7,7 +7,7 @@
 namespace cryptopals {
 
 std::unordered_map<std::string, std::string> parse_structured_cookie(
-    const std::string & cookie);
+    const std::string & cookie, char separator = '&');
 
 }  // namespace cryptopals
 

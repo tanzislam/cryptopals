@@ -17,7 +17,7 @@ std::pair<unsigned int, unsigned int> find_block_size_and_prefix_length(
 {
     auto candidateBlockSize = 0u, candidateBlockSizeMinusPrefix = 0u;
     std::string prevCipherText;
-    for (auto msgLength = 1u; msgLength < 50u; ++msgLength) {
+    for (auto msgLength = 1u; msgLength < 150u; ++msgLength) {
         std::istringstream plainTextStream(std::string(msgLength, 'A'));
         std::ostringstream cipherTextStream;
         ecbOracle(cipherTextStream, plainTextStream);

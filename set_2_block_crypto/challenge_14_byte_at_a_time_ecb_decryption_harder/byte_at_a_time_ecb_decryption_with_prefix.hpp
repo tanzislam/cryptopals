@@ -10,6 +10,8 @@ namespace cryptopals {
 
 typedef void (*EcbOracle)(std::ostream &, std::istream &);
 
+// This assumes that the prefix is shorter than the block size. Challenge 16 has
+// a version without this limitation.
 std::pair<unsigned int, unsigned int> find_block_size_and_prefix_length(
     EcbOracle ecbOracle,
     const unsigned int minBlockSize = 3u,
