@@ -153,3 +153,4 @@ clean :
         | xargs -I "{}" head -n "{}" .gitignore \
         > .gitignore.sav
 	mv .gitignore.sav .gitignore
+	$(if $(filter .gitignore,$(firstword $(file < .gitignore))),rm .gitignore)
