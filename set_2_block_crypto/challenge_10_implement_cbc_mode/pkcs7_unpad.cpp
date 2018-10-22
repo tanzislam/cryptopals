@@ -59,7 +59,7 @@ char * pkcs7_unpad_streambuf::findFirstPaddingByte() const
 {
     assert(d_outputStream ? pptr() == epptr() : gptr() == egptr());
     unsigned int numPaddingBytes = d_currentBlock[d_blockSize - 1];
-    if (numPaddingBytes > d_blockSize)
+    if (numPaddingBytes == 0 || numPaddingBytes > d_blockSize)
         throw std::ios_base::failure("Invalid PKCS#7 padding byte");
 
     char * firstPaddingByte = d_currentBlock + d_blockSize - numPaddingBytes;
