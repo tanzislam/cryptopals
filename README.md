@@ -33,18 +33,18 @@ challenges](https://cryptopals.com). All solutions are coded in C++11 and Boost.
 ## Requirements
 
 To build these solutions you will need:
- - [GNU Compiler Collection (GCC)](https://gcc.gnu.org/). I used v7.2.0 in
-   [MinGW-w64](https://mingw-w64.org/doku.php) (available as a MSYS2 package) on
-   Windows 7. On macOS Sierra I used the default [Clang](http://clang.llvm.org)
-   v8.0.0 (build `clang-800.0.42.1`) which is compatible with GCC.
+ - [GNU Compiler Collection (GCC)](https://gcc.gnu.org/). I used v8.2.0 in
+   [MSYS2](https://www.msys2.org/) on Windows 7. On macOS Sierra I used the
+   default [Clang](http://clang.llvm.org) v8.0.0 (build `clang-800.0.42.1`)
+   which is compatible with GCC.
 
  - [GNU Make](https://www.gnu.org/software/make/). I used v4.2.1 in MinGW-w64 in
    Windows 7 (invoked as `mingw32-make`). On macOS Sierra I installed v4.2.1
    using [Homebrew](http://brew.sh) (invoked as `gmake` to distinguish from the
    system default v3.8.1).
 
- - [Boost C++ Libraries](http://www.boost.org/). I used the "master" branch at
-   commit 51046e29c from [modular Boost](https://github.com/boostorg/boost).
+ - [Boost C++ Libraries](http://www.boost.org/). I used the "master" branch from
+   [modular Boost](https://github.com/boostorg/boost).
    - You will need to build the libraries as described for your platform in the
      [Getting Started](https://github.com/boostorg/boost/wiki/Getting-Started)
      guide. Only specific libraries are needed (as indicated by the `BOOST_LIBS`
@@ -54,20 +54,22 @@ To build these solutions you will need:
      `b2 --layout=system toolset=gcc variant=release address-model=64`.
    - On macOS and Linux: `./b2 --layout=system variant=release`.
 
- - [Google Test](https://github.com/google/googletest/). I used the "master"
-   branch at commit 5490beb.
+ - [Google Test](https://github.com/google/googletest/).
    - You will need to build Google Test as described in the Generic Build
      Instructions. To do this on Windows you will need a UNIX-like set of
      utilities (see below).
    - On Windows / MinGW-w64 I had to specify a Makefile override:
      `cd googletest/make; mingw32-make AR=gcc-ar RANLIB=gcc-ranlib`.
 
- - [Hunspell](https://hunspell.github.io/). I used the "master" branch at commit
-   4a90abe87.
-   - On Windows 7 / MinGW-w64 I had to first install `mingw-w64-x86_64-libtool`
-     (by running `pacman -S mingw-w64-x86_64-libtool` in an admin-mode MSYS2
-     window), and then I could run
-     `autoreconf -vfi && ./configure && mingw32-make` in a MinGW 64-bit Shell.
+ - [Hunspell](https://hunspell.github.io/).
+   - On Windows 7 / MinGW-w64 I had to first install the `autoconf`, `automake`
+     and `mingw-w64-x86_64-libtool` packages in the MSYS2 shell, and then I
+     could build it with the following commands in a MinGW 64-bit Shell:
+
+         autoreconf -vfi
+         ./configure --disable-dependency-tracking
+         mingw32-make
+
    - On macOS Sierra / Homebrew I had to first obtain the GNU Autotools
      packages: `automake`, `libtool`, and `gettext`. I also had to export the
      `LDFLAGS` and `CPPFLAGS` environment variables to what `brew` specified
@@ -75,13 +77,12 @@ To build these solutions you will need:
    - You will also need an English dictionary for Hunspell -- specifically the
      `.dic` and `.aff` files. Get one from [SCOWL](http://wordlist.aspell.net/).
 
- - [Crypto++](http://www.cryptopp.com/). I used the "master" branch at commit
-   b4df31c7f.
+ - [Crypto++](http://www.cryptopp.com/).
    - You will need to Build Crypto++ as a static library using the included
      `GNUmakefile`. To do this on Windows you will need a UNIX-like shell and
      set of utilities (see below).
    - On Windows / MinGW-w64 I had to specify a Makefile override:
-     `cd googletest/make; mingw32-make AR=gcc-ar RANLIB=gcc-ranlib`.
+     `mingw32-make AR=gcc-ar RANLIB=gcc-ranlib`.
 
 UNIX-like utilities on Windows are provided by any of the following:
  - [MSYS2](http://msys2.github.io/), or originally [MSYS](http://www.mingw.org/)
