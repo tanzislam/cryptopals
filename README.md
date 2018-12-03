@@ -41,7 +41,7 @@ To build these solutions you will need:
  - [GNU Make](https://www.gnu.org/software/make/). I used v4.2.1 in MinGW-w64 in
    Windows 7 (invoked as `mingw32-make`). On macOS Sierra I installed v4.2.1
    using [Homebrew](http://brew.sh) (invoked as `gmake` to distinguish from the
-   system default v3.8.1).
+   system default v3.8.1). On Ubuntu I had to upgrade to Cosmic (18.10).
 
  - [Boost C++ Libraries](http://www.boost.org/). I used the "master" branch from
    [modular Boost](https://github.com/boostorg/boost).
@@ -78,7 +78,7 @@ To build these solutions you will need:
      `.dic` and `.aff` files. Get one from [SCOWL](http://wordlist.aspell.net/).
 
  - [Crypto++](http://www.cryptopp.com/).
-   - You will need to Build Crypto++ as a static library using the included
+   - You will need to build Crypto++ as a static library using the included
      `GNUmakefile`. To do this on Windows you will need a UNIX-like shell and
      set of utilities (see below).
    - On Windows / MinGW-w64 I had to specify a Makefile override:
@@ -150,8 +150,8 @@ produce the combined test program called `test`.
 You can even do an out-of-source build. `cd` into an unrelated directory (it can
 be outside the repo or an uncommitted subdirectory inside the repo) and then run
 `make -f path/to/GNUmakefile`. The build system will adjust VPATH by itself, so
-you do not need to specify it yourself. (The `clean` target in this case leaks
-some files, but you can `rm -rf` the entire build directory yourself anyway.)
+you do not need to specify it yourself. (The `clean` target may leak some files
+in this case, but you can `rm -rf` the entire build directory yourself anyway.)
 
 Some solutions will require the location of a Hunspell dictionary to be provided
 in the `HUNSPELL_AFFIX_PATH` and `HUNSPELL_DICT_PATH` environment variables.
