@@ -18,7 +18,6 @@
 #
 # Note: Encrypted environment variables aren't available to pull request builds.
 
-sudo: false
 language: cpp
 
 branches:
@@ -33,8 +32,8 @@ os:
 - linux
 - osx
 
-dist: trusty
-osx_image: xcode10
+dist: xenial
+osx_image: xcode10.1
 
 addons:
     apt:
