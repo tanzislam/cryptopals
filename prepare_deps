@@ -59,9 +59,6 @@ function build_cryptopp {
     pushd cryptopp
     $GIT pull --prune --recurse-submodules
     $GIT submodule update --init --recursive
-    # https://bugzilla.redhat.com/show_bug.cgi?id=1571808
-    # https://askubuntu.com/questions/1029820/
-    export CXXFLAGS="-DNDEBUG -DCRYPTOPP_DISABLE_SHANI -g2 -O3"
     $GNU_MAKE deps
     $GNU_MAKE -kj 2
 }
