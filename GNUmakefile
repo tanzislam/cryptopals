@@ -19,7 +19,7 @@ SRCS := $(sort $(foreach \
 ))
 
 BOOST_LIBS = system
-LIBS = cryptopp hunspell-1.6
+LIBS = cryptopp hunspell-1.7
 
 # The implicit rule for linking is used only if the target name is the same as
 # that of any constituent .o file. We abide by this here and later create a hard
