@@ -13,11 +13,11 @@ function build_boost {
     # use [[ ! -d $dir ]] here
     if [[ ! -x boost/bootstrap.sh ]]
     then
-        $GIT clone https://github.com/boostorg/boost.git
+        $GIT clone --jobs 4 https://github.com/boostorg/boost.git
     fi
     pushd boost
-    $GIT pull --prune --recurse-submodules
-    $GIT submodule update --init --recursive
+    $GIT pull --prune --recurse-submodules --jobs 4
+    $GIT submodule update --init --recursive --jobs 4
     ./bootstrap.sh
     ./b2 headers
     ./b2 --layout=system variant=release -j 2 --with-system
@@ -27,11 +27,11 @@ function build_gtest {
     if [[ ! -f googletest/googletest/make/Makefile &&
           ! -f googletest/googletest/make/GNUmakefile ]]
     then
-        $GIT clone https://github.com/google/googletest.git
+        $GIT clone --jobs 4 https://github.com/google/googletest.git
     fi
     pushd googletest
-    $GIT pull --prune --recurse-submodules
-    $GIT submodule update --init --recursive
+    $GIT pull --prune --recurse-submodules --jobs 4
+    $GIT submodule update --init --recursive --jobs 4
     pushd googletest/make
     $GNU_MAKE -kj 2
 }
@@ -39,28 +39,28 @@ function build_gtest {
 function build_hunspell {
     if [[ ! -f hunspell/configure.ac ]]
     then
-        $GIT clone https://github.com/hunspell/hunspell.git
+        $GIT clone --jobs 4 https://github.com/hunspell/hunspell.git
     fi
     pushd hunspell
-    $GIT pull --prune --recurse-submodules
-    $GIT submodule update --init --recursive
+    $GIT pull --prune --recurse-submodules --jobs 4
+    $GIT submodule update --init --recursive --jobs 4
     export LDFLAGS=-L/usr/local/opt/gettext/lib
     export CPPFLAGS=-I/usr/local/opt/gettext/include
     autoreconf -vfi
-    ./configure
+    ./configure --config-cache
     $GNU_MAKE -kj 2
 }
 
 function build_cryptopp {
     if [[ ! -f cryptopp/GNUmakefile ]]
     then
-        $GIT clone https://github.com/weidai11/cryptopp.git
+        $GIT clone --jobs 4 https://github.com/weidai11/cryptopp.git
     fi
     pushd cryptopp
-    $GIT pull --prune --recurse-submodules
-    $GIT submodule update --init --recursive
+    $GIT pull --prune --recurse-submodules --jobs 4
+    $GIT submodule update --init --recursive --jobs 4
     $GNU_MAKE deps
-    $GNU_MAKE -kj 2
+    $GNU_MAKE -kj 3
 }
 
 function download_scowl_for_hunspell {
