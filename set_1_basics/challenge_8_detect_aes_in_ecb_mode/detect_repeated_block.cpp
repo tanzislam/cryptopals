@@ -15,9 +15,9 @@ std::pair<unsigned int, unsigned int> detect_most_repeats(std::istream & input,
     std::vector<std::string> blocksReadSoFar;
     while (input.read(thisBlock, size)) {
         std::string thisBlockStr(thisBlock, size);
-        auto numOccurrences = std::count(blocksReadSoFar.begin(),
-                                         blocksReadSoFar.end(),
-                                         thisBlockStr);
+        unsigned numOccurrences = std::count(blocksReadSoFar.begin(),
+                                             blocksReadSoFar.end(),
+                                             thisBlockStr);
         if (numOccurrences > maxRepeat.second)
             maxRepeat = std::make_pair(std::streamoff(input.tellg()) - size + 1,
                                        numOccurrences + 1);

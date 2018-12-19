@@ -10,7 +10,11 @@ namespace cryptopals {
 aes_ctr_streambuf::aes_ctr_streambuf(std::istream & input,
                                      const std::string & key,
                                      std::uint64_t nonce)
-        : d_inputStream(input), d_key(key), d_nonce(nonce), d_counter()
+        : d_inputStream(input),
+          d_inputBuffer(),
+          d_key(key),
+          d_nonce(nonce),
+          d_counter()
 {
     setupNextBlock();
 }
@@ -21,10 +25,9 @@ void aes_ctr_streambuf::setupNextBlock()
     std::string nonceAndCounter;
     nonceAndCounter.reserve(CryptoPP::AES::BLOCKSIZE);
     nonceAndCounter
-        .append(static_cast<boost::endian::little_uint64_buf_t>(d_nonce).data(),
+        .append(boost::endian::little_uint64_buf_t(d_nonce).data(),
                 sizeof(boost::endian::little_uint64_buf_t))
-        .append(static_cast<boost::endian::little_uint64_buf_t>(d_counter++)
-                    .data(),
+        .append(boost::endian::little_uint64_buf_t(d_counter++).data(),
                 sizeof(boost::endian::little_uint64_buf_t));
 
     d_encryptedNonceAndCounter.resize(nonceAndCounter.size());

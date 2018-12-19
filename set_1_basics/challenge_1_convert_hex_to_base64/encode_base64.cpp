@@ -88,7 +88,7 @@ std::ostream & operator<<(std::ostream & output,
 
 
 encode_base64_streambuf::encode_base64_streambuf(std::ostream & outputStream)
-        : d_outputStream(outputStream)
+        : d_outputStream(outputStream), d_buffer()
 {
     resetBuffer();
 }

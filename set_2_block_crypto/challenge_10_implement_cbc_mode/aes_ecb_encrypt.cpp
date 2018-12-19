@@ -12,7 +12,7 @@ void aes_ecb_encrypt(std::ostream & outputStream,
 {
     CryptoPP::ECB_Mode<CryptoPP::AES>::Encryption aesEncryptor(
         reinterpret_cast<const unsigned char *>(key.data()), key.size());
-    CryptoPP::FileSource(
+    CryptoPP::FileSource source(
         inputStream,
         true,
         new CryptoPP::StreamTransformationFilter(
