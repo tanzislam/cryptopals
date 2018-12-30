@@ -2,11 +2,14 @@
 
 # Prerequisites:
 # - Changed to relevant directory for downloading and building dependencies.
+# - GNU Bash (at least v3.1 for the '+=' string-concatenation operator).
 # - Latest GCC ('gcc' and 'g++') available in PATH.
 # - Caller will export BOOST_DIR, GTEST_DIR, HUNSPELL_DIR and CRYPTOPP_DIR.
 # - Environment variables:
-#   - GNU_MAKE: Executable name of GNU Make (at least v4.1).
+#   - GNU_MAKE: Executable name of GNU Make (at least v4.2.1).
 #   - GIT: Executable name of Git (relatively modern version with submodules).
+#   - AR: Executable name of GCC's 'ar' tool.
+#   - RANLIB: Executable name of GCC's 'ranlib' tool.
 
 function build_boost {
     # The Travis Cache plugin creates the directories beforehand, so we can't

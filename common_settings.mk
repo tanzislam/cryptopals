@@ -33,7 +33,7 @@ LIB_DIRS = $(if $(BOOST_LIBS),$(BOOST_DIR)/stage/lib) \
            $(CRYPTOPP_DIR)
 GNU_LD := $(shell ld -v 2>&1 | grep GNU)
 LDFLAGS = -pthread -Wl,$(if $(GNU_LD),--gc-sections,-dead_strip) \
-          $(foreach d,$(LIB_DIRS),-L$(d) -Wl,-rpath,$(d))
+          $(foreach d,$(LIB_DIRS),-L$(d))
 LDLIBS = $(GTEST_DIR)/googletest/make/gtest_main.a \
          $(foreach lib,$(BOOST_LIBS),-lboost_$(lib)) \
          $(foreach lib,$(LIBS),-l$(lib))
@@ -64,7 +64,11 @@ CC = $(CXX)
 
 PLATFORM := $(strip $(shell uname -s))
 IS_WINDOWS_PLATFORM := $(filter CYGWIN_% MSYS_% MINGW% windows%,$(PLATFORM))
+IS_MACOSX_PLATFORM := $(filter Darwin,$(PLATFORM))
 include $(dir $(this_plugin))dependency_cache.mk
+
+LDFLAGS += $(if $(IS_MACOSX_PLATFORM),, \
+                $(foreach d,$(LIB_DIRS),-Wl,-rpath,$(d)))
 
 ifeq "" "$(filter clean print-%,$(MAKECMDGOALS))"
     $(SRCS:.cpp=.o) : $(this_plugin) $(dir $(this_plugin))dependency_cache.mk
@@ -116,14 +120,21 @@ ifeq "" "$(filter clean print-%,$(MAKECMDGOALS))"
     # https://sourceforge.net/p/mingw-w64/wiki2/gnu%20printf/
     CPPFLAGS += $(if $(IS_WINDOWS_PLATFORM),-D__USE_MINGW_ANSI_STDIO=1)
 
+    space :=
+    space +=
+    relpath = $(if $(filter-out /%,$(1)),$(1),$(strip \
+              $(subst $(space),/,$(patsubst %,..,$(subst /, ,$(CURDIR))))$(1)))
+
     define post_link_actions_for_darwin =
         # Darwin (macOS) has support for dynamic library (dylib) search path
         # embedded inside the executable, but it takes effect only if the
-        # "install name" of the dylib starts with "@rpath". The "install name"
-        # is copied over from the dylib when linking the executable, and
-        # typically doesn't contain the "@rpath" token. We fix it here.
+        # "install name" of the dylib starts with "@rpath". Prior to OSX 10.5 we
+        # can use only "@executable_path", though. The "install name" is copied
+        # over from the dylib when linking the executable, and typically doesn't
+        # contain these tokens. We fix it here.
         #
         # http://jorgen.tjer.no/post/2014/05/20/dt-rpath-ld-and-at-rpath-dyld/
+        # https://wincent.com/wiki/@executable_path,_@load_path_and_@rpath
         .PHONY : fix_relative_paths_to_dylibs
         fix_relative_paths_to_dylibs : $(EXECUTABLE_NAME)
 	       otool -L $(EXECUTABLE_NAME) \
@@ -131,13 +142,17 @@ ifeq "" "$(filter clean print-%,$(MAKECMDGOALS))"
                | cut -d' ' -f1 \
                | grep -F $(foreach lib,$(BOOST_LIBS),-e libboost_$(lib)) \
                          $(foreach lib,$(LIBS),-e lib$(lib)) \
-               | xargs -L1 -I{} sh -c '\
-                   install_name_tool -change {} @rpath/`basename {}` \
-                                     $(EXECUTABLE_NAME)'
+               | xargs -L1 -J% sh -c '\
+                   install_name_tool \
+                       -change "$$0" \
+                       @executable_path/$$(\
+                           ls $(foreach d,$(LIB_DIRS),$(call relpath,$(d))/` \
+                               basename "$$0"`) 2>/dev/null) \
+                       $(EXECUTABLE_NAME) </dev/null' %
 
         .DEFAULT_GOAL = fix_relative_paths_to_dylibs
     endef
-    $(if $(and $(BOOST_LIBS)$(LIBS),$(filter Darwin,$(PLATFORM))), \
+    $(if $(and $(BOOST_LIBS)$(LIBS),$(IS_MACOSX_PLATFORM)), \
         $(eval $(value post_link_actions_for_darwin)) \
     )
 endif

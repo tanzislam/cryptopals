@@ -36,12 +36,18 @@ To build these solutions you will need:
  - [GNU Compiler Collection (GCC)](https://gcc.gnu.org/). I used v8.2.0 in
    [MSYS2](https://www.msys2.org/) on Windows 7. On macOS Sierra I used the
    default [Clang](http://clang.llvm.org) v8.0.0 (build `clang-800.0.42.1`)
-   which is compatible with GCC.
+   which is compatible with GCC. On macOS Tiger (on a PowerPC G3 iBook) I used
+   GCC v7.4.0 (invoked as `g++-mp-7`) from [MacPorts](https://www.macports.org).
 
  - [GNU Make](https://www.gnu.org/software/make/). I used v4.2.1 in MinGW-w64 in
-   Windows 7 (invoked as `mingw32-make`). On macOS Sierra I installed v4.2.1
-   using [Homebrew](http://brew.sh) (invoked as `gmake` to distinguish from the
-   system default v3.8.1). On Ubuntu I had to upgrade to Cosmic (18.10).
+   Windows 7 (invoked as `mingw32-make`). On macOS Sierra and Tiger I installed
+   v4.2.1 (invoked as `gmake` to distinguish from the system default v3.8.1)
+   using [Homebrew](https://brew.sh) and MacPorts, respectively. On Ubuntu I had
+   to upgrade to Cosmic (18.10) to get v4.2.1.
+
+ - [Git](https://git-scm.com/). On Windows 7 and 10 I used the Git for Windows
+   download. On macOS Sierra and Tiger I installed the latest version using
+   Homebrew and MacPorts, respectively.
 
  - [Boost C++ Libraries](http://www.boost.org/). I used the "master" branch from
    [modular Boost](https://github.com/boostorg/boost).
@@ -104,7 +110,12 @@ default installation. Check the respective documentation for guidance on how to
 locate and install packages.
 
 Once the packages are installed, the "from source" dependency libraries can be
-downloaded and built using the `prepare_deps` script, especially in CI jobs.
+downloaded and built using the `prepare_deps` script, especially in CI jobs. You
+will need [GNU Bash](https://www.gnu.org/software/bash/) (at least v3.1),
+[Wget](https://www.gnu.org/software/wget/) and `unzip` for it. (When installing
+Wget in MacPorts I ran into [this issue](https://trac.macports.org/ticket/47085)
+but the suggested fix worked fine -- so run `sudo port -v configure libffi`,
+then patch the files, then run `sudo port build libffi && sudo make install`.)
 
 Although my development environment is in Windows (primarily [Notepad++](
 https://notepad-plus-plus.org/) enhanced with some humble [NppExec](

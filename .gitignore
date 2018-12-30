@@ -20,6 +20,7 @@ CppApplication_1
 deps
 bw-output
 .scannerwork
+.DS_Store
 
 # Keep this entry in the last line of this file.
 # (The "clean" target relies on this fact.)
