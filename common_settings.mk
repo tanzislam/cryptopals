@@ -29,12 +29,13 @@ CXXFLAGS := -isystem $(BOOST_DIR) \
             -isystem $(HUNSPELL_DIR)/src/hunspell \
             -isystem $(CRYPTOPP_DIR)
 LIB_DIRS = $(if $(BOOST_LIBS),$(BOOST_DIR)/stage/lib) \
+           $(GTEST_DIR)/googletest/make \
            $(HUNSPELL_DIR)/src/hunspell/.libs \
            $(CRYPTOPP_DIR)
 GNU_LD := $(shell ld -v 2>&1 | grep GNU)
 LDFLAGS = -pthread -Wl,$(if $(GNU_LD),--gc-sections,-dead_strip) \
           $(foreach d,$(LIB_DIRS),-L$(d))
-LDLIBS = $(GTEST_DIR)/googletest/make/gtest_main.a \
+LDLIBS = -lgtest_main \
          $(foreach lib,$(BOOST_LIBS),-lboost_$(lib)) \
          $(foreach lib,$(LIBS),-l$(lib))
 
