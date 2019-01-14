@@ -35,7 +35,7 @@ challenges](https://cryptopals.com). All solutions are coded in C++11 and Boost.
 To build these solutions you will need:
  - [GNU Compiler Collection (GCC)](https://gcc.gnu.org/). I used v8.2.0 in
    [MSYS2](https://www.msys2.org/) on Windows 7. On macOS Sierra I used the
-   default [Clang](http://clang.llvm.org) v8.0.0 (build `clang-800.0.42.1`)
+   default [Clang](http://clang.llvm.org/) v8.0.0 (build `clang-800.0.42.1`)
    which is compatible with GCC. On macOS Tiger (on a PowerPC G3 iBook) I used
    GCC v7.4.0 (invoked as `g++-mp-7`) from [MacPorts](https://www.macports.org).
 
@@ -50,12 +50,13 @@ To build these solutions you will need:
    Homebrew and MacPorts, respectively.
 
  - [Boost C++ Libraries](http://www.boost.org/). I used the "master" branch from
-   [modular Boost](https://github.com/boostorg/boost).
+   [modular Boost](https://github.com/boostorg/boost/).
    - You will need to build the libraries as described for your platform in the
-     [Getting Started](https://github.com/boostorg/boost/wiki/Getting-Started)
-     guide. Only specific libraries are needed (as indicated by the `BOOST_LIBS`
-     line in each solution's `GNUmakefile`), so you can speed up the build by
-     appending the `--with-<library_name>` option below.
+     [Getting Started guide](
+     https://github.com/boostorg/boost/wiki/Getting-Started%3A-Overview). Only
+     specific libraries are needed (as indicated by the `BOOST_LIBS` line in
+     each solution's `GNUmakefile`), so you can speed up the build by appending
+     the `--with-<library_name>` option below.
    - On Windows:
      `b2 --layout=system toolset=gcc variant=release address-model=64`.
    - On macOS and Linux: `./b2 --layout=system variant=release`.
