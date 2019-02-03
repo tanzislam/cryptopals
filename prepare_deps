@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/usr/bin/env bash
 
 # Prerequisites:
 # - Changed to relevant directory for downloading and building dependencies.
@@ -8,8 +8,8 @@
 # - Environment variables:
 #   - GNU_MAKE: Executable name of GNU Make (at least v4.2.1).
 #   - GIT: Executable name of Git (relatively modern version with submodules).
-#   - AR: Executable name of GCC's 'ar' tool.
-#   - RANLIB: Executable name of GCC's 'ranlib' tool.
+#   - AR: Executable name of GCC's 'ar' tool. (Unnecessary on macOS.)
+#   - RANLIB: Executable name of GCC's 'ranlib' tool. (Unnecessary on macOS.)
 
 function build_boost {
     # The Travis Cache plugin creates the directories beforehand, so we can't
@@ -19,6 +19,7 @@ function build_boost {
         $GIT clone --jobs 4 https://github.com/boostorg/boost.git
     fi
     pushd boost
+    $GIT checkout --force --recurse-submodules master
     $GIT pull --prune --recurse-submodules --jobs 4
     $GIT submodule update --init --recursive --jobs 4
     ./bootstrap.sh
@@ -33,6 +34,7 @@ function build_gtest {
         $GIT clone --jobs 4 https://github.com/google/googletest.git
     fi
     pushd googletest
+    $GIT checkout --force --recurse-submodules master
     $GIT pull --prune --recurse-submodules --jobs 4
     $GIT submodule update --init --recursive --jobs 4
     pushd googletest/make
@@ -45,6 +47,7 @@ function build_hunspell {
         $GIT clone --jobs 4 https://github.com/hunspell/hunspell.git
     fi
     pushd hunspell
+    $GIT checkout --force --recurse-submodules master
     $GIT pull --prune --recurse-submodules --jobs 4
     $GIT submodule update --init --recursive --jobs 4
     export LDFLAGS=-L/usr/local/opt/gettext/lib
@@ -60,6 +63,7 @@ function build_cryptopp {
         $GIT clone --jobs 4 https://github.com/weidai11/cryptopp.git
     fi
     pushd cryptopp
+    $GIT checkout --force --recurse-submodules master
     $GIT pull --prune --recurse-submodules --jobs 4
     $GIT submodule update --init --recursive --jobs 4
     $GNU_MAKE deps
@@ -76,6 +80,19 @@ function download_scowl_for_hunspell {
     rm hunspell-en_US-2017.01.22.zip
 }
 
+if [[ "$GIT" == "" ]]
+then
+    echo "The GIT variable must be set to the Git program name (or to 'true'" \
+         "to avoid Git operations)" >&2
+    exit 1
+elif [[ "$GNU_MAKE" == "" ]]
+then
+    echo "The GNU_MAKE variable must be set to the GNU Make v4.2.1 program" \
+         "name" >&2
+    exit 1
+fi
+
+set -x
 build_boost &
 build_gtest &
 build_hunspell &

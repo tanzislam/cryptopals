@@ -81,6 +81,8 @@ To build these solutions you will need:
      packages: `automake`, `libtool`, and `gettext`. I also had to export the
      `LDFLAGS` and `CPPFLAGS` environment variables to what `brew` specified
      when installing `gettext`. After that I could run the standard steps.
+   - On macOS Tiger / MacPorts I only had to install the `automake` and
+     `libtool` packages, and they pulled in the other ones as dependencies.
    - You will also need an English dictionary for Hunspell -- specifically the
      `.dic` and `.aff` files. Get one from [SCOWL](http://wordlist.aspell.net/).
 
