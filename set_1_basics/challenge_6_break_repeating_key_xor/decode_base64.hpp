@@ -44,7 +44,7 @@ class decode_base64_streambuf : public std::streambuf
     DISABLE_METHOD(std::streambuf * setbuf(char_type *, std::streamsize))
     DISABLE_METHOD(int sync())
     DISABLE_METHOD(std::streamsize showmanyc())
-    DISABLE_METHOD(int_type overflow())
+    DISABLE_METHOD(int_type overflow(int_type))
     DISABLE_METHOD(int_type pbackfail(int_type))
 
   public:

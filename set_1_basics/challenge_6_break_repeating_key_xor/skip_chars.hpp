@@ -24,7 +24,7 @@ class skip_chars_streambuf : public std::streambuf
     DISABLE_METHOD(pos_type seekpos(pos_type, std::ios_base::openmode))
     DISABLE_METHOD(int sync())
     DISABLE_METHOD(std::streamsize showmanyc())
-    DISABLE_METHOD(int_type overflow())
+    DISABLE_METHOD(int_type overflow(int_type))
     DISABLE_METHOD(int_type pbackfail(int_type))
 
   public:
