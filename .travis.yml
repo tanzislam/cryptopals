@@ -16,6 +16,11 @@
 #                     at Administration -> Projects Management.
 # - SONAR_TOKEN: Create this SonarCloud access token in My Account -> Security.
 #
+# For integration with Code Inspector (https://www.code-inspector.com)
+# - CODE_INSPECTOR_ACCESS_KEY: The "Access key" of the API Key created in
+#                              Project Preferences.
+# - CODE_INSPECTOR_SECRET_KEY: The "Secret key" of the API Key.
+#
 # Note: Encrypted environment variables aren't available to pull request builds.
 
 language: cpp
@@ -61,7 +66,11 @@ cache:
     - hunspell
     - cryptopp
     - $HOME/.sonar/cache
+    - $HOME/.cache/pip
     timeout: 1000
+
+before_cache:
+  - rm -f $HOME/.cache/pip/log/debug.log
 
 before_install:
 - >-
@@ -77,6 +86,12 @@ before_install:
         export GNU_MAKE=make;
         export AR=gcc-ar-8;
         export RANLIB=gcc-ranlib-8;
+        if [[ "$TRAVIS_PULL_REQUEST" == "false" &&
+              ! -z "$CODE_INSPECTOR_ACCESS_KEY" ]];
+        then
+            sudo apt-get install python3-pip python3-setuptools python3-wheel;
+            pip3 install code-inspector;
+        fi;
     fi
 - export GIT=git
 # Workaround for https://github.com/travis-ci/travis-ci/issues/3668
@@ -112,6 +127,13 @@ script:
                       -Dsonar.host.url='https://sonarcloud.io';
     else
         $GNU_MAKE -kj 2;
+    fi
+- >-
+    if [[ "$TRAVIS_OS_NAME" == "linux" &&
+          "$TRAVIS_PULL_REQUEST" == "false" &&
+          ! -z "$CODE_INSPECTOR_ACCESS_KEY" ]];
+    then
+        code-inspector -v;
     fi
 - export HUNSPELL_AFFIX_PATH=$HUNSPELL_DIR/en_US.aff
 - export HUNSPELL_DICT_PATH=$HUNSPELL_DIR/en_US.dic
