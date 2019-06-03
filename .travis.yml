@@ -102,11 +102,11 @@ before_install:
 - g++ --version
 
 install:
-- ./prepare_deps
 - export BOOST_DIR=$PWD/boost
 - export GTEST_DIR=$PWD/googletest
 - export HUNSPELL_DIR=$PWD/hunspell
 - export CRYPTOPP_DIR=$PWD/cryptopp
+- ./prepare_deps
 
 before_script:
 - ulimit -c unlimited -S

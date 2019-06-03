@@ -4,8 +4,11 @@
 # - Changed to relevant directory for downloading and building dependencies.
 # - GNU Bash (at least v3.1 for the '+=' string-concatenation operator).
 # - Latest GCC ('gcc' and 'g++') available in PATH.
-# - Caller will export BOOST_DIR, GTEST_DIR, HUNSPELL_DIR and CRYPTOPP_DIR.
 # - Environment variables:
+#   - BOOST_DIR: Absolute or relative directory to Boost repo clone.
+#   - GTEST_DIR: Absolute or relative directory to Google Test repo clone.
+#   - HUNSPELL_DIR: Absolute or relative directory to Hunspell repo clone.
+#   - CRYPTOPP_DIR: Absolute or relative directory to Crypto++ repo clone.
 #   - GNU_MAKE: Executable name of GNU Make (at least v4.2.1).
 #   - GIT: Executable name of Git (relatively modern version with submodules).
 #   - AR: Executable name of GCC's 'ar' tool. (Unnecessary on macOS.)
@@ -14,26 +17,27 @@
 function build_boost {
     # The Travis Cache plugin creates the directories beforehand, so we can't
     # use [[ ! -d $dir ]] here
-    if [[ ! -x boost/bootstrap.sh ]]
+    if [[ ! -x $BOOST_DIR/bootstrap.sh ]]
     then
-        $GIT clone --jobs 4 https://github.com/boostorg/boost.git
+        $GIT clone --jobs 4 https://github.com/boostorg/boost.git $BOOST_DIR
     fi
-    pushd boost
+    pushd $BOOST_DIR
     $GIT checkout --force --recurse-submodules master
     $GIT pull --prune --recurse-submodules --jobs 4
     $GIT submodule update --init --recursive --jobs 4
     ./bootstrap.sh
     ./b2 headers
-    ./b2 --layout=system variant=release -j 2 --with-system
+    ./b2 --layout=system toolset=gcc variant=release address-model=64 -j 2 \
+         --with-system
 }
 
 function build_gtest {
-    if [[ ! -f googletest/googletest/make/Makefile &&
-          ! -f googletest/googletest/make/GNUmakefile ]]
+    if [[ ! -f $GTEST_DIR/googletest/make/Makefile &&
+          ! -f $GTEST_DIR/googletest/make/GNUmakefile ]]
     then
-        $GIT clone --jobs 4 https://github.com/google/googletest.git
+        $GIT clone --jobs 4 https://github.com/google/googletest.git $GTEST_DIR
     fi
-    pushd googletest
+    pushd $GTEST_DIR
     $GIT checkout --force --recurse-submodules master
     $GIT pull --prune --recurse-submodules --jobs 4
     $GIT submodule update --init --recursive --jobs 4
@@ -42,27 +46,29 @@ function build_gtest {
 }
 
 function build_hunspell {
-    if [[ ! -f hunspell/configure.ac ]]
+    if [[ ! -f $HUNSPELL_DIR/configure.ac ]]
     then
-        $GIT clone --jobs 4 https://github.com/hunspell/hunspell.git
+        $GIT clone --jobs 4 https://github.com/hunspell/hunspell.git \
+             $HUNSPELL_DIR
     fi
-    pushd hunspell
+    pushd $HUNSPELL_DIR
     $GIT checkout --force --recurse-submodules master
     $GIT pull --prune --recurse-submodules --jobs 4
     $GIT submodule update --init --recursive --jobs 4
     export LDFLAGS=-L/usr/local/opt/gettext/lib
     export CPPFLAGS=-I/usr/local/opt/gettext/include
     autoreconf -vfi
-    ./configure --config-cache
+    ./configure --config-cache --disable-dependency-tracking
     $GNU_MAKE -kj 2
 }
 
 function build_cryptopp {
-    if [[ ! -f cryptopp/GNUmakefile ]]
+    if [[ ! -f $CRYPTOPP_DIR/GNUmakefile ]]
     then
-        $GIT clone --jobs 4 https://github.com/weidai11/cryptopp.git
+        $GIT clone --jobs 4 https://github.com/weidai11/cryptopp.git \
+             $CRYPTOPP_DIR
     fi
-    pushd cryptopp
+    pushd $CRYPTOPP_DIR
     $GIT checkout --force --recurse-submodules master
     $GIT pull --prune --recurse-submodules --jobs 4
     $GIT submodule update --init --recursive --jobs 4
@@ -76,11 +82,30 @@ function download_scowl_for_hunspell {
     url+='projects%2Fwordlist%2Ffiles%2Fspeller%2F2017.01.22%2F&ts=1486860415'
     url+='&use_mirror=vorboss'
     wget "$url" -O hunspell-en_US-2017.01.22.zip
-    unzip -o -d hunspell hunspell-en_US-2017.01.22.zip
+    unzip -o -d $HUNSPELL_DIR hunspell-en_US-2017.01.22.zip
     rm hunspell-en_US-2017.01.22.zip
 }
 
-if [[ "$GIT" == "" ]]
+if [[ "$BOOST_DIR" == "" ]]
+then
+    echo "The BOOST_DIR variable must be set to where you cloned Boost" >&2
+    exit 1
+elif [[ "$GTEST_DIR" == "" ]]
+then
+    echo "The GTEST_DIR variable must be set to where you cloned Google Test" \
+         "and Google Mock" >&2
+    exit 1
+elif [[ "$HUNSPELL_DIR" == "" ]]
+then
+    echo "The HUNSPELL_DIR variable must be set to where you cloned Hunspell" \
+         >&2
+    exit 1
+elif [[ "$CRYPTOPP_DIR" == "" ]]
+then
+    echo "The CRYPTOPP_DIR variable must be set to where you cloned Crypto++" \
+         >&2
+    exit 1
+elif [[ "$GIT" == "" ]]
 then
     echo "The GIT variable must be set to the Git program name (or to 'true'" \
          "to avoid Git operations)" >&2
@@ -92,7 +117,7 @@ then
     exit 1
 fi
 
-set -x
+set -xe
 build_boost &
 build_gtest &
 build_hunspell &

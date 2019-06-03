@@ -3,16 +3,16 @@ ifeq "" "$(SRCS)"
     $(error SRCS must be defined before including this file)
 else ifeq "" "$(filter clean print-%,$(MAKECMDGOALS))"
     ifeq "" "$(BOOST_DIR)"
-        $(error The BOOST_DIR variable must be set to where you installed Boost)
+        $(error The BOOST_DIR variable must be set to where you cloned Boost)
     else ifeq "" "$(GTEST_DIR)"
-        $(error The GTEST_DIR variable must be set to where you downloaded or \
-                cloned Google Test and Google Mock)
+        $(error The GTEST_DIR variable must be set to where you cloned Google \
+                Test and Google Mock)
     else ifeq "" "$(HUNSPELL_DIR)"
-        $(error The HUNSPELL_DIR variable must be set to where you downloaded \
-                or cloned Hunspell)
+        $(error The HUNSPELL_DIR variable must be set to where you cloned \
+                Hunspell)
     else ifeq "" "$(CRYPTOPP_DIR)"
-        $(error The CRYPTOPP_DIR variable must be set to where you downloaded \
-                or cloned Crypto++)
+        $(error The CRYPTOPP_DIR variable must be set to where you cloned \
+                Crypto++)
     endif
 endif
 

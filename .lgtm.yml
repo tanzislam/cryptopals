@@ -27,12 +27,11 @@ extraction:
             - export GIT=true
         configure:
             command:
+                - export BOOST_DIR=$LGTM_SRC/boost
+                - export GTEST_DIR=$LGTM_SRC/googletest
+                - export HUNSPELL_DIR=$LGTM_SRC/hunspell
+                - export CRYPTOPP_DIR=$LGTM_SRC/cryptopp
                 - ./prepare_deps
-        before_index:
-            - export BOOST_DIR=$LGTM_SRC/boost
-            - export GTEST_DIR=$LGTM_SRC/googletest
-            - export HUNSPELL_DIR=$LGTM_SRC/hunspell
-            - export CRYPTOPP_DIR=$LGTM_SRC/cryptopp
         index:
             build_command:
                 - $GNU_MAKE -k
