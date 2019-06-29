@@ -44,9 +44,12 @@ addons:
     apt:
         sources:
         - ubuntu-toolchain-r-test
+        - sourceline: "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8"
+          key_url: "https://bazel.build/bazel-release.pub.gpg"
         packages:
         - g++-8
         - gdb
+        - bazel
     coverity_scan:
         project:
             name: $TRAVIS_REPO_SLUG
@@ -81,6 +84,8 @@ before_install:
         brew outdated automake || brew upgrade automake;
         brew outdated libtool || brew upgrade libtool;
         brew install gettext;
+        brew tap bazelbuild/tap;
+        brew install bazelbuild/tap/bazel;
         export GNU_MAKE=gmake;
     else
         export GNU_MAKE=make;
@@ -93,6 +98,7 @@ before_install:
             pip3 install code-inspector;
         fi;
     fi
+- export BAZEL=bazel
 - export GIT=git
 # Workaround for https://github.com/travis-ci/travis-ci/issues/3668
 - mkdir -p latest-gcc-symlinks

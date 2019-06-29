@@ -10,6 +10,7 @@
 #   - HUNSPELL_DIR: Absolute or relative directory to Hunspell repo clone.
 #   - CRYPTOPP_DIR: Absolute or relative directory to Crypto++ repo clone.
 #   - GNU_MAKE: Executable name of GNU Make (at least v4.2.1).
+#   - BAZEL: Executable name of Bazel.
 #   - GIT: Executable name of Git (relatively modern version with submodules).
 #   - AR: Executable name of GCC's 'ar' tool. (Unnecessary on macOS.)
 #   - RANLIB: Executable name of GCC's 'ranlib' tool. (Unnecessary on macOS.)
@@ -32,8 +33,7 @@ function build_boost {
 }
 
 function build_gtest {
-    if [[ ! -f $GTEST_DIR/googletest/make/Makefile &&
-          ! -f $GTEST_DIR/googletest/make/GNUmakefile ]]
+    if [[ ! -f $GTEST_DIR/BUILD.bazel && ! -f $GTEST_DIR/WORKSPACE ]]
     then
         $GIT clone --jobs 4 https://github.com/google/googletest.git $GTEST_DIR
     fi
@@ -41,8 +41,16 @@ function build_gtest {
     $GIT checkout --force --recurse-submodules master
     $GIT pull --prune --recurse-submodules --jobs 4
     $GIT submodule update --init --recursive --jobs 4
-    pushd googletest/make
-    $GNU_MAKE -kj 2
+    system_name=`uname -s`
+    if [[ $system_name =~ ^MINGW ]]
+    then
+        compiler_override="--compiler=mingw-gcc"
+    elif [[ $system_name =~ ^MSYS_ ]]
+    then
+        compiler_override="--compiler=msys-gcc"
+    fi
+    $BAZEL build $compiler_override gtest gtest_main
+    $BAZEL shutdown
 }
 
 function build_hunspell {
@@ -114,6 +122,10 @@ elif [[ "$GNU_MAKE" == "" ]]
 then
     echo "The GNU_MAKE variable must be set to the GNU Make v4.2.1 program" \
          "name" >&2
+    exit 1
+elif [[ "$BAZEL" == "" ]]
+then
+    echo "The BAZEL variable must be set to the Bazel program name" >&2
     exit 1
 fi
 

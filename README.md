@@ -66,11 +66,10 @@ To build these solutions you will need:
    - On macOS and Linux: `./b2 --layout=system variant=release`.
 
  - [Google Test](https://github.com/google/googletest/).
-   - You will need to build Google Test as described in the Generic Build
-     Instructions. To do this on Windows you will need a UNIX-like set of
-     utilities (see below).
-   - On Windows / MinGW-w64 I had to specify a Makefile override:
-     `cd googletest/make; mingw32-make AR=gcc-ar RANLIB=gcc-ranlib`.
+   - You will need to build Google Test using [Bazel](https://www.bazel.build/),
+     as mentioned in the Build Requirements.
+   - On Windows / MinGW-w64 I had to specify a compiler option:
+     `bazel build --compiler=mingw-gcc gtest gtest_main`.
 
  - [Hunspell](https://hunspell.github.io/).
    - On Windows 7 / MinGW-w64 I had to first install the `autoconf`, `automake`

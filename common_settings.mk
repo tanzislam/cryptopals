@@ -29,14 +29,14 @@ CXXFLAGS := -isystem $(BOOST_DIR) \
             -isystem $(HUNSPELL_DIR)/src/hunspell \
             -isystem $(CRYPTOPP_DIR)
 LIB_DIRS = $(if $(BOOST_LIBS),$(BOOST_DIR)/stage/lib) \
-           $(GTEST_DIR)/googletest/make \
+           $(GTEST_DIR)/bazel-bin \
            $(HUNSPELL_DIR)/src/hunspell/.libs \
            $(CRYPTOPP_DIR)
 GNU_LD := $(shell ld -v 2>&1 | grep GNU)
 LDFLAGS = -pthread -Wl,$(if $(GNU_LD),--gc-sections,-dead_strip) \
           $(foreach d,$(LIB_DIRS),-L$(d))
-LDLIBS = -lgtest_main \
-         $(foreach lib,$(BOOST_LIBS),-lboost_$(lib)) \
+LIBS += gtest_main gtest
+LDLIBS = $(foreach lib,$(BOOST_LIBS),-lboost_$(lib)) \
          $(foreach lib,$(LIBS),-l$(lib))
 
 # Adapt VPATH for out-of-source builds, i.e. "make -f .../path/to/GNUmakefile".

@@ -16,15 +16,27 @@ extraction:
         prepare:
             packages:
                 - g++-6
+                - pkg-config
+                - python3
+                - unzip
+                - zip
+                - zlib1g-dev
         after_prepare:
+            - urlbase="https://github.com/bazelbuild/bazel/releases/download"
+            - version=0.27.0
+            - filename="bazel-${version}-installer-linux-x86_64.sh"
+            - wget "${urlbase}/${version}/${filename}" -O $filename
+            - chmod +x $filename
+            - ./$filename --user
             - mkdir -p $LGTM_WORKSPACE/latest-gcc-symlinks
             - ln -s /usr/bin/g++-6 $LGTM_WORKSPACE/latest-gcc-symlinks/g++
             - ln -s /usr/bin/gcc-6 $LGTM_WORKSPACE/latest-gcc-symlinks/gcc
-            - export PATH=$LGTM_WORKSPACE/latest-gcc-symlinks:$PATH
+            - export PATH=$LGTM_WORKSPACE/latest-gcc-symlinks:$PATH:$HOME/bin
             - export AR=gcc-ar-6
             - export RANLIB=gcc-ranlib-6
             - export GNU_MAKE=make
             - export GIT=true
+            - export BAZEL=bazel
         configure:
             command:
                 - export BOOST_DIR=$LGTM_SRC/boost
