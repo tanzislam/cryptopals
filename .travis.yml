@@ -17,9 +17,11 @@
 # - SONAR_TOKEN: Create this SonarCloud access token in My Account -> Security.
 #
 # For integration with Code Inspector (https://www.code-inspector.com)
-# - CODE_INSPECTOR_ACCESS_KEY: The "Access key" of the API Key created in
-#                              Project Preferences.
-# - CODE_INSPECTOR_SECRET_KEY: The "Secret key" of the API Key.
+# - CODE_INSPECTOR_ACCESS_KEY: The "Access key" of the API Key of your user
+#                              account. This is created in User Profile.
+# - CODE_INSPECTOR_SECRET_KEY: The "Secret key" of the API Key of your user
+#                              account.
+# - CODE_INSPECTOR_PROJECT_NAME: The name of the project in Code Inspector.
 #
 # Note: Encrypted environment variables aren't available to pull request builds.
 
@@ -139,7 +141,7 @@ script:
           "$TRAVIS_PULL_REQUEST" == "false" &&
           ! -z "$CODE_INSPECTOR_ACCESS_KEY" ]];
     then
-        code-inspector -v;
+        code-inspector-analyze -p "$CODE_INSPECTOR_PROJECT_NAME";
     fi
 - export HUNSPELL_AFFIX_PATH=$HUNSPELL_DIR/en_US.aff
 - export HUNSPELL_DICT_PATH=$HUNSPELL_DIR/en_US.dic
