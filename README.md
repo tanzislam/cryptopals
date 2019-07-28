@@ -26,9 +26,9 @@
   <img alt="lgtm"
        src="https://img.shields.io/lgtm/alerts/g/tanzislam/cryptopals.svg?logo=lgtm&logoWidth=18"/>
 </a> <a
-  href="https://www.code-inspector.com/public/project/78/cryptopals/dashboard">
+  href="https://www.code-inspector.com/public/project/365/cryptopals/dashboard">
   <img alt="Code Grade"
-       src="https://www.code-inspector.com/project/78/status/svg"/>
+       src="https://www.code-inspector.com/project/365/status/svg"/>
 </a>
 
 These are my solutions to the interesting challenges at [the cryptopals crypto
