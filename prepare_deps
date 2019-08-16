@@ -14,6 +14,7 @@
 #   - GIT: Executable name of Git (relatively modern version with submodules).
 #   - AR: Executable name of GCC's 'ar' tool. (Unnecessary on macOS.)
 #   - RANLIB: Executable name of GCC's 'ranlib' tool. (Unnecessary on macOS.)
+#   - CLEAN_BUILD: (Optional) Clean up existing build artifacts before building.
 
 function build_boost {
     # The Travis Cache plugin creates the directories beforehand, so we can't
@@ -21,8 +22,14 @@ function build_boost {
     if [[ ! -x $BOOST_DIR/bootstrap.sh ]]
     then
         $GIT clone --jobs 4 https://github.com/boostorg/boost.git $BOOST_DIR
+        pushd $BOOST_DIR
+    else
+        pushd $BOOST_DIR
+        if [[ -n "$CLEAN_BUILD" ]]
+        then
+            $GIT clean --force -Xd
+        fi
     fi
-    pushd $BOOST_DIR
     $GIT checkout --force --recurse-submodules master
     $GIT pull --prune --recurse-submodules --jobs 4
     $GIT submodule update --init --recursive --jobs 4
@@ -36,8 +43,14 @@ function build_gtest {
     if [[ ! -f $GTEST_DIR/BUILD.bazel && ! -f $GTEST_DIR/WORKSPACE ]]
     then
         $GIT clone --jobs 4 https://github.com/google/googletest.git $GTEST_DIR
+        pushd $GTEST_DIR
+    else
+        pushd $GTEST_DIR
+        if [[ -n "$CLEAN_BUILD" ]]
+        then
+            $GIT clean --force -Xd
+        fi
     fi
-    pushd $GTEST_DIR
     $GIT checkout --force --recurse-submodules master
     $GIT pull --prune --recurse-submodules --jobs 4
     $GIT submodule update --init --recursive --jobs 4
@@ -58,8 +71,15 @@ function build_hunspell {
     then
         $GIT clone --jobs 4 https://github.com/hunspell/hunspell.git \
              $HUNSPELL_DIR
+        pushd $HUNSPELL_DIR
+    else
+        pushd $HUNSPELL_DIR
+        if [[ -n "$CLEAN_BUILD" ]]
+        then
+            $GIT clean --force -Xd
+            rm config.cache
+        fi
     fi
-    pushd $HUNSPELL_DIR
     $GIT checkout --force --recurse-submodules master
     $GIT pull --prune --recurse-submodules --jobs 4
     $GIT submodule update --init --recursive --jobs 4
@@ -75,8 +95,14 @@ function build_cryptopp {
     then
         $GIT clone --jobs 4 https://github.com/weidai11/cryptopp.git \
              $CRYPTOPP_DIR
+        pushd $CRYPTOPP_DIR
+    else
+        pushd $CRYPTOPP_DIR
+        if [[ -n "$CLEAN_BUILD" ]]
+        then
+            $GIT clean --force -Xd
+        fi
     fi
-    pushd $CRYPTOPP_DIR
     $GIT checkout --force --recurse-submodules master
     $GIT pull --prune --recurse-submodules --jobs 4
     $GIT submodule update --init --recursive --jobs 4
