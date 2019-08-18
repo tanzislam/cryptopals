@@ -43,6 +43,7 @@ extraction:
                 - export GTEST_DIR=$LGTM_SRC/googletest
                 - export HUNSPELL_DIR=$LGTM_SRC/hunspell
                 - export CRYPTOPP_DIR=$LGTM_SRC/cryptopp
+                - export OPENSSL_DIR=$LGTM_SRC/openssl
                 - ./prepare_deps
         index:
             build_command:
