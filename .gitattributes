@@ -1,3 +1,4 @@
 # https://git-scm.com/docs/gitattributes
 * text=auto
 prepare_deps eol=lf
+.gitmodules eol=lf
