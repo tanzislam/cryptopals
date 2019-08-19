@@ -4,7 +4,7 @@
 #include "decode_base64.hpp"
 #include <string>
 #include "skip_chars.hpp"
-#include <boost/asio.hpp>
+#include "download_file_over_https.hpp"
 #include <boost/iostreams/device/array.hpp>
 #include <boost/iostreams/stream.hpp>
 #include "break_repeating_key_xor_cipher.hpp"
@@ -142,12 +142,9 @@ TEST(SkipChars, SkipsCharacters)
 
 TEST(BreakRepeatingKeyXor, BreaksRepeatingKeyXorCipher)
 {
-    std::string fileContents;
-    {
-        boost::asio::ip::tcp::iostream challenge6File("cryptopals.com", "http");
-        challenge6File << "GET /static/challenge-data/6.txt\r\n" << std::flush;
-        std::getline(challenge6File, fileContents, '\0');
-    }
+    auto fileContents =
+        cryptopals::downloadFileOverHttps("cryptopals.com",
+                                          "/static/challenge-data/6.txt");
     boost::iostreams::stream<boost::iostreams::array_source>
         fileRead(fileContents.c_str(), fileContents.size());
     cryptopals::decode_base64_streambuf base64Decoder(fileRead);
