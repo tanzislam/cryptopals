@@ -126,7 +126,7 @@ function build_openssl {
     $GIT checkout --force --recurse-submodules master
     $GIT pull --prune --recurse-submodules --jobs 4
     $GIT submodule update --init --recursive --jobs 4
-    ./config
+    ./config no-shared
     $GNU_MAKE -kj 3
 }
 

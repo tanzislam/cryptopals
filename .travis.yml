@@ -147,6 +147,14 @@ script:
     fi
 - export HUNSPELL_AFFIX_PATH=$HUNSPELL_DIR/en_US.aff
 - export HUNSPELL_DICT_PATH=$HUNSPELL_DIR/en_US.dic
+- >-
+    if [[ "$TRAVIS_OS_NAME" == "linux" ]];
+    then
+        export SSL_CERT_DIR=/etc/ssl/certs;
+    elif [[ "$TRAVIS_OS_NAME" == "osx" ]];
+    then
+        export SSL_CERT_FILE=/usr/local/etc/openssl/osx_cert.pem;
+    fi
 - ./test
 
 after_failure:

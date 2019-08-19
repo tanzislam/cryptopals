@@ -96,6 +96,10 @@ To build these solutions you will need:
    - On Windows / MinGW-w64 I had to specify a Makefile override:
      `mingw32-make AR=gcc-ar RANLIB=gcc-ranlib`.
 
+ - [OpenSSL](https://www.openssl.org/). Build it as a static library as given in
+   the `INSTALL` file in a UNIX-like shell:
+   `./config no-shared && mingw32-make AR=gcc-ar RANLIB=gcc-ranlib`.
+
 UNIX-like utilities on Windows are provided by any of the following:
  - [MSYS2](http://msys2.github.io/), or originally [MSYS](http://www.mingw.org/)
  - [Cygwin](https://www.cygwin.com/)
@@ -141,6 +145,7 @@ inner directory has a `GNUmakefile` that expects these variables:
  - `GTEST_DIR` -- the top-level directory of your Google Test installation
  - `HUNSPELL_DIR` -- the top-level directory of your Hunspell repository clone
  - `CRYPTOPP_DIR` -- the top-level directory of your Crypto++ repository clone
+ - `OPENSSL_DIR` -- the top-level directory of your OpenSSL repository clone
 
 To build any solution, ensure that the above are set in the environment, then
 `cd` to that directory and run `make` (or `gmake`, `mingw32-make`, etc.). This
@@ -170,8 +175,22 @@ be outside the repo or an uncommitted subdirectory inside the repo) and then run
 you do not need to specify it yourself. (The `clean` target may leak some files
 in this case, but you can `rm -rf` the entire build directory yourself anyway.)
 
+## Running
+
 Some solutions will require the location of a Hunspell dictionary to be provided
 in the `HUNSPELL_AFFIX_PATH` and `HUNSPELL_DICT_PATH` environment variables.
+
+Some solutions need to download data files over HTTPS from the Cryptopals
+website.
+ - On Linux platforms they need the SSL certificates location (e.g.
+   `/etc/ssl/certs` on Ubuntu, or `/etc/pki/tls/certs` on CentOS) to be provided
+   in the `SSL_CERT_DIR` environment variable.
+ - On macOS the SSL root certificates are stored in the "System Roots" keychain,
+   so I had export them to a temporary file with: `security export -k
+   /System/Library/Keychains/SystemRootCertificates.keychain` and then point the
+   `SSL_CERT_FILE` environment variable at it.
+ - On Windows the project directly fetches the system root certificates with
+   Microsoft's CryptoAPI to use with OpenSSL. No runtime settings are needed.
 
 ## Deciphering the Code
 
