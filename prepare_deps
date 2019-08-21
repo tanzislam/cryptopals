@@ -34,7 +34,7 @@ function build_boost {
     $GIT checkout --force --recurse-submodules master
     $GIT pull --prune --recurse-submodules --jobs 4
     $GIT submodule update --init --recursive --jobs 4
-    ./bootstrap.sh
+    ./bootstrap.sh --with-toolset=gcc
     ./b2 headers
     ./b2 --layout=system toolset=gcc variant=release address-model=64 -j 2 \
          --with-system
@@ -126,7 +126,7 @@ function build_openssl {
     $GIT checkout --force --recurse-submodules master
     $GIT pull --prune --recurse-submodules --jobs 4
     $GIT submodule update --init --recursive --jobs 4
-    ./config no-shared
+    CC=gcc CXX=g++ ./config no-shared
     $GNU_MAKE -kj 3
 }
 
