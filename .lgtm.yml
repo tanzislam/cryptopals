@@ -37,12 +37,12 @@ extraction:
             - export GNU_MAKE=make
             - export GIT=true
             - export BAZEL=bazel
+            - export BOOST_DIR=$LGTM_SRC/boost
+            - export GTEST_DIR=$LGTM_SRC/googletest
+            - export HUNSPELL_DIR=$LGTM_SRC/hunspell
+            - export CRYPTOPP_DIR=$LGTM_SRC/cryptopp
         configure:
             command:
-                - export BOOST_DIR=$LGTM_SRC/boost
-                - export GTEST_DIR=$LGTM_SRC/googletest
-                - export HUNSPELL_DIR=$LGTM_SRC/hunspell
-                - export CRYPTOPP_DIR=$LGTM_SRC/cryptopp
                 - ./prepare_deps
         index:
             build_command:
