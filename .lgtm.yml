@@ -10,6 +10,7 @@ path_classifiers:
         - cryptopp
         - googletest
         - hunspell
+        - openssl
 
 extraction:
     cpp:
@@ -41,6 +42,7 @@ extraction:
             - export GTEST_DIR=$LGTM_SRC/googletest
             - export HUNSPELL_DIR=$LGTM_SRC/hunspell
             - export CRYPTOPP_DIR=$LGTM_SRC/cryptopp
+            - export OPENSSL_DIR=$LGTM_SRC/openssl
         configure:
             command:
                 - ./prepare_deps

@@ -9,6 +9,7 @@
 #   - GTEST_DIR: Absolute or relative directory to Google Test repo clone.
 #   - HUNSPELL_DIR: Absolute or relative directory to Hunspell repo clone.
 #   - CRYPTOPP_DIR: Absolute or relative directory to Crypto++ repo clone.
+#   - OPENSSL_DIR: Absolute or relative directory to OpenSSL repo clone.
 #   - GNU_MAKE: Executable name of GNU Make (at least v4.2.1).
 #   - BAZEL: Executable name of Bazel.
 #   - GIT: Executable name of Git (relatively modern version with submodules).
@@ -33,7 +34,7 @@ function build_boost {
     $GIT checkout --force --recurse-submodules master
     $GIT pull --prune --recurse-submodules --jobs 4
     $GIT submodule update --init --recursive --jobs 4
-    ./bootstrap.sh
+    ./bootstrap.sh --with-toolset=gcc
     ./b2 headers
     ./b2 --layout=system toolset=gcc variant=release address-model=64 -j 2 \
          --with-system
@@ -110,6 +111,28 @@ function build_cryptopp {
     $GNU_MAKE -kj 3
 }
 
+function build_openssl {
+    if [[ ! -f $OPENSSL_DIR/config ]]
+    then
+        $GIT clone --jobs 4 https://github.com/openssl/openssl.git $OPENSSL_DIR
+        pushd $OPENSSL_DIR
+    else
+        pushd $OPENSSL_DIR
+        if [[ -n "$CLEAN_BUILD" ]]
+        then
+            $GIT clean --force -Xd
+        fi
+    fi
+    $GIT checkout --force --recurse-submodules master
+    $GIT pull --prune --recurse-submodules --jobs 4
+    $GIT submodule update --init --recursive --jobs 4
+    CC=gcc CXX=g++ ./config --prefix=`pwd`
+    $GNU_MAKE -kj 3
+    [[ -d lib ]] || mkdir lib
+    pushd lib
+    ln -fs ../libssl.* ../libcrypto.* .
+}
+
 function download_scowl_for_hunspell {
     url='https://downloads.sourceforge.net/project/wordlist/speller/2017.01.22/'
     url+='hunspell-en_US-2017.01.22.zip?r=https%3A%2F%2Fsourceforge.net%2F'
@@ -139,6 +162,10 @@ then
     echo "The CRYPTOPP_DIR variable must be set to where you cloned Crypto++" \
          >&2
     exit 1
+elif [[ "$OPENSSL_DIR" == "" ]]
+then
+    echo "The OPENSSL_DIR variable must be set to where you cloned OpenSSL" >&2
+    exit 1
 elif [[ "$GIT" == "" ]]
 then
     echo "The GIT variable must be set to the Git program name (or to 'true'" \
@@ -160,5 +187,6 @@ build_boost &
 build_gtest &
 build_hunspell &
 build_cryptopp &
+build_openssl &
 download_scowl_for_hunspell &
 wait

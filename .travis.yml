@@ -70,6 +70,7 @@ cache:
     - googletest
     - hunspell
     - cryptopp
+    - openssl
     - $HOME/.sonar/cache
     - $HOME/.cache/pip
     timeout: 1000
@@ -114,6 +115,7 @@ install:
 - export GTEST_DIR=$PWD/googletest
 - export HUNSPELL_DIR=$PWD/hunspell
 - export CRYPTOPP_DIR=$PWD/cryptopp
+- export OPENSSL_DIR=$PWD/openssl
 - ./prepare_deps
 
 before_script:
@@ -145,6 +147,19 @@ script:
     fi
 - export HUNSPELL_AFFIX_PATH=$HUNSPELL_DIR/en_US.aff
 - export HUNSPELL_DICT_PATH=$HUNSPELL_DIR/en_US.dic
+- >-
+    if [[ "$TRAVIS_OS_NAME" == "linux" ]];
+    then
+        export SSL_CERT_DIR=/etc/ssl/certs;
+    elif [[ "$TRAVIS_OS_NAME" == "osx" ]];
+    then
+        security export \
+            -k /System/Library/Keychains/SystemRootCertificates.keychain \
+            -t certs \
+            -p \
+            > certs.pem;
+        export SSL_CERT_FILE=`pwd`/certs.pem;
+    fi
 - ./test
 
 after_failure:

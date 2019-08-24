@@ -2,7 +2,7 @@
 #include <sstream>
 #include "line_extract_streambuf.hpp"
 #include <string>
-#include <boost/asio.hpp>
+#include "download_file_over_https.hpp"
 #include <boost/iostreams/device/array.hpp>
 #include <boost/iostreams/stream.hpp>
 #include "detect_single_byte_xor_cipher.hpp"
@@ -113,15 +113,12 @@ TEST(LineExtractStreamBuf, ExtractsLinesOneAtATimeAndRewindsProperly)
 }
 
 
-void testDetectSingleByteXorCipher(
+static void testDetectSingleByteXorCipher(
     cryptopals::break_single_byte_xor_cipher & breaker)
 {
-    std::string fileContents;
-    {
-        boost::asio::ip::tcp::iostream challenge4File("cryptopals.com", "http");
-        challenge4File << "GET /static/challenge-data/4.txt\r\n" << std::flush;
-        std::getline(challenge4File, fileContents, '\0');
-    }
+    static const auto fileContents =
+        cryptopals::downloadFileOverHttps("cryptopals.com",
+                                          "/static/challenge-data/4.txt");
     boost::iostreams::stream<boost::iostreams::array_source>
         fileRead(fileContents.c_str(), fileContents.size());
     auto lineNumberScoreAndXorByte =

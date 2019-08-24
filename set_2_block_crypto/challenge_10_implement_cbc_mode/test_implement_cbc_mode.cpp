@@ -2,7 +2,7 @@
 #include <sstream>
 #include "pkcs7_unpad.hpp"
 #include <string>
-#include <boost/asio.hpp>
+#include "download_file_over_https.hpp"
 #include <boost/iostreams/device/array.hpp>
 #include <boost/iostreams/stream.hpp>
 #include "decode_base64.hpp"
@@ -124,14 +124,9 @@ TEST(Pkcs7Unpad, DetectsInvalidOutput)
 
 TEST(AesCbcMode, CanDecrypt)
 {
-    std::string fileContents;
-    {
-        boost::asio::ip::tcp::iostream challenge10File("cryptopals.com",
-                                                       "http");
-        challenge10File << "GET /static/challenge-data/10.txt\r\n"
-                        << std::flush;
-        std::getline(challenge10File, fileContents, '\0');
-    }
+    auto fileContents =
+        cryptopals::downloadFileOverHttps("cryptopals.com",
+                                          "/static/challenge-data/10.txt");
     boost::iostreams::stream<boost::iostreams::array_source>
         challenge10File(fileContents.c_str(), fileContents.size());
     cryptopals::decode_base64_streambuf base64Decoder(challenge10File);

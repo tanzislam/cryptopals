@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
-#include <boost/asio.hpp>
+#include "download_file_over_https.hpp"
+#include <boost/iostreams/stream.hpp>
+#include <boost/iostreams/device/array.hpp>
 #include "decode_base64.hpp"
 #include "aes_ecb_decrypt.hpp"
 #include <iostream>
@@ -8,10 +10,19 @@
 #include <base64.h>
 
 
+static const std::string & fileData()
+{
+    static const auto challenge7File =
+        cryptopals::downloadFileOverHttps("cryptopals.com",
+                                          "/static/challenge-data/7.txt");
+    return challenge7File;
+}
+
+
 TEST(AesEcbTest, DecryptsAesInEcbMode)
 {
-    boost::asio::ip::tcp::iostream challenge7File("cryptopals.com", "http");
-    challenge7File << "GET /static/challenge-data/7.txt\r\n" << std::flush;
+    boost::iostreams::stream<boost::iostreams::array_source>
+        challenge7File(fileData().c_str(), fileData().size());
     cryptopals::decode_base64_streambuf base64Decoder(challenge7File);
     std::istream base64DecodedInput(&base64Decoder);
     cryptopals::aes_ecb_decrypt(std::cout,
@@ -24,8 +35,8 @@ TEST(DecodeBase64Test, ComparisonWithCryptoPP)
 {
     std::string output1, output2;
     {
-        boost::asio::ip::tcp::iostream challenge7File("cryptopals.com", "http");
-        challenge7File << "GET /static/challenge-data/7.txt\r\n" << std::flush;
+        boost::iostreams::stream<boost::iostreams::array_source>
+            challenge7File(fileData().c_str(), fileData().size());
         cryptopals::decode_base64_streambuf base64Decoder(challenge7File);
         std::istream base64DecodedInput(&base64Decoder);
         std::ostringstream os;
@@ -33,8 +44,8 @@ TEST(DecodeBase64Test, ComparisonWithCryptoPP)
         output1 = os.str();
     }
     {
-        boost::asio::ip::tcp::iostream challenge7File("cryptopals.com", "http");
-        challenge7File << "GET /static/challenge-data/7.txt\r\n" << std::flush;
+        boost::iostreams::stream<boost::iostreams::array_source>
+            challenge7File(fileData().c_str(), fileData().size());
         CryptoPP::FileSource source(challenge7File,
                                     true,
                                     new CryptoPP::Base64Decoder(

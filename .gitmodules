@@ -14,3 +14,7 @@
 [submodule "cryptopp"]
     path = cryptopp
     url = https://github.com/weidai11/cryptopp.git
+
+[submodule "openssl"]
+    path = openssl
+    url = https://github.com/openssl/openssl.git

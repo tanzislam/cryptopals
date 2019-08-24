@@ -13,6 +13,9 @@ else ifeq "" "$(filter clean print-%,$(MAKECMDGOALS))"
     else ifeq "" "$(CRYPTOPP_DIR)"
         $(error The CRYPTOPP_DIR variable must be set to where you cloned \
                 Crypto++)
+    else ifeq "" "$(OPENSSL_DIR)"
+        $(error The OPENSSL_DIR variable must be set to where you cloned \
+                OpenSSL)
     endif
 endif
 
@@ -27,11 +30,13 @@ CPPFLAGS = $(CPP_STANDARD) $(CPP_QUALITY_CHECKS) $(CPP_OPTIMIZATIONS)
 CXXFLAGS := -isystem $(BOOST_DIR) \
             -isystem $(GTEST_DIR)/googletest/include \
             -isystem $(HUNSPELL_DIR)/src/hunspell \
-            -isystem $(CRYPTOPP_DIR)
+            -isystem $(CRYPTOPP_DIR) \
+            -isystem $(OPENSSL_DIR)/include
 LIB_DIRS = $(if $(BOOST_LIBS),$(BOOST_DIR)/stage/lib) \
            $(GTEST_DIR)/bazel-bin \
            $(HUNSPELL_DIR)/src/hunspell/.libs \
-           $(CRYPTOPP_DIR)
+           $(CRYPTOPP_DIR) \
+           $(OPENSSL_DIR)
 GNU_LD := $(shell ld -v 2>&1 | grep GNU)
 LDFLAGS = -pthread -Wl,$(if $(GNU_LD),--gc-sections,-dead_strip) \
           $(foreach d,$(LIB_DIRS),-L$(d))

@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <sstream>
 #include "detect_repeated_block.hpp"
-#include <boost/asio.hpp>
+#include "download_file_over_https.hpp"
 #include <boost/iostreams/device/array.hpp>
 #include <boost/iostreams/stream.hpp>
 #include "detect_aes_in_ecb_mode.hpp"
@@ -20,12 +20,9 @@ TEST(DetectRepeatedBlock, CountsRepeatedBlock)
 
 TEST(DetectAesInEcbMode, DetectsAesEcbByRepeatCount)
 {
-    std::string fileContents;
-    {
-        boost::asio::ip::tcp::iostream challenge8File("cryptopals.com", "http");
-        challenge8File << "GET /static/challenge-data/8.txt\r\n" << std::flush;
-        std::getline(challenge8File, fileContents, '\0');
-    }
+    auto fileContents =
+        cryptopals::downloadFileOverHttps("cryptopals.com",
+                                          "/static/challenge-data/8.txt");
     boost::iostreams::stream<boost::iostreams::array_source>
         challenge8File(fileContents.c_str(), fileContents.size());
 
