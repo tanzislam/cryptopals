@@ -116,9 +116,11 @@ To build these solutions you will need:
      of building OpenSSL, which is `/usr/local/lib` by default. We need to
      override that as follows:
 
-       CC=gcc CXX=g++ ./config --prefix=`pwd`
-       gmake
-       mkdir lib && pushd lib && ln -fs ../libssl.* ../libcrypto.* .
+         CC=gcc CXX=g++ ./config --prefix=`pwd`
+         gmake
+         [[ -d lib ]] || mkdir lib
+         pushd lib
+         ln -fs ../libssl.* ../libcrypto.* .
 
 UNIX-like utilities on Windows are provided by any of the following:
  - [MSYS2](http://msys2.github.io/), or originally [MSYS](http://www.mingw.org/)

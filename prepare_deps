@@ -128,7 +128,7 @@ function build_openssl {
     $GIT submodule update --init --recursive --jobs 4
     CC=gcc CXX=g++ ./config --prefix=`pwd`
     $GNU_MAKE -kj 3
-    mkdir lib
+    [[ -d lib ]] || mkdir lib
     pushd lib
     ln -fs ../libssl.* ../libcrypto.* .
 }
