@@ -150,14 +150,17 @@ script:
 - >-
     if [[ "$TRAVIS_OS_NAME" == "linux" ]];
     then
-        cmd_prefix="SSL_CERT_DIR=/etc/ssl/certs";
+        export SSL_CERT_DIR=/etc/ssl/certs;
     elif [[ "$TRAVIS_OS_NAME" == "osx" ]];
     then
-        cmd_prefix="security export -k ";
-        cmd_prefix+="/System/Library/Keychains/SystemRootCertificates.keychain";
-        cmd_prefix+=" | SSL_CERT_FILE=/dev/stdin";
+        security export \
+            -k /System/Library/Keychains/SystemRootCertificates.keychain \
+            -t certs \
+            -p \
+            > certs.pem;
+        export SSL_CERT_FILE=`pwd`/certs.pem;
     fi
-- $cmd_prefix ./test
+- ./test
 
 after_failure:
 # http://jsteemann.github.io/blog/2014/10/30/getting-core-dumps-of-failed-travisci-builds/
