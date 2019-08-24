@@ -70,6 +70,14 @@ To build these solutions you will need:
      as mentioned in the Build Requirements.
    - On Windows / MinGW-w64 I had to specify a compiler option:
      `bazel build --compiler=mingw-gcc gtest gtest_main`.
+   - On my iBook G3 (running macOS Tiger 10.4.11) Bazel is not available due to
+     its dependency JDK8 not having been ported to the 32-bit PowerPC platform.
+     As a workaround I restored the `Makefile` from before it was deleted and
+     used that for building:
+
+         git checkout 6b8c138154~1 -- googletest/make
+         cd googletest/make
+         gmake AR=gcc-ar-mp-7 RANLIB=gcc-ranlib-mp-7
 
  - [Hunspell](https://hunspell.github.io/).
    - On Windows 7 / MinGW-w64 I had to first install the `autoconf`, `automake`
