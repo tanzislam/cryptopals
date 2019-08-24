@@ -96,9 +96,21 @@ To build these solutions you will need:
    - On Windows / MinGW-w64 I had to specify a Makefile override:
      `mingw32-make AR=gcc-ar RANLIB=gcc-ranlib`.
 
- - [OpenSSL](https://www.openssl.org/). Build it as a static library as given in
-   the `INSTALL` file in a UNIX-like shell:
-   `./config no-shared && mingw32-make AR=gcc-ar RANLIB=gcc-ranlib`.
+ - [OpenSSL](https://www.openssl.org/). Build it in a UNIX-like shell, with
+   overrides to use GCC:
+
+       CC=gcc CXX=g++ ./config
+       mingw32-make AR=gcc-ar RANLIB=gcc-ranlib
+
+   - On macOS, the dynamic library search mechanism cannot be directed to find
+     transitive dependencies (e.g. libcrypto.dylib, needed by libssl.dylib) in a
+     location determined by the application. The location is chosen at the time
+     of building OpenSSL, which is `/usr/local/lib` by default. We need to
+     override that as follows:
+
+       CC=gcc CXX=g++ ./config --prefix=`pwd`
+       gmake
+       mkdir lib && pushd lib && ln -fs ../libssl.* ../libcrypto.* .
 
 UNIX-like utilities on Windows are provided by any of the following:
  - [MSYS2](http://msys2.github.io/), or originally [MSYS](http://www.mingw.org/)

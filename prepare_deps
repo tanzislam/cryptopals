@@ -126,8 +126,11 @@ function build_openssl {
     $GIT checkout --force --recurse-submodules master
     $GIT pull --prune --recurse-submodules --jobs 4
     $GIT submodule update --init --recursive --jobs 4
-    CC=gcc CXX=g++ ./config no-shared
+    CC=gcc CXX=g++ ./config --prefix=`pwd`
     $GNU_MAKE -kj 3
+    mkdir lib
+    pushd lib
+    ln -fs ../libssl.* ../libcrypto.* .
 }
 
 function download_scowl_for_hunspell {
