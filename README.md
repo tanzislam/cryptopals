@@ -74,7 +74,7 @@ To build these solutions you will need:
      its dependency JDK8 not having been ported to the 32-bit PowerPC platform.
      As a workaround I restored the `Makefile` from before it was deleted and
      used that for building:
-     
+
          git checkout 6b8c138154~1 -- googletest/make
          cd googletest/make
          gmake AR=gcc-ar-mp-7 RANLIB=gcc-ranlib-mp-7
