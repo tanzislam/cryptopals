@@ -11,7 +11,7 @@
 #   - CRYPTOPP_DIR: Absolute or relative directory to Crypto++ repo clone.
 #   - OPENSSL_DIR: Absolute or relative directory to OpenSSL repo clone.
 #   - GNU_MAKE: Executable name of GNU Make (at least v4.2.1).
-#   - BAZEL: Executable name of Bazel.
+#   - BAZEL: Executable name of Bazel. (Set to "true" for Makefile workaround.) 
 #   - GIT: Executable name of Git (relatively modern version with submodules).
 #   - AR: Executable name of GCC's 'ar' tool. (Unnecessary on macOS.)
 #   - RANLIB: Executable name of GCC's 'ranlib' tool. (Unnecessary on macOS.)
@@ -55,16 +55,27 @@ function build_gtest {
     $GIT checkout --force --recurse-submodules master
     $GIT pull --prune --recurse-submodules --jobs 4
     $GIT submodule update --init --recursive --jobs 4
-    system_name=`uname -s`
-    if [[ $system_name =~ ^MINGW ]]
+    if [[ $BAZEL != "true" ]]
     then
-        compiler_override="--compiler=mingw-gcc"
-    elif [[ $system_name =~ ^MSYS_ ]]
-    then
-        compiler_override="--compiler=msys-gcc"
+        system_name=`uname -s`
+        if [[ $system_name =~ ^MINGW ]]
+        then
+            compiler_override="--compiler=mingw-gcc"
+        elif [[ $system_name =~ ^MSYS_ ]]
+        then
+            compiler_override="--compiler=msys-gcc"
+        fi
+        $BAZEL build $compiler_override gtest gtest_main
+        $BAZEL shutdown
+    else
+        git checkout 6b8c138154~1 -- googletest/make
+        pushd googletest/make
+        $GNU_MAKE -kj 2
+        popd
+        [[ -d bazel-bin ]] || mkdir bazel-bin
+        pushd bazel-bin
+        ln -fs ../googletest/make/*.a .
     fi
-    $BAZEL build $compiler_override gtest gtest_main
-    $BAZEL shutdown
 }
 
 function build_hunspell {
@@ -126,7 +137,7 @@ function build_openssl {
     $GIT checkout --force --recurse-submodules master
     $GIT pull --prune --recurse-submodules --jobs 4
     $GIT submodule update --init --recursive --jobs 4
-    CC=gcc CXX=g++ ./config --prefix=`pwd`
+    CC=gcc CXX=g++ ./config --prefix=`pwd` no-async
     $GNU_MAKE -kj 3
     [[ -d lib ]] || mkdir lib
     pushd lib

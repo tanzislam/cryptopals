@@ -76,8 +76,12 @@ To build these solutions you will need:
      used that for building:
 
          git checkout 6b8c138154~1 -- googletest/make
-         cd googletest/make
-         gmake AR=gcc-ar-mp-7 RANLIB=gcc-ranlib-mp-7
+         pushd googletest/make
+         gmake
+         popd
+         [[ -d bazel-bin ]] || mkdir bazel-bin
+         pushd bazel-bin
+         ln -fs ../googletest/make/*.a .
 
  - [Hunspell](https://hunspell.github.io/).
    - On Windows 7 / MinGW-w64 I had to first install the `autoconf`, `automake`
@@ -111,9 +115,9 @@ To build these solutions you will need:
        mingw32-make AR=gcc-ar RANLIB=gcc-ranlib
 
    - On macOS, the dynamic library search mechanism cannot be directed to find
-     transitive dependencies (e.g. libcrypto.dylib, needed by libssl.dylib) in a
-     location determined by the application. The location is chosen at the time
-     of building OpenSSL, which is `/usr/local/lib` by default. We need to
+     transitive dependencies (e.g. `libcrypto.dylib`, needed by `libssl.dylib`)
+     in a location determined by the application. The location is chosen at the
+     time of building OpenSSL, which is `/usr/local/lib` by default. We need to
      override that as follows:
 
          CC=gcc CXX=g++ ./config --prefix=`pwd`
@@ -121,6 +125,10 @@ To build these solutions you will need:
          [[ -d lib ]] || mkdir lib
          pushd lib
          ln -fs ../libssl.* ../libcrypto.* .
+
+     Also on macOS Tiger, I had to pass `no-async` to the first step in order to
+     avoid some "undefined symbol" issues with `_getcontext`, `_setcontext`, and
+     `_makecontext`.
 
 UNIX-like utilities on Windows are provided by any of the following:
  - [MSYS2](http://msys2.github.io/), or originally [MSYS](http://www.mingw.org/)
