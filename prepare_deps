@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 # Prerequisites:
-# - Changed to relevant directory for downloading and building dependencies.
 # - GNU Bash (at least v3.1 for the '+=' string-concatenation operator).
 # - Latest GCC ('gcc' and 'g++') available in PATH.
 # - Environment variables:
@@ -29,10 +28,10 @@ function build_boost {
         if [[ -n "$CLEAN_BUILD" ]]
         then
             $GIT clean --force -Xd
+            $GIT checkout --force --recurse-submodules master
         fi
+        $GIT pull --prune --recurse-submodules --jobs 4
     fi
-    $GIT checkout --force --recurse-submodules master
-    $GIT pull --prune --recurse-submodules --jobs 4
     $GIT submodule update --init --recursive --jobs 4
     ./bootstrap.sh --with-toolset=gcc
     ./b2 headers
@@ -50,10 +49,10 @@ function build_gtest {
         if [[ -n "$CLEAN_BUILD" ]]
         then
             $GIT clean --force -Xd
+            $GIT checkout --force --recurse-submodules master
         fi
+        $GIT pull --prune --recurse-submodules --jobs 4
     fi
-    $GIT checkout --force --recurse-submodules master
-    $GIT pull --prune --recurse-submodules --jobs 4
     $GIT submodule update --init --recursive --jobs 4
     if [[ $BAZEL != "true" ]]
     then
@@ -65,8 +64,7 @@ function build_gtest {
         then
             compiler_override="--compiler=msys-gcc"
         fi
-        $BAZEL build $compiler_override gtest gtest_main
-        $BAZEL shutdown
+        $BAZEL --batch build $compiler_override gtest gtest_main
     else
         git checkout 6b8c138154~1 -- googletest/make
         pushd googletest/make
@@ -90,10 +88,10 @@ function build_hunspell {
         then
             $GIT clean --force -Xd
             rm config.cache
+            $GIT checkout --force --recurse-submodules master
         fi
+        $GIT pull --prune --recurse-submodules --jobs 4
     fi
-    $GIT checkout --force --recurse-submodules master
-    $GIT pull --prune --recurse-submodules --jobs 4
     $GIT submodule update --init --recursive --jobs 4
     export LDFLAGS=-L/usr/local/opt/gettext/lib
     export CPPFLAGS=-I/usr/local/opt/gettext/include
@@ -113,10 +111,10 @@ function build_cryptopp {
         if [[ -n "$CLEAN_BUILD" ]]
         then
             $GIT clean --force -Xd
+            $GIT checkout --force --recurse-submodules master
         fi
+        $GIT pull --prune --recurse-submodules --jobs 4
     fi
-    $GIT checkout --force --recurse-submodules master
-    $GIT pull --prune --recurse-submodules --jobs 4
     $GIT submodule update --init --recursive --jobs 4
     $GNU_MAKE deps
     $GNU_MAKE -kj 3
@@ -132,12 +130,13 @@ function build_openssl {
         if [[ -n "$CLEAN_BUILD" ]]
         then
             $GIT clean --force -Xd
+            $GIT checkout --force --recurse-submodules master
         fi
+        $GIT pull --prune --recurse-submodules --jobs 4
     fi
-    $GIT checkout --force --recurse-submodules master
-    $GIT pull --prune --recurse-submodules --jobs 4
     $GIT submodule update --init --recursive --jobs 4
     CC=gcc CXX=g++ ./config --prefix=`pwd` no-async
+    $GNU_MAKE clean
     $GNU_MAKE -kj 3
     [[ -d lib ]] || mkdir lib
     pushd lib
