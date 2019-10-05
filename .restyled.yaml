@@ -1,0 +1,10 @@
+# https://github.com/restyled-io/restyled.io/wiki/Configuration-Reference
+request_review: author
+
+restylers_version: master
+
+restylers:
+- clang-format:
+    include:
+      - "set_*/challenge_*/*.hpp"
+      - "set_*/challenge_*/*.cpp"
