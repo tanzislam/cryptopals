@@ -16,7 +16,7 @@ aes_ctr_streambuf::aes_ctr_streambuf(std::istream & input,
           d_nonce(nonce),
           d_counter()
 {
-    setupNextBlock(); 
+    setupNextBlock();
 }
 
 
@@ -25,9 +25,11 @@ void aes_ctr_streambuf::setupNextBlock()
     std::string nonceAndCounter;
     nonceAndCounter.reserve(CryptoPP::AES::BLOCKSIZE);
     nonceAndCounter
-        .append(reinterpret_cast<char*>(boost::endian::little_uint64_buf_t(d_nonce).data()), 
+        .append(reinterpret_cast<char *>(
+                    boost::endian::little_uint64_buf_t(d_nonce).data()),
                 sizeof(boost::endian::little_uint64_buf_t))
-        .append(reinterpret_cast<char*>(boost::endian::little_uint64_buf_t(d_counter++).data()),
+        .append(reinterpret_cast<char *>(
+                    boost::endian::little_uint64_buf_t(d_counter++).data()),
                 sizeof(boost::endian::little_uint64_buf_t));
 
     d_encryptedNonceAndCounter.resize(nonceAndCounter.size());
