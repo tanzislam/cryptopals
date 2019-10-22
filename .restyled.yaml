@@ -1,5 +1,5 @@
 # https://github.com/restyled-io/restyled.io/wiki/Configuration-Reference
-request_review: {}
+request_review: author
 
 restylers_version: master
 
