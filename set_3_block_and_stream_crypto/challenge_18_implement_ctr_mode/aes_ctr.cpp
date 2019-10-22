@@ -16,7 +16,7 @@ aes_ctr_streambuf::aes_ctr_streambuf(std::istream & input,
           d_nonce(nonce),
           d_counter()
 {
-    setupNextBlock();
+    setupNextBlock(); 
 }
 
 
