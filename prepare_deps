@@ -87,7 +87,7 @@ function build_hunspell {
         if [[ -n "$CLEAN_BUILD" ]]
         then
             $GIT clean --force -Xd
-            rm config.cache
+            rm -f config.cache
             $GIT checkout --force --recurse-submodules master
         fi
         $GIT pull --prune --recurse-submodules --jobs 4
