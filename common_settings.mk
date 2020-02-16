@@ -126,8 +126,8 @@ ifeq "" "$(filter clean print-%,$(MAKECMDGOALS))"
     # https://sourceforge.net/p/mingw-w64/wiki2/gnu%20printf/
     CPPFLAGS += $(if $(IS_WINDOWS_PLATFORM),-D__USE_MINGW_ANSI_STDIO=1)
 
-    space :=
-    space +=
+    space := a
+    space := $(space:a= )
     relpath = $(if $(filter-out /%,$(1)),$(1),$(strip \
               $(subst $(space),/,$(patsubst %,..,$(subst /, ,$(CURDIR))))$(1)))
 
