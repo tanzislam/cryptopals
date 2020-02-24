@@ -48,13 +48,13 @@ addons:
         - sourceline: "ppa:ubuntu-toolchain-r/test"
         - sourceline: "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8"
           key_url: "https://bazel.build/bazel-release.pub.gpg"
-        - sourceline: "deb http://archive.ubuntu.com/ubuntu cosmic main"
+        - sourceline: "deb http://archive.ubuntu.com/ubuntu focal main"
         packages:
         - -t bionic
         - g++-9
         - gdb
         - bazel
-        - make/cosmic
+        - make/focal
     homebrew:
         update: true
         taps:
