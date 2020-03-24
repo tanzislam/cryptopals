@@ -21,6 +21,7 @@ deps
 bw-output
 .scannerwork
 .DS_Store
+compile_commands.json
 
 # Keep this entry in the last line of this file.
 # (The "clean" target relies on this fact.)
