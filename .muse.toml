@@ -1,0 +1,13 @@
+# https://docs.muse.dev/docs/repository-configuration/
+setup = "prepare_deps"
+
+build = """
+BOOST_DIR=boost
+GTEST_DIR=googletest
+HUNSPELL_DIR=hunspell
+CRYPTOPP_DIR=cryptopp
+OPENSSL_DIR=openssl
+make -k
+"""
+
+tools = [ "infer" ]

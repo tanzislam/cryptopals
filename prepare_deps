@@ -15,6 +15,19 @@
 #   - AR: Executable name of GCC's 'ar' tool. (Unnecessary on macOS.)
 #   - RANLIB: Executable name of GCC's 'ranlib' tool. (Unnecessary on macOS.)
 #   - CLEAN_BUILD: (Optional) Clean up existing build artifacts before building.
+export BOOST_DIR=${BOOST_DIR:-boost}
+export GTEST_DIR=${GTEST_DIR:-googletest}
+export HUNSPELL_DIR=${HUNSPELL_DIR:-hunspell}
+export CRYPTOPP_DIR=${CRYPTOPP_DIR:-cryptopp}
+export OPENSSL_DIR=${OPENSSL_DIR:-openssl}
+export GNU_MAKE=${GNU_MAKE:-make}
+export BAZEL=${BAZEL:-true}
+export GIT=${GIT:-git}
+if [[ $(uname) != "Darwin" ]]
+then
+    export AR=${AR:-gcc-ar}
+    export RANLIB=${RANLIB:-gcc-ranlib}
+fi
 
 function build_boost {
     # The Travis Cache plugin creates the directories beforehand, so we can't
@@ -56,7 +69,7 @@ function build_gtest {
     $GIT submodule update --init --recursive --jobs 4
     if [[ $BAZEL != "true" ]]
     then
-        system_name=`uname -s`
+        system_name=$(uname -s)
         if [[ $system_name =~ ^MINGW ]]
         then
             compiler_override="--compiler=mingw-gcc"
@@ -135,7 +148,7 @@ function build_openssl {
         $GIT pull --prune --recurse-submodules --jobs 4
     fi
     $GIT submodule update --init --recursive --jobs 4
-    CC=gcc CXX=g++ ./config --prefix=`pwd` no-async
+    CC=gcc CXX=g++ ./config --prefix=$(pwd) no-async
     $GNU_MAKE clean
     $GNU_MAKE -kj 3
     [[ -d lib ]] || mkdir lib
@@ -152,45 +165,6 @@ function download_scowl_for_hunspell {
     unzip -o -d $HUNSPELL_DIR hunspell-en_US-2017.01.22.zip
     rm hunspell-en_US-2017.01.22.zip
 }
-
-if [[ "$BOOST_DIR" == "" ]]
-then
-    echo "The BOOST_DIR variable must be set to where you cloned Boost" >&2
-    exit 1
-elif [[ "$GTEST_DIR" == "" ]]
-then
-    echo "The GTEST_DIR variable must be set to where you cloned Google Test" \
-         "and Google Mock" >&2
-    exit 1
-elif [[ "$HUNSPELL_DIR" == "" ]]
-then
-    echo "The HUNSPELL_DIR variable must be set to where you cloned Hunspell" \
-         >&2
-    exit 1
-elif [[ "$CRYPTOPP_DIR" == "" ]]
-then
-    echo "The CRYPTOPP_DIR variable must be set to where you cloned Crypto++" \
-         >&2
-    exit 1
-elif [[ "$OPENSSL_DIR" == "" ]]
-then
-    echo "The OPENSSL_DIR variable must be set to where you cloned OpenSSL" >&2
-    exit 1
-elif [[ "$GIT" == "" ]]
-then
-    echo "The GIT variable must be set to the Git program name (or to 'true'" \
-         "to avoid Git operations)" >&2
-    exit 1
-elif [[ "$GNU_MAKE" == "" ]]
-then
-    echo "The GNU_MAKE variable must be set to the GNU Make v4.2.1 program" \
-         "name" >&2
-    exit 1
-elif [[ "$BAZEL" == "" ]]
-then
-    echo "The BAZEL variable must be set to the Bazel program name" >&2
-    exit 1
-fi
 
 set -xe
 build_boost &
