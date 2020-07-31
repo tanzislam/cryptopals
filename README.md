@@ -18,10 +18,9 @@
   <img alt="CodeFactor"
        src=
    "https://www.codefactor.io/repository/github/tanzislam/cryptopals/badge"/>
-</a> <a href="https://www.kiuwan.com/github/tanzislam/cryptopals">
-  <img alt="Kiuwan"
-       src=
-   "https://www.kiuwan.com/github/tanzislam/cryptopals/badges/security.svg"/>
+</a> <a href="https://codescene.io/projects/4256">
+  <img src="https://codescene.io/projects/4256/status-badges/code-health"
+       alt="Code Health"/>
 </a> <a href="https://lgtm.com/projects/g/tanzislam/cryptopals">
   <img alt="lgtm"
        src="https://img.shields.io/lgtm/alerts/g/tanzislam/cryptopals.svg?logo=lgtm&logoWidth=18"/>
