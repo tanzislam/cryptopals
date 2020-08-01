@@ -28,6 +28,9 @@
   href="https://www.code-inspector.com/public/project/365/cryptopals/dashboard">
   <img alt="Code Grade"
        src="https://www.code-inspector.com/project/365/status/svg"/>
+</a> <a href="https://www.deepcode.ai/app/gh/tanzislam/cryptopals/_/dashboard">
+  <img alt="deepcode"
+       src="https://www.deepcode.ai/api/gh/badge?key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwbGF0Zm9ybTEiOiJnaCIsIm93bmVyMSI6InRhbnppc2xhbSIsInJlcG8xIjoiY3J5cHRvcGFscyIsImluY2x1ZGVMaW50IjpmYWxzZSwiYXV0aG9ySWQiOjE1NTYwLCJpYXQiOjE1OTYyNzM3MDJ9.fJXi9cVZaZWCRloAiKR0uQ2sBWNyTfYmMMGEQ2EbsPo"/>
 </a>
 
 These are my solutions to the interesting challenges at [the cryptopals crypto
