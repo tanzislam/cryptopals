@@ -46,7 +46,7 @@ addons:
     apt:
         sources:
         - sourceline: "ppa:ubuntu-toolchain-r/test"
-        - sourceline: "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8"
+        - sourceline: "deb [arch=amd64] https://storage.googleapis.com/bazel-apt stable jdk1.8"
           key_url: "https://bazel.build/bazel-release.pub.gpg"
         - sourceline: "deb http://archive.ubuntu.com/ubuntu focal main"
         packages:
@@ -119,7 +119,7 @@ before_install:
         if [[ $TRAVIS_PULL_REQUEST == false &&
               ! -z "$CODE_INSPECTOR_ACCESS_KEY" ]]
         then
-            # http://doc.code-inspector.com/ci-support.html
+            # https://doc.code-inspector.com/ci-support.html
             sudo apt-get install python3-pip python3-setuptools python3-wheel
             pip3 install code-inspector
         fi
@@ -217,7 +217,7 @@ script:
 - $shell ./test --gtest_color=yes
 
 after_failure:
-# http://jsteemann.github.io/blog/2014/10/30/getting-core-dumps-of-failed-travisci-builds/
+# https://jsteemann.github.io/blog/2014/10/30/getting-core-dumps-of-failed-travisci-builds/
 - coreFile=$(find . -maxdepth 1 -name "*core*" | head -n 1)
 - |-
     if [[ -f "$coreFile" ]]

@@ -1,4 +1,4 @@
-# http://make.mad-scientist.net/papers/advanced-auto-dependency-generation/
+# https://make.mad-scientist.net/papers/advanced-auto-dependency-generation/
 
 DEPDIR := deps
 DEPEXT := dep

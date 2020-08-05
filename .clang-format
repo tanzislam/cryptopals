@@ -1,4 +1,4 @@
-# http://clang.llvm.org/docs/ClangFormatStyleOptions.html
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html
 Language: Cpp
 AccessModifierOffset: -2
 AlignAfterOpenBracket: Align

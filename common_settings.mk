@@ -139,7 +139,7 @@ ifeq "" "$(filter clean print-%,$(MAKECMDGOALS))"
         # over from the dylib when linking the executable, and typically doesn't
         # contain these tokens. We fix it here.
         #
-        # http://jorgen.tjer.no/post/2014/05/20/dt-rpath-ld-and-at-rpath-dyld/
+        # https://jorgen.tjer.no/post/2014/05/20/dt-rpath-ld-and-at-rpath-dyld/
         # https://wincent.com/wiki/@executable_path,_@load_path_and_@rpath
         .PHONY : fix_relative_paths_to_dylibs
         fix_relative_paths_to_dylibs : $(EXECUTABLE_NAME)
