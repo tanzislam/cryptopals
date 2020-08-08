@@ -117,7 +117,11 @@ To build these solutions you will need:
    overrides to use GCC:
 
        CC=gcc CXX=g++ ./config
-       mingw32-make AR=gcc-ar RANLIB=gcc-ranlib
+       make AR=gcc-ar RANLIB=gcc-ranlib
+
+   - On Windows / MinGW-w64 I had to install the MSYS2 `make.exe`, because the
+     generated `Makefile` contains Unix-style full paths that `mingw32-make.exe`
+     cannot understand.
 
    - On macOS, the dynamic library search mechanism cannot be directed to find
      transitive dependencies (e.g. `libcrypto.dylib`, needed by `libssl.dylib`)
