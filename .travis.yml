@@ -141,6 +141,7 @@ before_install:
         $msys2 pacman --sync --noconfirm --needed \
                 autoconf \
                 automake \
+                make \
                 mingw-w64-x86_64-libtool \
                 mingw-w64-x86_64-toolchain \
                 perl \
@@ -148,8 +149,8 @@ before_install:
         taskkill //IM gpg-agent.exe //F
         export CPPFLAGS=-D__USE_MINGW_ANSI_STDIO=1
         export PATH=/C/tools/msys64/mingw64/bin:$PATH
-        export GNU_MAKE=mingw32-make
-        export MAKE=mingw32-make
+        export GNU_MAKE=/C/tools/msys64/usr/bin/make
+        export MAKE=$GNU_MAKE
         export AR=gcc-ar
         export RANLIB=gcc-ranlib
         export COVERITY_SCAN_BRANCH_PATTERN=disable_coverity_scan
@@ -158,7 +159,7 @@ before_install:
 - export BAZEL=bazel
 - export GIT=git
 - g++ --version
-- $GNU_MAKE --version
+- $shell $GNU_MAKE --version
 - $GIT --version
 
 install:
