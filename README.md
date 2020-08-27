@@ -62,7 +62,7 @@ To build these solutions you will need:
    from [modular Boost](https://github.com/boostorg/boost/).
    - You will need to build the libraries as described for your platform in the
      [Getting Started guide](
-     https://github.com/boostorg/boost/wiki/Getting-Started%3A-Overview). Only
+     https://github.com/boostorg/wiki/wiki/Getting-Started%3A-Overview). Only
      specific libraries are needed (as indicated by the `BOOST_LIBS` line in
      each solution's `GNUmakefile`), so you can speed up the build by appending
      the `--with-<library_name>` option below.
