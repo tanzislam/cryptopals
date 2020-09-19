@@ -46,7 +46,7 @@ std::string forge_admin_profile_cbc()
             });
     auto inputBlockIdx = prefixLength / blockSize;
     auto inputIdxInBlock = prefixLength % blockSize;
-    static char inputWithNuls[] = "\0admin\0true\0";
+    static char inputWithNuls[] = "\0\0admin\0true\0";
     std::string input(inputWithNuls, sizeof inputWithNuls - 1);
     if (!inputBlockIdx) {
         input = std::string(blockSize, 'X') + input;
@@ -55,9 +55,10 @@ std::string forge_admin_profile_cbc()
     auto inputPosInPrevBlock = blockSize * (inputBlockIdx - 1)
                                + inputIdxInBlock;
     auto ret = generate_encrypted_cookie(input);
-    ret[inputPosInPrevBlock] ^= ';';
-    ret[inputPosInPrevBlock + sizeof "\0admin"  - 1] ^= '=';
-    ret[inputPosInPrevBlock + sizeof "\0admin\0true" - 1] ^= ';';
+    ret[inputPosInPrevBlock] ^= '=';  // Parser must read new key after next ';'
+    ret[inputPosInPrevBlock + sizeof "\0" - 1] ^= ';';
+    ret[inputPosInPrevBlock + sizeof "\0\0admin"  - 1] ^= '=';
+    ret[inputPosInPrevBlock + sizeof "\0\0admin\0true" - 1] ^= ';';
     return ret;
 }
 
