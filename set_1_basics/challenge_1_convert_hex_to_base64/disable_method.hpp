@@ -32,4 +32,15 @@
         }                                               \
     }
 
+
+// This default seekpos() method allows seeking to the current position,
+// otherwise it fails with a no-op (or asserts). Needed by weidai11/cryptopp#968
+#define DEFINE_DEFAULT_SEEKPOS_METHOD                                     \
+    pos_type seekpos(pos_type pos, std::ios_base::openmode which)         \
+    {                                                                     \
+        auto curpos = seekoff(0, std::ios_base::cur, which);              \
+        assert(pos == curpos);                                            \
+        return pos == curpos ? pos : std::streambuf::seekpos(pos, which); \
+    }
+
 #endif

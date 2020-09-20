@@ -20,8 +20,10 @@ std::streambuf::pos_type tee_streambuf::seekoff(std::streambuf::off_type off,
 {
     assert(d_inputStream);
     assert(off == 0);
-    assert(dir == std::ios_base::cur);
     assert(which == std::ios_base::in);
+    if (dir == std::ios_base::end)
+        return std::streambuf::seekoff(off, dir, which);
+    assert(dir == std::ios_base::cur);
     return off == 0 && dir == std::ios_base::cur && which == std::ios_base::in
                ? std::streampos(d_inputStream->tellg())
                : std::streambuf::seekoff(off, dir, which);

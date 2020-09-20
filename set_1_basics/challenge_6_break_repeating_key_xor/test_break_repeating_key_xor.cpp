@@ -119,12 +119,7 @@ TEST(DecodeBase64StreamBuf, ComputesPositionsAndOffsets)
     EXPECT_EQ(9, base64DecodedInput.tellg());
     EXPECT_EQ(16, inputStream.tellg());
 
-#ifdef NDEBUG
     EXPECT_FALSE(base64DecodedInput.seekg(-3, std::ios_base::end));
-#else
-    EXPECT_DEATH(base64DecodedInput.seekg(-3, std::ios_base::end),
-                 "dir == std::ios_base::cur");
-#endif
     EXPECT_TRUE(inputStream);
     EXPECT_EQ(16, inputStream.tellg());
 }

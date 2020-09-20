@@ -25,7 +25,7 @@ class xor_streambuf : public std::streambuf
 
     DISABLE_VOID_METHOD(void imbue(const std::locale &))
     DISABLE_METHOD(std::streambuf * setbuf(char_type *, std::streamsize))
-    DISABLE_METHOD(pos_type seekpos(pos_type, std::ios_base::openmode))
+    DEFINE_DEFAULT_SEEKPOS_METHOD
     DISABLE_METHOD(std::streamsize showmanyc())
     DISABLE_METHOD(int_type pbackfail(int_type))
 

@@ -63,9 +63,11 @@ std::streambuf::pos_type xor_streambuf::seekoff(off_type off,
                                                 std::ios_base::openmode which)
 {
     assert(off == 0);
-    assert(dir == std::ios_base::cur);
     assert(d_inputStream2 ? which == std::ios_base::in
                           : which == std::ios_base::out);
+    if (dir == std::ios_base::end)
+        return std::streambuf::seekoff(off, dir, which);
+    assert(dir == std::ios_base::cur);
     return which == std::ios_base::in ? d_inputStream2->tellg()
                                       : d_outputStream->tellp();
 }

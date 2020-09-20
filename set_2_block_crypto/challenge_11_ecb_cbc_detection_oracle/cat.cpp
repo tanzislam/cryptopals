@@ -16,6 +16,8 @@ cat_streambuf::cat_streambuf(std::istream & inputStream1,
 std::streambuf::pos_type cat_streambuf::seekpos(std::streambuf::pos_type pos,
                                                 std::ios_base::openmode which)
 {
+    if (pos == seekoff(0, std::ios_base::cur, which))
+        return pos;
     assert(pos == std::streampos(0));
     assert(which == std::ios_base::in);
     return pos == std::streampos(0) && which == std::ios_base::in
@@ -31,8 +33,10 @@ std::streambuf::pos_type cat_streambuf::seekoff(std::streambuf::off_type off,
                                                 std::ios_base::openmode which)
 {
     assert(off == 0);
-    assert(dir == std::ios_base::cur);
     assert(which == std::ios_base::in);
+    if (dir == std::ios_base::end)
+        return std::streambuf::seekoff(off, dir, which);
+    assert(dir == std::ios_base::cur);
     return off == 0 && dir == std::ios_base::cur && which == std::ios_base::in
                ? d_inputStream1.rdbuf()->pubseekoff(0, dir, which)
                      + (d_inputStream1.eof()
