@@ -10,6 +10,7 @@
   <img alt="Codacy"
        src=
    "https://api.codacy.com/project/badge/Grade/0eefb6418259474191b5611351e02dee"
+       title="Cppcheck, Flawfinder, remark-lint"
   />
 </a> <a href="https://sonarcloud.io/dashboard?id=tanzislam_cryptopals">
   <img alt="SonarCloud"
@@ -17,7 +18,8 @@
 </a> <a href="https://www.codefactor.io/repository/github/tanzislam/cryptopals">
   <img alt="CodeFactor"
        src=
-   "https://www.codefactor.io/repository/github/tanzislam/cryptopals/badge"/>
+   "https://www.codefactor.io/repository/github/tanzislam/cryptopals/badge"
+       title="cpplint, ShellCheck, yamllint"/>
 </a> <a href="https://codescene.io/projects/4256">
   <img src="https://codescene.io/projects/4256/status-badges/code-health"
        alt="Code Health"/>
@@ -33,7 +35,8 @@
        src="https://www.deepcode.ai/api/gh/badge?key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwbGF0Zm9ybTEiOiJnaCIsIm93bmVyMSI6InRhbnppc2xhbSIsInJlcG8xIjoiY3J5cHRvcGFscyIsImluY2x1ZGVMaW50IjpmYWxzZSwiYXV0aG9ySWQiOjE1NTYwLCJpYXQiOjE1OTYyNzM3MDJ9.fJXi9cVZaZWCRloAiKR0uQ2sBWNyTfYmMMGEQ2EbsPo"/>
 </a> <a href="https://codeclimate.com/github/tanzislam/cryptopals">
   <img alt="Code Climate"
-       src="https://api.codeclimate.com/v1/badges/95f777506332767d6c34/maintainability"/>
+       src="https://api.codeclimate.com/v1/badges/95f777506332767d6c34/maintainability"
+       title="Cppcheck, EditorConfig, Markdownlint, ShellCheck"/>
 </a>
 
 These are my solutions to the interesting challenges at [the cryptopals crypto
