@@ -33,6 +33,7 @@ branches:
 
 git:
     submodules: false
+    depth: false
 
 os:
 - linux
@@ -188,6 +189,9 @@ script:
         sonar-scanner -Dsonar.projectKey=$SONAR_PROJECTKEY \
                       -Dsonar.sources="${source_dirs[*]}" \
                       -Dsonar.cfamily.build-wrapper-output=bw-output \
+                      -Dsonar.cfamily.cache.enabled=true \
+                      -Dsonar.cfamily.cache.path=$HOME/.sonar/cache \
+                      -Dsonar.cfamily.threads=`nproc` \
                       -Dsonar.host.url='https://sonarcloud.io'
     else
         $shell $GNU_MAKE -kj `nproc`
