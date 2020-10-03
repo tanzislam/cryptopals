@@ -182,20 +182,10 @@ script:
         ( $TRAVIS_PULL_REQUEST == false ||
             "$TRAVIS_PULL_REQUEST_SLUG" == "$TRAVIS_REPO_SLUG" ) ]]
     then
-        $GNU_MAKE -k clean
-        build-wrapper-macosx-x86 --out-dir bw-output $GNU_MAKE -kj `nproc`
-        source_dirs=(set_*)
-        IFS=,
-        sonar-scanner -Dsonar.projectKey=$SONAR_PROJECTKEY \
-                      -Dsonar.sources="${source_dirs[*]}" \
-                      -Dsonar.cfamily.build-wrapper-output=bw-output \
-                      -Dsonar.cfamily.cache.enabled=true \
-                      -Dsonar.cfamily.cache.path=$HOME/.sonar/cache \
-                      -Dsonar.cfamily.threads=`nproc` \
-                      -Dsonar.host.url='https://sonarcloud.io'
-    else
-        $shell $GNU_MAKE -kj `nproc`
+        build_instrument="build-wrapper-macosx-x86 --out-dir bw-output"
     fi
+- $shell $GNU_MAKE -k clean
+- $shell $build_instrument $GNU_MAKE -kj `nproc`
 - |-
     if [[ $TRAVIS_OS_NAME == linux &&
           $TRAVIS_PULL_REQUEST == false &&
@@ -219,7 +209,23 @@ script:
         export SSL_CERT_FILE=`pwd`/certs.pem
         ;;
     esac
-- $shell ./test --gtest_color=yes
+- $shell ./test --gtest_color=yes --gtest_output=xml:test_results/
+- |-
+    if [[ $TRAVIS_OS_NAME == osx  &&
+        ( $TRAVIS_PULL_REQUEST == false ||
+            "$TRAVIS_PULL_REQUEST_SLUG" == "$TRAVIS_REPO_SLUG" ) ]]
+    then
+        source_dirs=(set_*)
+        IFS=,
+        sonar-scanner -Dsonar.projectKey=$SONAR_PROJECTKEY \
+                      -Dsonar.sources="${source_dirs[*]}" \
+                      -Dsonar.cfamily.build-wrapper-output=bw-output \
+                      -Dsonar.cfamily.cache.enabled=true \
+                      -Dsonar.cfamily.cache.path=$HOME/.sonar/cache \
+                      -Dsonar.cfamily.cppunit.reportsPath=test_results \
+                      -Dsonar.cfamily.threads=`nproc` \
+                      -Dsonar.host.url='https://sonarcloud.io'
+    fi
 
 after_failure:
 # https://jsteemann.github.io/blog/2014/10/30/getting-core-dumps-of-failed-travisci-builds/
