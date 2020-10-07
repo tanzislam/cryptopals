@@ -136,12 +136,15 @@ function build_cryptopp {
 function build_openssl {
     if [[ ! -f $OPENSSL_DIR/config ]]
     then
-        $GIT clone --jobs 4 https://github.com/openssl/openssl.git $OPENSSL_DIR
+        $GIT clone --config core.eol=lf --config core.autocrlf=false --jobs 4 \
+             https://github.com/openssl/openssl.git $OPENSSL_DIR
         pushd $OPENSSL_DIR
     else
         pushd $OPENSSL_DIR
         if [[ -n "$CLEAN_BUILD" ]]
         then
+            $GIT config core.eol lf
+            $GIT config core.autocrlf false
             $GIT clean --force -Xd
             $GIT checkout --force --recurse-submodules master
         fi
@@ -149,7 +152,7 @@ function build_openssl {
     fi
     $GIT submodule update --init --recursive --jobs 4
     CC=gcc CXX=g++ ./config --prefix=$(pwd) no-async
-    $GNU_MAKE clean
+    $GNU_MAKE update -kj 3
     $GNU_MAKE -kj 3
     [[ -d lib ]] || mkdir lib
     pushd lib
