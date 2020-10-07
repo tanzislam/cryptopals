@@ -134,6 +134,9 @@ before_install:
         [[ ! -f C:/tools/msys64/msys2_shell.cmd ]] && rm -rf C:/tools/msys64
         choco uninstall -y mingw
         choco upgrade --no-progress -y msys2 bazel
+        sed -ri -e 's|^(Server = http://repo.msys2.org)|#\1|' \
+                -e 's|^(Server = https://sourceforge.net)|#\1|' \
+                /C/tools/msys64/etc/pacman.d/mirrorlist.*
         export msys2='cmd //C RefreshEnv.cmd '
         export msys2+='& set MSYS=winsymlinks:nativestrict '
         export msys2+='& C:\\tools\\msys64\\msys2_shell.cmd -defterm -no-start'
