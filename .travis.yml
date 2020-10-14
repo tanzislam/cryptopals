@@ -40,22 +40,19 @@ os:
 - osx
 - windows
 
-dist: bionic
-osx_image: xcode11.3
+dist: focal
+osx_image: xcode12.2
 
 addons:
     apt:
         sources:
-        - sourceline: "ppa:ubuntu-toolchain-r/test"
         - sourceline: "deb [arch=amd64] https://storage.googleapis.com/bazel-apt stable jdk1.8"
           key_url: "https://bazel.build/bazel-release.pub.gpg"
-        - sourceline: "deb http://archive.ubuntu.com/ubuntu focal main"
         packages:
-        - -t bionic
-        - g++-9
+        - g++-10
         - gdb
         - bazel
-        - make/focal
+        - make
     homebrew:
         update: true
         taps:
@@ -115,8 +112,8 @@ before_install:
         ;;
       linux)
         export GNU_MAKE=make
-        export AR=gcc-ar-9
-        export RANLIB=gcc-ranlib-9
+        export AR=gcc-ar-10
+        export RANLIB=gcc-ranlib-10
         if [[ $TRAVIS_PULL_REQUEST == false &&
               ! -z "$CODE_INSPECTOR_ACCESS_KEY" ]]
         then
@@ -126,8 +123,8 @@ before_install:
         fi
         # Workaround for https://github.com/travis-ci/travis-ci/issues/3668
         mkdir -p latest-gcc-symlinks
-        ln -s /usr/bin/g++-9 latest-gcc-symlinks/g++
-        ln -s /usr/bin/gcc-9 latest-gcc-symlinks/gcc
+        ln -s /usr/bin/g++-10 latest-gcc-symlinks/g++
+        ln -s /usr/bin/gcc-10 latest-gcc-symlinks/gcc
         export PATH=$PWD/latest-gcc-symlinks:$PATH
         ;;
       windows)
