@@ -34,7 +34,8 @@ function build_boost {
     # use [[ ! -d $dir ]] here
     if [[ ! -x $BOOST_DIR/bootstrap.sh ]]
     then
-        $GIT clone --jobs 4 https://github.com/boostorg/boost.git $BOOST_DIR
+        $GIT clone --depth 1 --shallow-submodules --jobs 4 \
+             https://github.com/boostorg/boost.git $BOOST_DIR
         pushd $BOOST_DIR
     else
         pushd $BOOST_DIR
@@ -45,7 +46,7 @@ function build_boost {
         fi
         $GIT pull --prune --recurse-submodules --jobs 4
     fi
-    $GIT submodule update --init --recursive --jobs 4
+    $GIT submodule update --init --recursive --depth 1 --jobs 4
     ./bootstrap.sh --with-toolset=gcc
     ./b2 headers
     ./b2 --layout=system toolset=gcc variant=release address-model=64 -j 2 \
@@ -55,7 +56,8 @@ function build_boost {
 function build_gtest {
     if [[ ! -f $GTEST_DIR/BUILD.bazel && ! -f $GTEST_DIR/WORKSPACE ]]
     then
-        $GIT clone --jobs 4 https://github.com/google/googletest.git $GTEST_DIR
+        $GIT clone --depth 1 --shallow-submodules --jobs 4 \
+             https://github.com/google/googletest.git $GTEST_DIR
         pushd $GTEST_DIR
     else
         pushd $GTEST_DIR
@@ -66,7 +68,7 @@ function build_gtest {
         fi
         $GIT pull --prune --recurse-submodules --jobs 4
     fi
-    $GIT submodule update --init --recursive --jobs 4
+    $GIT submodule update --init --recursive --depth 1 --jobs 4
     if [[ $BAZEL != "true" ]]
     then
         system_name=$(uname -s)
@@ -92,8 +94,8 @@ function build_gtest {
 function build_hunspell {
     if [[ ! -f $HUNSPELL_DIR/configure.ac ]]
     then
-        $GIT clone --jobs 4 https://github.com/hunspell/hunspell.git \
-             $HUNSPELL_DIR
+        $GIT clone --depth 1 --shallow-submodules --jobs 4 \
+             https://github.com/hunspell/hunspell.git $HUNSPELL_DIR
         pushd $HUNSPELL_DIR
     else
         pushd $HUNSPELL_DIR
@@ -105,7 +107,7 @@ function build_hunspell {
         fi
         $GIT pull --prune --recurse-submodules --jobs 4
     fi
-    $GIT submodule update --init --recursive --jobs 4
+    $GIT submodule update --init --recursive --depth 1 --jobs 4
     export LDFLAGS=-L/usr/local/opt/gettext/lib
     export CPPFLAGS=-I/usr/local/opt/gettext/include
     autoreconf -vfi
@@ -116,8 +118,8 @@ function build_hunspell {
 function build_cryptopp {
     if [[ ! -f $CRYPTOPP_DIR/GNUmakefile ]]
     then
-        $GIT clone --jobs 4 https://github.com/weidai11/cryptopp.git \
-             $CRYPTOPP_DIR
+        $GIT clone --depth 1 --shallow-submodules --jobs 4 \
+             https://github.com/weidai11/cryptopp.git $CRYPTOPP_DIR
         pushd $CRYPTOPP_DIR
     else
         pushd $CRYPTOPP_DIR
@@ -128,7 +130,7 @@ function build_cryptopp {
         fi
         $GIT pull --prune --recurse-submodules --jobs 4
     fi
-    $GIT submodule update --init --recursive --jobs 4
+    $GIT submodule update --init --recursive --depth 1 --jobs 4
     $GNU_MAKE deps
     $GNU_MAKE -kj 3
 }
@@ -136,7 +138,8 @@ function build_cryptopp {
 function build_openssl {
     if [[ ! -f $OPENSSL_DIR/config ]]
     then
-        $GIT clone --config core.eol=lf --config core.autocrlf=false --jobs 4 \
+        $GIT clone --config core.eol=lf --config core.autocrlf=false --depth 1 \
+             --shallow-submodules --jobs 4 \
              https://github.com/openssl/openssl.git $OPENSSL_DIR
         pushd $OPENSSL_DIR
     else
@@ -150,7 +153,7 @@ function build_openssl {
         fi
         $GIT pull --prune --recurse-submodules --jobs 4
     fi
-    $GIT submodule update --init --recursive --jobs 4
+    $GIT submodule update --init --recursive --depth 1 --jobs 4
     CC=gcc CXX=g++ ./config --prefix=$(pwd) no-async
     $GNU_MAKE update -kj 3
     $GNU_MAKE -kj 3
