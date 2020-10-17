@@ -34,7 +34,7 @@ function build_boost {
     # use [[ ! -d $dir ]] here
     if [[ ! -x $BOOST_DIR/bootstrap.sh ]]
     then
-        $GIT clone --depth 1 --shallow-submodules --jobs 4 \
+        $GIT clone --depth 1 --shallow-submodules --no-tags --jobs 4 \
              https://github.com/boostorg/boost.git $BOOST_DIR
         pushd $BOOST_DIR
     else
@@ -56,7 +56,7 @@ function build_boost {
 function build_gtest {
     if [[ ! -f $GTEST_DIR/BUILD.bazel && ! -f $GTEST_DIR/WORKSPACE ]]
     then
-        $GIT clone --depth 1 --shallow-submodules --jobs 4 \
+        $GIT clone --depth 1 --shallow-submodules --no-tags --jobs 4 \
              https://github.com/google/googletest.git $GTEST_DIR
         pushd $GTEST_DIR
     else
@@ -94,7 +94,7 @@ function build_gtest {
 function build_hunspell {
     if [[ ! -f $HUNSPELL_DIR/configure.ac ]]
     then
-        $GIT clone --depth 1 --shallow-submodules --jobs 4 \
+        $GIT clone --depth 1 --shallow-submodules --no-tags --jobs 4 \
              https://github.com/hunspell/hunspell.git $HUNSPELL_DIR
         pushd $HUNSPELL_DIR
     else
@@ -118,7 +118,7 @@ function build_hunspell {
 function build_cryptopp {
     if [[ ! -f $CRYPTOPP_DIR/GNUmakefile ]]
     then
-        $GIT clone --depth 1 --shallow-submodules --jobs 4 \
+        $GIT clone --depth 1 --shallow-submodules --no-tags --jobs 4 \
              https://github.com/weidai11/cryptopp.git $CRYPTOPP_DIR
         pushd $CRYPTOPP_DIR
     else
@@ -139,7 +139,7 @@ function build_openssl {
     if [[ ! -f $OPENSSL_DIR/config ]]
     then
         $GIT clone --config core.eol=lf --config core.autocrlf=false --depth 1 \
-             --shallow-submodules --jobs 4 \
+             --shallow-submodules --no-tags --jobs 4 \
              https://github.com/openssl/openssl.git $OPENSSL_DIR
         pushd $OPENSSL_DIR
     else
