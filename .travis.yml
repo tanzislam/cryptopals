@@ -49,7 +49,7 @@ addons:
         - sourceline: "deb [arch=amd64] https://storage.googleapis.com/bazel-apt stable jdk1.8"
           key_url: "https://bazel.build/bazel-release.pub.gpg"
         packages:
-        - g++-10
+        - g++-9
         - gdb
         - bazel
         - make
@@ -69,7 +69,8 @@ addons:
             version: $TRAVIS_COMMIT
         build_command_prepend: $GNU_MAKE -k clean
         build_command: $GNU_MAKE -k
-        branch_pattern: master
+        # https://ruby-doc.org/core/Regexp.html (script encloses in \A and \Z)
+        branch_pattern: (master|travis-coverity-.*)
     sonarcloud:
         organization: $SONAR_ORGANIZATION
 
@@ -112,8 +113,8 @@ before_install:
         ;;
       linux)
         export GNU_MAKE=make
-        export AR=gcc-ar-10
-        export RANLIB=gcc-ranlib-10
+        export AR=gcc-ar-9
+        export RANLIB=gcc-ranlib-9
         if [[ $TRAVIS_PULL_REQUEST == false &&
               ! -z "$CODE_INSPECTOR_ACCESS_KEY" ]]
         then
@@ -123,8 +124,8 @@ before_install:
         fi
         # Workaround for https://github.com/travis-ci/travis-ci/issues/3668
         mkdir -p latest-gcc-symlinks
-        ln -s /usr/bin/g++-10 latest-gcc-symlinks/g++
-        ln -s /usr/bin/gcc-10 latest-gcc-symlinks/gcc
+        ln -s /usr/bin/g++-9 latest-gcc-symlinks/g++
+        ln -s /usr/bin/gcc-9 latest-gcc-symlinks/gcc
         export PATH=$PWD/latest-gcc-symlinks:$PATH
         ;;
       windows)
