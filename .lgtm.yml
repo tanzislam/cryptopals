@@ -16,28 +16,23 @@ extraction:
     cpp:
         prepare:
             packages:
-                - g++-6
+                - g++-10
                 - pkg-config
                 - python3
                 - unzip
                 - zip
                 - zlib1g-dev
         after_prepare:
-            - urlbase="https://github.com/bazelbuild/bazel/releases/download"
-            - version=0.27.0
-            - filename="bazel-${version}-installer-linux-x86_64.sh"
-            - wget "${urlbase}/${version}/${filename}" -O $filename
-            - chmod +x $filename
-            - ./$filename --user
+            - npm install -g @bazel/bazelisk
             - mkdir -p $LGTM_WORKSPACE/latest-gcc-symlinks
-            - ln -s /usr/bin/g++-6 $LGTM_WORKSPACE/latest-gcc-symlinks/g++
-            - ln -s /usr/bin/gcc-6 $LGTM_WORKSPACE/latest-gcc-symlinks/gcc
+            - ln -s /usr/bin/g++-10 $LGTM_WORKSPACE/latest-gcc-symlinks/g++
+            - ln -s /usr/bin/gcc-10 $LGTM_WORKSPACE/latest-gcc-symlinks/gcc
             - export PATH=$LGTM_WORKSPACE/latest-gcc-symlinks:$PATH:$HOME/bin
-            - export AR=gcc-ar-6
-            - export RANLIB=gcc-ranlib-6
+            - export AR=gcc-ar-10
+            - export RANLIB=gcc-ranlib-10
             - export GNU_MAKE=make
             - export GIT=true
-            - export BAZEL=bazel
+            - export BAZEL=bazelisk
             - export BOOST_DIR=$LGTM_SRC/boost
             - export GTEST_DIR=$LGTM_SRC/googletest
             - export HUNSPELL_DIR=$LGTM_SRC/hunspell
