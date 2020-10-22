@@ -29,7 +29,7 @@ extraction:
             - export RANLIB=gcc-ranlib
             - export GNU_MAKE=make
             - export GIT=true
-            - export BAZEL="npm run bazelisk --"
+            - export BAZEL=$LGTM_SRC/node_modules/bin/bazelisk-linux_amd64
             - export BOOST_DIR=$LGTM_SRC/boost
             - export GTEST_DIR=$LGTM_SRC/googletest
             - export HUNSPELL_DIR=$LGTM_SRC/hunspell
@@ -37,6 +37,7 @@ extraction:
             - export OPENSSL_DIR=$LGTM_SRC/openssl
         configure:
             command:
+                - find . -type f -name bazelisk-linux_amd64
                 - ./prepare_deps
         index:
             build_command:
