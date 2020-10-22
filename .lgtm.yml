@@ -36,6 +36,7 @@ extraction:
                                     -name bazelisk-linux_amd64 \
                                     -print \
                                     -quit)
+            - echo "startup --server_javabase=$SEMMLE_JAVA_HOME" >> ~/.bazelrc
             - export BOOST_DIR=$LGTM_SRC/boost
             - export GTEST_DIR=$LGTM_SRC/googletest
             - export HUNSPELL_DIR=$LGTM_SRC/hunspell
