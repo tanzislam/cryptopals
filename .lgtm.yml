@@ -24,7 +24,7 @@ extraction:
                 - zip
                 - zlib1g-dev
         after_prepare:
-            - npm install -g @bazel/bazelisk
+            - npm install @bazel/bazelisk
             - export AR=gcc-ar
             - export RANLIB=gcc-ranlib
             - export GNU_MAKE=make
