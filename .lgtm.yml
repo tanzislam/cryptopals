@@ -17,6 +17,7 @@ extraction:
         prepare:
             packages:
                 - g++
+                - npm
                 - pkg-config
                 - python3
                 - unzip
