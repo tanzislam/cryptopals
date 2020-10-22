@@ -42,12 +42,13 @@ extraction:
                                               -noprompt \
                                               -file $NODE_EXTRA_CA_CERTS \
                                               -alias bazel \
-                                              -keystore bazel.jks \
+                                              -keystore $(pwd)/bazel \
                                               -storepass test12
             - |-
                 echo startup \
-                     --host_jvm_args=-Djavax.net.ssl.trustStore=bazel.jks \
+                     --host_jvm_args=-Djavax.net.ssl.trustStore=$(pwd)/bazel \
                      --host_jvm_args=-Djavax.net.ssl.trustStorePassword=test12 \
+                     --host_jvm_args=-Djavax.net.debug=ssl,keymanager \
                      > ~/.bazelrc
             - export BOOST_DIR=$LGTM_SRC/boost
             - export GTEST_DIR=$LGTM_SRC/googletest
