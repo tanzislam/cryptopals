@@ -36,6 +36,7 @@ extraction:
                                     -name bazelisk-linux_amd64 \
                                     -print \
                                     -quit)
+            # LGTM's server uses a MITM proxy: https://discuss.lgtm.com/t/598/14
             - |-
                 $SEMMLE_JAVA_HOME/bin/keytool -importcert \
                                               -trustcacerts \
@@ -43,12 +44,11 @@ extraction:
                                               -file $NODE_EXTRA_CA_CERTS \
                                               -alias bazel \
                                               -keystore $(pwd)/bazel \
-                                              -storepass test12
+                                              -storepass 6chars
             - |-
                 echo startup \
                      --host_jvm_args=-Djavax.net.ssl.trustStore=$(pwd)/bazel \
-                     --host_jvm_args=-Djavax.net.ssl.trustStorePassword=test12 \
-                     --host_jvm_args=-Djavax.net.debug=ssl,keymanager \
+                     --host_jvm_args=-Djavax.net.ssl.trustStorePassword=6chars \
                      > ~/.bazelrc
             - export BOOST_DIR=$LGTM_SRC/boost
             - export GTEST_DIR=$LGTM_SRC/googletest
