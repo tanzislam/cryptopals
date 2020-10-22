@@ -43,6 +43,7 @@ extraction:
             - export OPENSSL_DIR=$LGTM_SRC/openssl
         configure:
             command:
+                - env
                 - ./prepare_deps
         index:
             build_command:
