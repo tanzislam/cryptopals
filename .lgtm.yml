@@ -36,7 +36,19 @@ extraction:
                                     -name bazelisk-linux_amd64 \
                                     -print \
                                     -quit)
-            - echo "startup --server_javabase=$SEMMLE_JAVA_HOME" >> ~/.bazelrc
+            - |-
+                $SEMMLE_JAVA_HOME/bin/keytool -importcert \
+                                              -trustcacerts \
+                                              -noprompt \
+                                              -file $NODE_EXTRA_CA_CERTS \
+                                              -alias bazel \
+                                              -keystore bazel.jks \
+                                              -storepass test
+            - |-
+                echo startup \
+                     --host_jvm_args=-Djavax.net.ssl.trustStore=bazel.jks \
+                     --host_jvm_args=-Djavax.net.ssl.trustStorePassword=test \
+                     > ~/.bazelrc
             - export BOOST_DIR=$LGTM_SRC/boost
             - export GTEST_DIR=$LGTM_SRC/googletest
             - export HUNSPELL_DIR=$LGTM_SRC/hunspell
@@ -44,7 +56,6 @@ extraction:
             - export OPENSSL_DIR=$LGTM_SRC/openssl
         configure:
             command:
-                - env
                 - ./prepare_deps
         index:
             build_command:
