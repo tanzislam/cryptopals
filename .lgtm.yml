@@ -29,7 +29,12 @@ extraction:
             - export RANLIB=gcc-ranlib
             - export GNU_MAKE=make
             - export GIT=true
-            - export BAZEL=`find . -type f -name bazelisk-linux_amd64 -print -quit`
+            - export BAZEL=$(find $(pwd) \
+                                  -type f \
+                                  -executable \
+                                  -name bazelisk-linux_amd64 \
+                                  -print \
+                                  -quit)
             - export BOOST_DIR=$LGTM_SRC/boost
             - export GTEST_DIR=$LGTM_SRC/googletest
             - export HUNSPELL_DIR=$LGTM_SRC/hunspell
