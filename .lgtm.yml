@@ -29,7 +29,7 @@ extraction:
             - export RANLIB=gcc-ranlib
             - export GNU_MAKE=make
             - export GIT=true
-            - export BAZEL=bazelisk
+            - export BAZEL="npm run bazelisk --"
             - export BOOST_DIR=$LGTM_SRC/boost
             - export GTEST_DIR=$LGTM_SRC/googletest
             - export HUNSPELL_DIR=$LGTM_SRC/hunspell
