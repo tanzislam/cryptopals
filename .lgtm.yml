@@ -16,28 +16,40 @@ extraction:
     cpp:
         prepare:
             packages:
-                - g++-6
+                - g++
+                - npm
                 - pkg-config
                 - python3
                 - unzip
                 - zip
                 - zlib1g-dev
         after_prepare:
-            - urlbase="https://github.com/bazelbuild/bazel/releases/download"
-            - version=0.27.0
-            - filename="bazel-${version}-installer-linux-x86_64.sh"
-            - wget "${urlbase}/${version}/${filename}" -O $filename
-            - chmod +x $filename
-            - ./$filename --user
-            - mkdir -p $LGTM_WORKSPACE/latest-gcc-symlinks
-            - ln -s /usr/bin/g++-6 $LGTM_WORKSPACE/latest-gcc-symlinks/g++
-            - ln -s /usr/bin/gcc-6 $LGTM_WORKSPACE/latest-gcc-symlinks/gcc
-            - export PATH=$LGTM_WORKSPACE/latest-gcc-symlinks:$PATH:$HOME/bin
-            - export AR=gcc-ar-6
-            - export RANLIB=gcc-ranlib-6
+            - npm install @bazel/bazelisk
+            - export AR=gcc-ar
+            - export RANLIB=gcc-ranlib
             - export GNU_MAKE=make
             - export GIT=true
-            - export BAZEL=bazel
+            - |-
+                export BAZEL=$(find $(pwd) \
+                                    -type f \
+                                    -executable \
+                                    -name bazelisk-linux_amd64 \
+                                    -print \
+                                    -quit)
+            # LGTM's server uses a MITM proxy: https://discuss.lgtm.com/t/598/14
+            - |-
+                $SEMMLE_JAVA_HOME/bin/keytool -importcert \
+                                              -trustcacerts \
+                                              -noprompt \
+                                              -file $NODE_EXTRA_CA_CERTS \
+                                              -alias bazel \
+                                              -keystore $(pwd)/bazel \
+                                              -storepass 6chars
+            - |-
+                echo startup \
+                     --host_jvm_args=-Djavax.net.ssl.trustStore=$(pwd)/bazel \
+                     --host_jvm_args=-Djavax.net.ssl.trustStorePassword=6chars \
+                     > ~/.bazelrc
             - export BOOST_DIR=$LGTM_SRC/boost
             - export GTEST_DIR=$LGTM_SRC/googletest
             - export HUNSPELL_DIR=$LGTM_SRC/hunspell
