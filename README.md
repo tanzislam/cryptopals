@@ -37,6 +37,9 @@
   <img alt="Code Climate"
        src="https://api.codeclimate.com/v1/badges/95f777506332767d6c34/maintainability"
        title="Cppcheck, EditorConfig, Markdownlint, ShellCheck"/>
+</a> <a href="https://bettercodehub.com/results/tanzislam/cryptopals">
+  <img alt="Better Code Hub"
+       src="https://bettercodehub.com/edge/badge/tanzislam/cryptopals?branch=master"/>
 </a>
 
 These are my solutions to the interesting challenges at [the cryptopals crypto
