@@ -81,6 +81,7 @@ function build_gtest {
         fi
         $BAZEL --batch build $compiler_override gtest gtest_main
     else
+        git fetch --shallow-since=2019-06-12
         git checkout 6b8c138154~1 -- googletest/make
         pushd googletest/make
         $GNU_MAKE -kj 2
