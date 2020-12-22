@@ -37,8 +37,9 @@ LIB_DIRS = $(if $(BOOST_LIBS),$(BOOST_DIR)/stage/lib) \
            $(HUNSPELL_DIR)/src/hunspell/.libs \
            $(CRYPTOPP_DIR) \
            $(OPENSSL_DIR)
-GNU_LD := $(shell ld -v 2>&1 | grep GNU)
-LDFLAGS = -pthread -Wl,$(if $(GNU_LD),--gc-sections,-dead_strip) \
+GNU_LD := $(shell ld -v 2>&1 || ld -V 2>&1)
+LDFLAGS = -pthread -Wl,$(if $(filter GNU Solaris, \
+                                     $(GNU_LD)),--gc-sections,-dead_strip) \
           $(foreach d,$(LIB_DIRS),-L$(d))
 LIBS += gtest_main gtest
 LDLIBS = $(foreach lib,$(BOOST_LIBS),-lboost_$(lib)) \
