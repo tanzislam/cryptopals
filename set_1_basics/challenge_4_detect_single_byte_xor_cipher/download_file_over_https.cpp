@@ -1,4 +1,7 @@
 #include "download_file_over_https.hpp"
+#if __cplusplus < 201703L
+# define BOOST_ASIO_USE_TS_EXECUTOR_AS_DEFAULT
+#endif
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/asio/ssl.hpp>
 #include <boost/asio/connect.hpp>
