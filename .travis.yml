@@ -39,6 +39,7 @@ os:
 - linux
 - osx
 - windows
+- freebsd
 
 dist: focal
 osx_image: xcode12.2
@@ -86,6 +87,7 @@ cache:
     - $HOME/Library/Caches/Homebrew
     - $HOME/AppData/Local/Temp/chocolatey
     - /C/tools/msys64
+    - /var/cache/pkg
     timeout: 1000
 
 before_cache:
@@ -102,11 +104,24 @@ before_cache:
         # https://stackoverflow.com/a/53331571/1433768
         brew cleanup
         ;;
+      freebsd)
+        su -m root -c 'pkg clean --yes'
+        ;;
     esac
 
 before_install:
 - |-
     case $TRAVIS_OS_NAME in
+      freebsd)
+        su -m root -c 'pkg install --yes automake bazel gmake libtool wget'
+        export AR=ar
+        export RANLIB=ranlib
+        mkdir -p ~/bin
+        ln -s /usr/bin/clang ~/bin/gcc
+        ln -s /usr/bin/clang++ ~/bin/g++
+        export GNU_MAKE=gmake
+        export COVERITY_SCAN_BRANCH_PATTERN=disable_coverity_scan
+        ;;
       osx)
         export GNU_MAKE=gmake
         export COVERITY_SCAN_BRANCH_PATTERN=disable_coverity_scan
@@ -167,8 +182,9 @@ install:
 - export HUNSPELL_DIR=$PWD/hunspell
 - export CRYPTOPP_DIR=$PWD/cryptopp
 - export OPENSSL_DIR=$PWD/openssl
-- $GIT config --global --add submodule.fetchJobs `nproc`
-- export MAKEFLAGS="-s -j `nproc`"
+- export NPROC=`nproc || sysctl -n hw.ncpu`
+- $GIT config --global --add submodule.fetchJobs $NPROC
+- export MAKEFLAGS="-s -j $NPROC"
 - $shell ./prepare_deps
 
 before_script:
@@ -181,7 +197,7 @@ script:
             "$TRAVIS_PULL_REQUEST_SLUG" == "$TRAVIS_REPO_SLUG" ) ]]
     then
         $GNU_MAKE -k clean
-        build-wrapper-macosx-x86 --out-dir bw-output $GNU_MAKE -kj `nproc`
+        build-wrapper-macosx-x86 --out-dir bw-output $GNU_MAKE -kj $NPROC
         source_dirs=(set_*)
         IFS=,
         sonar-scanner -Dsonar.projectKey=$SONAR_PROJECTKEY \
@@ -189,10 +205,10 @@ script:
                       -Dsonar.cfamily.build-wrapper-output=bw-output \
                       -Dsonar.cfamily.cache.enabled=true \
                       -Dsonar.cfamily.cache.path=$HOME/.sonar/cache \
-                      -Dsonar.cfamily.threads=`nproc` \
+                      -Dsonar.cfamily.threads=$NPROC \
                       -Dsonar.host.url='https://sonarcloud.io'
     else
-        $shell $GNU_MAKE -kj `nproc`
+        $shell $GNU_MAKE -kj $NPROC
     fi
 - |-
     if [[ $TRAVIS_OS_NAME == linux &&
@@ -215,6 +231,9 @@ script:
             -p \
             > certs.pem
         export SSL_CERT_FILE=`pwd`/certs.pem
+        ;;
+      freebsd)
+        export SSL_CERT_FILE=/etc/ssl/cert.pem
         ;;
     esac
 - $shell ./test --gtest_color=yes
