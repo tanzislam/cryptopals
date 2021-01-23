@@ -2,13 +2,14 @@
 #define INCLUDED_PKCS7_UNPAD
 
 #include <streambuf>
+#include <boost/core/noncopyable.hpp>
 #include <istream>
 #include <ostream>
 #include "disable_method.hpp"
 
 namespace cryptopals {
 
-class pkcs7_unpad_streambuf : public std::streambuf
+class pkcs7_unpad_streambuf : public std::streambuf, private boost::noncopyable
 {
     char * d_currentBlock;
     const unsigned int d_blockSize;

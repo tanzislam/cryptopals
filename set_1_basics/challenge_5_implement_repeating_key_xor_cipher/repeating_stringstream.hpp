@@ -2,12 +2,14 @@
 #define INCLUDED_REPEATING_STRINGBUF
 
 #include <sstream>
+#include <boost/core/noncopyable.hpp>
 
 namespace cryptopals {
 
 /** @warning Do not extract text from an object of this class without setting a
              width (e.g. using the @c std::setw manipulator)!**/
-class repeating_stringstream : public std::stringstream
+class repeating_stringstream : public std::stringstream,
+                               private boost::noncopyable
 {
     class repeating_stringbuf : public std::stringbuf
     {

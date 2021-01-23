@@ -4,6 +4,7 @@
 #include <istream>
 #include <boost/integer.hpp>
 #include <streambuf>
+#include <boost/core/noncopyable.hpp>
 #include "disable_method.hpp"
 
 namespace cryptopals {
@@ -30,7 +31,7 @@ class decode_hex
 std::istream & operator>>(std::istream & input, const decode_hex & manipulator);
 
 
-class decode_hex_streambuf : public std::streambuf
+class decode_hex_streambuf : public std::streambuf, private boost::noncopyable
 {
     std::istream & d_inputStream;
     decode_hex::decoded_t d_buffer;

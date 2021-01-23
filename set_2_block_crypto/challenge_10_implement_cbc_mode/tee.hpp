@@ -2,13 +2,14 @@
 #define INCLUDED_TEE
 
 #include <streambuf>
+#include <boost/core/noncopyable.hpp>
 #include <istream>
 #include <ostream>
 #include "disable_method.hpp"
 
 namespace cryptopals {
 
-class tee_streambuf : public std::streambuf
+class tee_streambuf : public std::streambuf, private boost::noncopyable
 {
     std::istream * d_inputStream;
     std::ostream & d_teeStream;

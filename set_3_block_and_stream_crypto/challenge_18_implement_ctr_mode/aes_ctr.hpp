@@ -2,6 +2,7 @@
 #define INCLUDED_AES_CTR
 
 #include <streambuf>
+#include <boost/core/noncopyable.hpp>
 #include <istream>
 #include <string>
 #include <cstdint>
@@ -9,7 +10,7 @@
 
 namespace cryptopals {
 
-class aes_ctr_streambuf : public std::streambuf
+class aes_ctr_streambuf : public std::streambuf, private boost::noncopyable
 {
     std::istream & d_inputStream;
     char d_inputBuffer;

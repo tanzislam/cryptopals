@@ -4,6 +4,7 @@
 #include "base64_common.hpp"
 #include <istream>
 #include <streambuf>
+#include <boost/core/noncopyable.hpp>
 #include "disable_method.hpp"
 
 namespace cryptopals {
@@ -26,7 +27,8 @@ std::istream & operator>>(std::istream & input,
                           const decode_base64 & manipulator);
 
 
-class decode_base64_streambuf : public std::streambuf
+class decode_base64_streambuf : public std::streambuf,
+                                private boost::noncopyable
 {
     std::istream & d_inputStream;
     char d_buffer[3];

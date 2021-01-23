@@ -2,13 +2,14 @@
 #define INCLUDED_XOR
 
 #include <streambuf>
+#include <boost/core/noncopyable.hpp>
 #include <istream>
 #include <ostream>
 #include "disable_method.hpp"
 
 namespace cryptopals {
 
-class xor_streambuf : public std::streambuf
+class xor_streambuf : public std::streambuf, private boost::noncopyable
 {
     std::istream & d_inputStream1;
     std::istream * d_inputStream2;

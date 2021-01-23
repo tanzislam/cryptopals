@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <ostream>
 #include <streambuf>
+#include <boost/core/noncopyable.hpp>
 #include "disable_method.hpp"
 
 namespace cryptopals {
@@ -22,7 +23,7 @@ std::ostream & operator<<(std::ostream & output,
                           const encode_hex & manipulator);
 
 
-class encode_hex_streambuf : public std::streambuf
+class encode_hex_streambuf : public std::streambuf, private boost::noncopyable
 {
     std::ostream & d_outputStream;
 

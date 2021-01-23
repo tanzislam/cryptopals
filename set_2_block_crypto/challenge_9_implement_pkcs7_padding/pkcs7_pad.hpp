@@ -2,12 +2,13 @@
 #define INCLUDED_PKCS7_PAD
 
 #include <streambuf>
+#include <boost/core/noncopyable.hpp>
 #include <istream>
 #include "disable_method.hpp"
 
 namespace cryptopals {
 
-class pkcs7_pad_streambuf : public std::streambuf
+class pkcs7_pad_streambuf : public std::streambuf, private boost::noncopyable
 {
     std::istream * d_inputStream;
     char d_buffer;

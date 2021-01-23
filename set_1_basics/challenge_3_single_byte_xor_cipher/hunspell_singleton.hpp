@@ -1,15 +1,14 @@
 #ifndef INCLUDED_HUNSPELL_SINGLETON
 #define INCLUDED_HUNSPELL_SINGLETON
 
+#include <boost/core/noncopyable.hpp>
 #include <hunspell.hxx>
 
 namespace cryptopals {
 
-class HunspellSingleton
+class HunspellSingleton : private boost::noncopyable
 {
     HunspellSingleton();
-    HunspellSingleton(const HunspellSingleton &);
-    HunspellSingleton & operator=(const HunspellSingleton &);
     ~HunspellSingleton();
 
   public:

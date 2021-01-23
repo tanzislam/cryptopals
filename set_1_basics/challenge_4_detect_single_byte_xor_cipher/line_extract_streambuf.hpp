@@ -2,12 +2,13 @@
 #define INCLUDED_LINE_EXTRACT_STREAMBUF
 
 #include <streambuf>
+#include <boost/core/noncopyable.hpp>
 #include <istream>
 #include "disable_method.hpp"
 
 namespace cryptopals {
 
-class line_extract_streambuf : public std::streambuf
+class line_extract_streambuf : public std::streambuf, private boost::noncopyable
 {
     std::istream & d_inputStream;
     char d_buffer;
