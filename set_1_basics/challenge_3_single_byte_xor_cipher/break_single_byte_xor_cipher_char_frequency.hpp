@@ -10,7 +10,8 @@ class break_single_byte_xor_cipher_char_frequency
         : public break_single_byte_xor_cipher
 {
   public:
-    std::pair<unsigned int, uint8_t> do_break(std::istream & cipherTextStream);
+    std::pair<unsigned int, uint8_t> do_break(
+        std::istream & cipherTextStream) override;
 };
 
 }  // namespace cryptopals

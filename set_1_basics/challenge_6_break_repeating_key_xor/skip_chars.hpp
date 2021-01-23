@@ -15,7 +15,7 @@ class skip_chars_streambuf : public std::streambuf, private boost::noncopyable
     unsigned int d_skipLength;
 
   protected:
-    virtual int_type underflow();
+    virtual int_type underflow() override;
 
     DISABLE_VOID_METHOD(void imbue(const std::locale &))
     DISABLE_METHOD(std::streambuf * setbuf(char_type *, std::streamsize))

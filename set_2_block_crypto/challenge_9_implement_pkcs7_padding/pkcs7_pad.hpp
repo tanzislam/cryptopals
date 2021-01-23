@@ -19,17 +19,19 @@ class pkcs7_pad_streambuf : public std::streambuf, private boost::noncopyable
     pkcs7_pad_streambuf & operator=(pkcs7_pad_streambuf &) = delete;
 
   protected:
-    virtual int_type underflow();
+    virtual int_type underflow() override;
 
     /// only supports rewinding (i.e. pos == 0 and which == in)
-    virtual pos_type seekpos(pos_type pos,
-                             std::ios_base::openmode which = std::ios_base::in);
+    virtual pos_type seekpos(
+        pos_type pos,
+        std::ios_base::openmode which = std::ios_base::in) override;
 
     /// only supports querying current position
     /// (i.e. off == 0, dir == cur, which == in)
-    virtual pos_type seekoff(off_type off,
-                             std::ios_base::seekdir dir,
-                             std::ios_base::openmode which = std::ios_base::in);
+    virtual pos_type seekoff(
+        off_type off,
+        std::ios_base::seekdir dir,
+        std::ios_base::openmode which = std::ios_base::in) override;
 
     DISABLE_VOID_METHOD(void imbue(const std::locale &))
     DISABLE_METHOD(std::streambuf * setbuf(char_type *, std::streamsize))

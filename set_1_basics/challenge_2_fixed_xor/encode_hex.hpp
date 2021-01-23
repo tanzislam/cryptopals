@@ -28,7 +28,7 @@ class encode_hex_streambuf : public std::streambuf, private boost::noncopyable
     std::ostream & d_outputStream;
 
   protected:
-    std::streambuf::int_type overflow(std::streambuf::int_type value);
+    std::streambuf::int_type overflow(std::streambuf::int_type value) override;
     DEFINE_DEFAULT_SYNC_METHOD(&d_outputStream)
 
     DISABLE_VOID_METHOD(void imbue(const std::locale &))

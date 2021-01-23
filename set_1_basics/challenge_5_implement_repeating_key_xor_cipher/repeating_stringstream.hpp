@@ -13,7 +13,7 @@ class repeating_stringstream : public std::stringstream,
 {
     class repeating_stringbuf : public std::stringbuf
     {
-        virtual int_type underflow();
+        virtual int_type underflow() override;
 
       public:
         explicit repeating_stringbuf(std::ios_base::openmode which =

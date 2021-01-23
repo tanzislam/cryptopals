@@ -23,7 +23,7 @@ class aes_ctr_streambuf : public std::streambuf, private boost::noncopyable
     void setupNextBlock();
 
   protected:
-    int_type underflow();
+    int_type underflow() override;
 
     DISABLE_VOID_METHOD(void imbue(const std::locale &))
     DISABLE_METHOD(std::streambuf * setbuf(char_type *, std::streamsize))

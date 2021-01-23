@@ -19,10 +19,10 @@ class tee_streambuf : public std::streambuf, private boost::noncopyable
   protected:
     pos_type seekoff(std::streambuf::off_type off,
                      std::ios_base::seekdir dir,
-                     std::ios_base::openmode which);
-    int_type underflow();
-    int_type overflow(int_type ch = traits_type::eof());
-    int sync();
+                     std::ios_base::openmode which) override;
+    int_type underflow() override;
+    int_type overflow(int_type ch = traits_type::eof()) override;
+    int sync() override;
 
     DISABLE_VOID_METHOD(void imbue(const std::locale &))
     DISABLE_METHOD(std::streambuf * setbuf(char_type *, std::streamsize))

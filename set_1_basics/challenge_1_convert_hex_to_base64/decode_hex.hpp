@@ -38,12 +38,14 @@ class decode_hex_streambuf : public std::streambuf, private boost::noncopyable
     std::istream::pos_type d_startPos;
 
   protected:
-    int_type underflow();
-    pos_type seekpos(pos_type pos,
-                     std::ios_base::openmode which = std::ios_base::in);
-    pos_type seekoff(off_type off,
-                     std::ios_base::seekdir dir,
-                     std::ios_base::openmode which = std::ios_base::in);
+    int_type underflow() override;
+    pos_type seekpos(
+        pos_type pos,
+        std::ios_base::openmode which = std::ios_base::in) override;
+    pos_type seekoff(
+        off_type off,
+        std::ios_base::seekdir dir,
+        std::ios_base::openmode which = std::ios_base::in) override;
 
     DISABLE_VOID_METHOD(void imbue(const std::locale &))
     DISABLE_METHOD(std::streambuf * setbuf(char_type *, std::streamsize))

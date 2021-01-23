@@ -35,12 +35,14 @@ class decode_base64_streambuf : public std::streambuf,
     std::istream::pos_type d_startPos;
 
   protected:
-    virtual int_type underflow();
-    virtual pos_type seekpos(pos_type pos,
-                             std::ios_base::openmode which = std::ios_base::in);
-    virtual pos_type seekoff(off_type off,
-                             std::ios_base::seekdir dir,
-                             std::ios_base::openmode which = std::ios_base::in);
+    virtual int_type underflow() override;
+    virtual pos_type seekpos(
+        pos_type pos,
+        std::ios_base::openmode which = std::ios_base::in) override;
+    virtual pos_type seekoff(
+        off_type off,
+        std::ios_base::seekdir dir,
+        std::ios_base::openmode which = std::ios_base::in) override;
 
     DISABLE_VOID_METHOD(void imbue(const std::locale &))
     DISABLE_METHOD(std::streambuf * setbuf(char_type *, std::streamsize))

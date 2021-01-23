@@ -37,7 +37,7 @@ class encode_base64_streambuf : public std::streambuf,
     void encode();
 
   protected:
-    int_type overflow(int_type ch = std::char_traits<char>::eof());
+    int_type overflow(int_type ch = std::char_traits<char>::eof()) override;
     DEFINE_DEFAULT_SYNC_METHOD(&d_outputStream)
 
     DISABLE_VOID_METHOD(void imbue(const std::locale &))
