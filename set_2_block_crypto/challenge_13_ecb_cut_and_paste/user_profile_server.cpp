@@ -11,13 +11,18 @@
 
 namespace cryptopals {
 
-static auto key = generateRandomBytes(CryptoPP::AES::BLOCKSIZE);
+static const std::string & key()
+{
+    static auto key = generateRandomBytes(CryptoPP::AES::BLOCKSIZE);
+    return key;
+}
+
 
 std::string generate_encrypted_user_profile(const std::string & email)
 {
     std::istringstream encodedProfile(profile_for(email));
     std::ostringstream outputStream;
-    aes_ecb_encrypt(outputStream, encodedProfile, key);
+    aes_ecb_encrypt(outputStream, encodedProfile, key());
     return outputStream.str();
 }
 
@@ -31,7 +36,7 @@ std::unordered_map<std::string, std::string> parse_encrypted_user_profile(
                         encrypted_user_profile.c_str(),
                         encrypted_user_profile.size())
                         .seekg(0),
-                    key);
+                    key());
     return parse_structured_cookie(decryptedProfile.str());
 }
 

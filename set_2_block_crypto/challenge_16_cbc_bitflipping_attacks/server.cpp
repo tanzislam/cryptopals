@@ -12,8 +12,19 @@
 namespace cryptopals {
 
 namespace {
-static auto key = generateRandomBytes(CryptoPP::AES::BLOCKSIZE);
-static auto initVector = generateRandomBytes(CryptoPP::AES::BLOCKSIZE);
+
+static const std::string & key()
+{
+    static auto key = generateRandomBytes(CryptoPP::AES::BLOCKSIZE);
+    return key;
+}
+
+static const std::string & initVector()
+{
+    static auto initVector = generateRandomBytes(CryptoPP::AES::BLOCKSIZE);
+    return initVector;
+}
+
 }  // namespace
 
 
@@ -28,7 +39,7 @@ std::string generate_encrypted_cookie(const std::string & data)
     boost::iostreams::stream<boost::iostreams::array_source>
         inputStream(stringToEncrypt.c_str(), stringToEncrypt.size());
     std::ostringstream output;
-    aes_cbc_encrypt(output, inputStream, key, initVector.data());
+    aes_cbc_encrypt(output, inputStream, key(), initVector().data());
     return output.str();
 }
 
@@ -38,7 +49,7 @@ bool is_admin_cookie(const std::string & encryptedCookie)
     boost::iostreams::stream<boost::iostreams::array_source>
         inputStream(encryptedCookie.c_str(), encryptedCookie.size());
     std::ostringstream decryptedCookie;
-    aes_cbc_decrypt(decryptedCookie, inputStream, key, initVector.data());
+    aes_cbc_decrypt(decryptedCookie, inputStream, key(), initVector().data());
     return parse_structured_cookie(decryptedCookie.str(), ';')["admin"]
            == "true";
 }
