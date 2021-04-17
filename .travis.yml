@@ -22,6 +22,9 @@
 #                              account.
 # - CODE_INSPECTOR_PROJECT_NAME: The name of the project in Code Inspector.
 #
+# For integration with Scantist SCA (https://scantist.io)
+# - SCANTISTTOKEN: The access token created in Organization Settings.
+#
 # Note: Encrypted environment variables aren't available to pull request builds.
 
 language: cpp
@@ -237,6 +240,13 @@ script:
         ;;
     esac
 - $shell ./test --gtest_color=yes
+
+after_success:
+- |-
+    if [[ $TRAVIS_OS_NAME == linux && ! -z "$SCANTISTTOKEN" ]]
+    then
+        bash <(curl -s https://scripts.scantist.com/ci-travis.sh)
+    fi
 
 after_failure:
 # https://jsteemann.github.io/blog/2014/10/30/getting-core-dumps-of-failed-travisci-builds/
