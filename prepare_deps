@@ -155,8 +155,10 @@ function build_openssl {
         $GIT pull --prune --recurse-submodules --jobs 4
     fi
     $GIT submodule update --init --recursive --depth 1 --jobs 4
-    CC=gcc CXX=g++ ./config --prefix=$(pwd) no-async
+    CC=gcc CXX=g++ ./config --prefix=$(pwd) no-async enable-makedepend
     $GNU_MAKE update -kj 3
+    $GNU_MAKE -kj 3
+    # https://github.com/openssl/openssl/issues/14994#issuecomment-825872628
     $GNU_MAKE -kj 3
     [[ -d lib ]] || mkdir lib
     pushd lib
