@@ -35,54 +35,52 @@ git:
     submodules: false
     depth: false
 
-os:
-- linux
-- osx
-- windows
-- freebsd
-
-dist: focal
-osx_image: xcode12.5
-
-env:
-    global:
-    - HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=true
-
-addons:
-    apt:
-        sources:
-        - sourceline: "deb [arch=amd64] https://storage.googleapis.com/bazel-apt stable jdk1.8"
-          key_url: "https://bazel.build/bazel-release.pub.gpg"
-        packages:
-        - g++-10
-        - gdb
-        - bazel
-        - make
-    homebrew:
-        update: true
-        taps:
-        - bazelbuild/tap
-        packages:
-        - make
+jobs:
+    include:
+    - os: linux
+      dist: focal
+      addons:
+        apt:
+            sources:
+            - sourceline: "deb [arch=amd64] https://storage.googleapis.com/bazel-apt stable jdk1.8"
+              key_url: "https://bazel.build/bazel-release.pub.gpg"
+            packages:
+            - g++-10
+            - gdb
+            - bazel
+            - make
+        coverity_scan:
+            project:
+                name: $TRAVIS_REPO_SLUG
+                version: $TRAVIS_COMMIT
+            build_command_prepend: $GNU_MAKE -k clean
+            build_command: $GNU_MAKE -k
+            branch_pattern: master
+    - os: osx
+      osx_image: xcode12.5
+      env: HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=true
+      addons:
+        homebrew:
+            update: true
+            taps:
+            - bazelbuild/tap
+            packages:
+            - make
+            - automake
+            - libtool
+            - gettext
+            - bazelbuild/tap/bazel
+        sonarcloud:
+            organization: $SONAR_ORGANIZATION
+    - os: windows
+    - os: freebsd
+      addons:
+        pkg:
         - automake
+        - bazel
+        - gmake
         - libtool
-        - gettext
-        - bazelbuild/tap/bazel
-    pkg:
-    - automake
-    - bazel
-    - gmake
-    - libtool
-    - wget
-    coverity_scan:
-        project:
-            name: $TRAVIS_REPO_SLUG
-            version: $TRAVIS_COMMIT
-        build_command_prepend: $GNU_MAKE -k clean
-        build_command: $GNU_MAKE -k
-        branch_pattern: master
-    sonarcloud:
-        organization: $SONAR_ORGANIZATION
+        - wget
 
 cache:
     directories:
