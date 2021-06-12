@@ -38,45 +38,53 @@ git:
     submodules: false
     depth: false
 
-os:
-- linux
-- osx
-- windows
-- freebsd
-
-dist: focal
-osx_image: xcode12.4
-
-addons:
-    apt:
-        sources:
-        - sourceline: "deb [arch=amd64] https://storage.googleapis.com/bazel-apt stable jdk1.8"
-          key_url: "https://bazel.build/bazel-release.pub.gpg"
-        packages:
-        - g++-9
-        - gdb
-        - bazel
-        - make
-    homebrew:
-        update: true
-        taps:
-        - bazelbuild/tap
-        packages:
-        - make
+jobs:
+    include:
+    - os: linux
+      dist: focal
+      addons:
+        apt:
+            sources:
+            - sourceline: "deb [arch=amd64] https://storage.googleapis.com/bazel-apt stable jdk1.8"
+              key_url: "https://bazel.build/bazel-release.pub.gpg"
+            packages:
+            - g++-9
+            - gdb
+            - bazel
+            - make
+        coverity_scan:
+            project:
+                name: $TRAVIS_REPO_SLUG
+                version: $TRAVIS_COMMIT
+            build_command_prepend: $GNU_MAKE -k clean
+            build_command: $GNU_MAKE -k
+            # https://ruby-doc.org/core/Regexp.html (enclosed in \A and \Z)
+            branch_pattern: (master|travis-coverity-.*)
+    - os: osx
+      osx_image: xcode12.5
+      env: HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=true
+      addons:
+        homebrew:
+            update: true
+            taps:
+            - bazelbuild/tap
+            packages:
+            - make
+            - automake
+            - libtool
+            - gettext
+            - bazelbuild/tap/bazel
+        sonarcloud:
+            organization: $SONAR_ORGANIZATION
+    - os: windows
+    - os: freebsd
+      addons:
+        pkg:
         - automake
+        - bazel
+        - gmake
         - libtool
-        - gettext
-        - bazelbuild/tap/bazel
-    coverity_scan:
-        project:
-            name: $TRAVIS_REPO_SLUG
-            version: $TRAVIS_COMMIT
-        build_command_prepend: $GNU_MAKE -k clean
-        build_command: $GNU_MAKE -k
-        # https://ruby-doc.org/core/Regexp.html (script encloses in \A and \Z)
-        branch_pattern: (master|travis-coverity-.*)
-    sonarcloud:
-        organization: $SONAR_ORGANIZATION
+        - wget
 
 cache:
     directories:
@@ -116,18 +124,15 @@ before_install:
 - |-
     case $TRAVIS_OS_NAME in
       freebsd)
-        su -m root -c 'pkg install --yes automake bazel gmake libtool wget'
         export AR=ar
         export RANLIB=ranlib
         mkdir -p ~/bin
         ln -s /usr/bin/clang ~/bin/gcc
         ln -s /usr/bin/clang++ ~/bin/g++
         export GNU_MAKE=gmake
-        export COVERITY_SCAN_BRANCH_PATTERN=disable_coverity_scan
         ;;
       osx)
         export GNU_MAKE=gmake
-        export COVERITY_SCAN_BRANCH_PATTERN=disable_coverity_scan
         ;;
       linux)
         export GNU_MAKE=make
@@ -136,7 +141,7 @@ before_install:
         if [[ $TRAVIS_PULL_REQUEST == false &&
               ! -z "$CODE_INSPECTOR_ACCESS_KEY" ]]
         then
-            # https://doc.code-inspector.com/ci-support.html
+            # https://doc.code-inspector.com/docs/integration-ci
             sudo apt-get install python3-pip python3-setuptools python3-wheel
             pip3 install code-inspector
         fi
@@ -147,14 +152,15 @@ before_install:
         export PATH=$PWD/latest-gcc-symlinks:$PATH
         ;;
       windows)
+        # https://docs.travis-ci.com/user/reference/windows/#how-do-i-use-msys2
         [[ ! -f C:/tools/msys64/msys2_shell.cmd ]] && rm -rf C:/tools/msys64
         choco uninstall -y mingw
         choco upgrade --no-progress -y msys2 bazel
         export msys2='cmd //C RefreshEnv.cmd '
         export msys2+='& set MSYS=winsymlinks:nativestrict '
         export msys2+='& C:\\tools\\msys64\\msys2_shell.cmd -defterm -no-start'
-        export shell="$msys2 -mingw64 -full-path -here -c \$\* --"
-        export msys2+=" -msys2 -c \$\* --"
+        export shell="$msys2 -mingw64 -full-path -here -c "\"\$@"\" --"
+        export msys2+=" -msys2 -c "\"\$@"\" --"
         $msys2 pacman --sync --noconfirm --needed \
                 autoconf \
                 automake \
@@ -170,7 +176,6 @@ before_install:
         export MAKE=$GNU_MAKE
         export AR=gcc-ar
         export RANLIB=gcc-ranlib
-        export COVERITY_SCAN_BRANCH_PATTERN=disable_coverity_scan
         ;;
     esac
 - export BAZEL=bazel

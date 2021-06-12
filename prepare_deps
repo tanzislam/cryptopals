@@ -160,6 +160,7 @@ function build_openssl {
     $GNU_MAKE -kj 3
     # https://github.com/openssl/openssl/issues/14994#issuecomment-825872628
     $GNU_MAKE -kj 3
+    $GNU_MAKE -kj 3
     [[ -d lib ]] || mkdir lib
     pushd lib
     ln -fs ../libssl.* ../libcrypto.* .
