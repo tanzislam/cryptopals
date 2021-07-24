@@ -44,7 +44,7 @@ function build_boost {
             $GIT clean --force -Xd
             $GIT checkout --force master
         fi
-        $GIT pull --prune --recurse-submodules
+        $GIT pull --prune --recurse-submodules --strategy-option=renormalize
     fi
     $GIT submodule update --init --recursive --depth 1
     ./bootstrap.sh --with-toolset=gcc
