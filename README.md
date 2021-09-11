@@ -1,8 +1,8 @@
 # Cryptopals
 
-<a href="https://travis-ci.com/tanzislam/cryptopals">
+<a href="https://app.travis-ci.com/tanzislam/cryptopals">
   <img alt="Build Status"
-       src="https://travis-ci.com/tanzislam/cryptopals.svg?branch=master"/>
+       src="https://app.travis-ci.com/tanzislam/cryptopals.svg?branch=master"/>
 </a> <a href="https://scan.coverity.com/projects/tanzislam-cryptopals">
   <img alt="Coverity Scan Build Status"
        src="https://scan.coverity.com/projects/10143/badge.svg"/>
