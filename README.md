@@ -144,7 +144,7 @@ To build these solutions you will need:
 
 UNIX-like utilities on Windows are provided by any of the following:
  - [MSYS2](https://msys2.github.io/), or originally [MSYS](
-   http://www.mingw.org/)
+   https://mingw.osdn.io/)
  - [Cygwin](https://www.cygwin.com/)
  - Interix / [Windows Services for Unix](
    https://technet.microsoft.com/en-gb/library/bb463212.aspx) / [Subsystem for
