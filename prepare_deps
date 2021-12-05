@@ -64,7 +64,7 @@ function build_gtest {
         if [[ -n "$CLEAN_BUILD" ]]
         then
             $GIT clean --force -Xd
-            $GIT checkout --force --recurse-submodules master
+            $GIT checkout --force --recurse-submodules main
         fi
         $GIT pull --prune --recurse-submodules --jobs 4
     fi
