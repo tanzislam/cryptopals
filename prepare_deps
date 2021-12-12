@@ -15,6 +15,7 @@
 #   - AR: Executable name of GCC's 'ar' tool. (Unnecessary on macOS.)
 #   - RANLIB: Executable name of GCC's 'ranlib' tool. (Unnecessary on macOS.)
 #   - CLEAN_BUILD: (Optional) Clean up existing build artifacts before building.
+#   - SKIP_COMPILER: (Optional) Only run code-generation steps for IDEs/linters.
 export BOOST_DIR=${BOOST_DIR:-boost}
 export GTEST_DIR=${GTEST_DIR:-googletest}
 export HUNSPELL_DIR=${HUNSPELL_DIR:-hunspell}
@@ -49,6 +50,7 @@ function build_boost {
     $GIT submodule update --init --recursive --depth 1 --jobs 4
     ./bootstrap.sh --with-toolset=gcc
     ./b2 headers
+    [[ -z "$SKIP_COMPILER" ]] || return
     ./b2 --layout=system toolset=gcc variant=release address-model=64 -j 2 \
          --with-system
 }
@@ -69,6 +71,7 @@ function build_gtest {
         $GIT pull --prune --recurse-submodules --jobs 4
     fi
     $GIT submodule update --init --recursive --depth 1 --jobs 4
+    [[ -z "$SKIP_COMPILER" ]] || return
     if [[ $BAZEL != "true" ]]
     then
         system_name=$(uname -s)
@@ -119,6 +122,7 @@ function build_hunspell {
     export CPPFLAGS=-I/usr/local/opt/gettext/include
     autoreconf -vfi
     ./configure --config-cache --disable-dependency-tracking
+    [[ -z "$SKIP_COMPILER" ]] || return
     $GNU_MAKE -kj 2
 }
 
@@ -138,6 +142,7 @@ function build_cryptopp {
         $GIT pull --prune --recurse-submodules --jobs 4
     fi
     $GIT submodule update --init --recursive --depth 1 --jobs 4
+    [[ -z "$SKIP_COMPILER" ]] || return
     $GNU_MAKE deps
     $GNU_MAKE -kj 3
 }
@@ -163,6 +168,7 @@ function build_openssl {
     $GIT submodule update --init --recursive --depth 1 --jobs 4
     CC=gcc CXX=g++ ./config --prefix=$(pwd) no-async enable-makedepend
     $GNU_MAKE update -kj 3
+    [[ -z "$SKIP_COMPILER" ]] || return
     $GNU_MAKE -kj 3
     # https://github.com/openssl/openssl/issues/14994#issuecomment-825872628
     $GNU_MAKE -kj 3
@@ -188,5 +194,5 @@ build_gtest &
 build_hunspell &
 build_cryptopp &
 build_openssl &
-download_scowl_for_hunspell &
+[[ -n "$SKIP_COMPILER" ]] || download_scowl_for_hunspell &
 wait
