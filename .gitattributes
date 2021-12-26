@@ -2,3 +2,4 @@
 * text=auto
 prepare_deps eol=lf
 .gitmodules eol=lf
+.trustinsoft/prepare.sh eol=lf

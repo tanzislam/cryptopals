@@ -36,6 +36,9 @@
 </a> <a href="https://bettercodehub.com/results/tanzislam/cryptopals">
   <img alt="Better Code Hub"
        src="https://bettercodehub.com/edge/badge/tanzislam/cryptopals?branch=master"/>
+</a> <a href="https://ci.trust-in-soft.com/projects/tanzislam/cryptopals">
+  <img alt="TrustInSoft CI"
+       src="https://ci.trust-in-soft.com/projects/tanzislam/cryptopals.svg?branch=trustinsoft-ci"/>
 </a>
 
 These are my solutions to the interesting challenges at [the cryptopals crypto

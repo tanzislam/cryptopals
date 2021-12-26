@@ -1,0 +1,15 @@
+// https://docs.ci.trust-in-soft.com/configuration-file/analyses-configuration-file
+[
+    {
+        "name": "Set 1 Challenge 1",
+        "files": [
+            "set_1_basics/challenge_1_convert_hex_to_base64/convert_hex_to_base64.cpp",
+            "set_1_basics/challenge_1_convert_hex_to_base64/decode_hex.cpp",
+            "set_1_basics/challenge_1_convert_hex_to_base64/encode_base64.cpp",
+            "set_1_basics/challenge_1_convert_hex_to_base64/test_hex2base64.cpp",
+            "googletest/googletest/src/gtest-all.cc",
+            "googletest/googletest/src/gtest_main.cc"
+        ],
+        "cpp-extra-args": "-Iset_1_basics/challenge_1_convert_hex_to_base64 -Iboost -Igoogletest/googletest/include -Igoogletest/googletest"
+    }
+]
