@@ -2,6 +2,9 @@
 *.d
 *.o
 *.exe
+test
+test_*
+!*.cpp
 .vscode
 .vs
 tags
