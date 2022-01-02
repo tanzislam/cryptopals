@@ -15,12 +15,9 @@
 #                     at Administration -> Projects Management.
 # - SONAR_TOKEN: Create this SonarCloud access token in My Account -> Security.
 #
-# For integration with Code Inspector (https://www.code-inspector.com)
-# - CODE_INSPECTOR_ACCESS_KEY: The "Access key" of the API Key of your user
-#                              account. This is created in User Profile.
-# - CODE_INSPECTOR_SECRET_KEY: The "Secret key" of the API Key of your user
-#                              account.
-# - CODE_INSPECTOR_PROJECT_NAME: The name of the project in Code Inspector.
+# For integration with Codiga (https://www.codiga.io)
+# - CODIGA_API_TOKEN: API Token created at https://app.codiga.io/api-tokens.
+# - CODIGA_PROJECT_NAME: The name of the project in Codiga.
 #
 # For integration with Scantist SCA (https://scantist.io)
 # - SCANTISTTOKEN: The access token created in Organization Settings.
@@ -138,12 +135,11 @@ before_install:
         export GNU_MAKE=make
         export AR=gcc-ar-9
         export RANLIB=gcc-ranlib-9
-        if [[ $TRAVIS_PULL_REQUEST == false &&
-              ! -z "$CODE_INSPECTOR_ACCESS_KEY" ]]
+        if [[ $TRAVIS_PULL_REQUEST == false && ! -z "$CODIGA_API_TOKEN" ]]
         then
-            # https://doc.code-inspector.com/docs/integration-ci
+            # https://doc.codiga.io/docs/integration-ci/
             sudo apt-get install python3-pip python3-setuptools python3-wheel
-            pip3 install code-inspector
+            pip3 install codiga
         fi
         # Workaround for https://github.com/travis-ci/travis-ci/issues/3668
         mkdir -p latest-gcc-symlinks
@@ -221,9 +217,9 @@ script:
 - |-
     if [[ $TRAVIS_OS_NAME == linux &&
           $TRAVIS_PULL_REQUEST == false &&
-          ! -z "$CODE_INSPECTOR_ACCESS_KEY" ]]
+          ! -z "$CODIGA_API_TOKEN" ]]
     then
-        code-inspector-analyze -p "$CODE_INSPECTOR_PROJECT_NAME"
+        codiga-analyze -p "$CODIGA_PROJECT_NAME"
     fi
 - export HUNSPELL_AFFIX_PATH=$HUNSPELL_DIR/en_US.aff
 - export HUNSPELL_DICT_PATH=$HUNSPELL_DIR/en_US.dic
