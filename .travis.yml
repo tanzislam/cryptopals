@@ -15,10 +15,6 @@
 #                     at Administration -> Projects Management.
 # - SONAR_TOKEN: Create this SonarCloud access token in My Account -> Security.
 #
-# For integration with Codiga (https://www.codiga.io)
-# - CODIGA_API_TOKEN: API Token created at https://app.codiga.io/api-tokens.
-# - CODIGA_PROJECT_NAME: The name of the project in Codiga.
-#
 # For integration with Scantist SCA (https://scantist.io)
 # - SCANTISTTOKEN: The access token created in Organization Settings.
 #
@@ -91,7 +87,6 @@ cache:
     - cryptopp
     - openssl
     - $HOME/.sonar/cache
-    - $HOME/.cache/pip
     - $HOME/Library/Caches/Homebrew
     - $HOME/AppData/Local/Temp/chocolatey
     - /C/tools/msys64
@@ -101,9 +96,6 @@ cache:
 before_cache:
 - |-
     case $TRAVIS_OS_NAME in
-      linux)
-        rm -f $HOME/.cache/pip/log/debug.log
-        ;;
       windows)
         $msys2 pacman --sync --clean --noconfirm
         echo --tcp-nodelay >> $APPDATA/.curlrc
@@ -135,12 +127,6 @@ before_install:
         export GNU_MAKE=make
         export AR=gcc-ar-9
         export RANLIB=gcc-ranlib-9
-        if [[ $TRAVIS_PULL_REQUEST == false && ! -z "$CODIGA_API_TOKEN" ]]
-        then
-            # https://doc.codiga.io/docs/integration-ci/
-            sudo apt-get install python3-pip python3-setuptools python3-wheel
-            pip3 install codiga
-        fi
         # Workaround for https://github.com/travis-ci/travis-ci/issues/3668
         mkdir -p latest-gcc-symlinks
         ln -s /usr/bin/g++-9 latest-gcc-symlinks/g++
@@ -213,13 +199,6 @@ script:
                       -Dsonar.host.url='https://sonarcloud.io'
     else
         $shell $GNU_MAKE -kj $NPROC
-    fi
-- |-
-    if [[ $TRAVIS_OS_NAME == linux &&
-          $TRAVIS_PULL_REQUEST == false &&
-          ! -z "$CODIGA_API_TOKEN" ]]
-    then
-        codiga-analyze -p "$CODIGA_PROJECT_NAME"
     fi
 - export HUNSPELL_AFFIX_PATH=$HUNSPELL_DIR/en_US.aff
 - export HUNSPELL_DICT_PATH=$HUNSPELL_DIR/en_US.dic
