@@ -1,4 +1,4 @@
-# https://docs.muse.dev/docs/repository-configuration/
+# https://help.sonatype.com/lift/configuration-reference
 setup = "prepare_deps"
 
 build = """
