@@ -49,6 +49,7 @@ extraction:
                 echo startup \
                      --host_jvm_args=-Djavax.net.ssl.trustStore=$(pwd)/bazel \
                      --host_jvm_args=-Djavax.net.ssl.trustStorePassword=6chars \
+                     --host_jvm_args=-Djava.net.useSystemProxies=true \
                      > ~/.bazelrc
             - export BOOST_DIR=$LGTM_SRC/boost
             - export GTEST_DIR=$LGTM_SRC/googletest
