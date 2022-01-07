@@ -29,4 +29,4 @@ extraction:
                 - ./prepare_deps
         index:
             build_command:
-                - $GNU_MAKE -k
+                - make -k
