@@ -91,8 +91,8 @@ To build these solutions you will need:
          ln -fs ../googletest/make/*.a .
 
  - [Hunspell](https://hunspell.github.io/).
-   - On Windows 7 / MinGW-w64 I had to first install the `autoconf`, `automake`
-     and `mingw-w64-x86_64-libtool` packages in the MSYS2 shell, and then I
+   - On Windows 7 / MinGW-w64 I had to first install the
+     `mingw-w64-x86_64-autotools` package in the MSYS2 shell, and then I
      could build it with the following commands in a MinGW 64-bit Shell:
 
          autoreconf -vfi
