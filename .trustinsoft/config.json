@@ -2,6 +2,7 @@
 [
     {
         "name": "Set 1 Challenge 1",
+        "prefix_path": "..",
         "files": [
             "set_1_basics/challenge_1_convert_hex_to_base64/convert_hex_to_base64.cpp",
             "set_1_basics/challenge_1_convert_hex_to_base64/decode_hex.cpp",
