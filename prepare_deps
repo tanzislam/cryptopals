@@ -68,7 +68,7 @@ function build_gtest {
             $GIT clean --force -Xd
             $GIT checkout --force --recurse-submodules main
         fi
-        $GIT pull --prune --recurse-submodules --jobs 4
+        $GIT pull --prune --recurse-submodules
     fi
     $GIT submodule update --init --recursive --depth 1 --jobs 4
     [[ -z "$SKIP_COMPILER" ]] || return
@@ -163,7 +163,7 @@ function build_openssl {
             $GIT clean --force -Xd
             $GIT checkout --force --recurse-submodules master
         fi
-        $GIT pull --prune --recurse-submodules --jobs 4
+        $GIT pull --prune --recurse-submodules
     fi
     $GIT submodule update --init --recursive --depth 1 --jobs 4
     CC=gcc CXX=g++ ./config --prefix=$(pwd) no-async enable-makedepend
