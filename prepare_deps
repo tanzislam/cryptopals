@@ -45,7 +45,7 @@ function build_boost {
             $GIT clean --force -Xd
             $GIT checkout --force master
         fi
-        $GIT pull --prune --recurse-submodules --no-tags --depth 1 --jobs 4
+        $GIT pull --prune --recurse-submodules --no-tags --depth=1 --jobs=4
     fi
     $GIT submodule update --init --recursive --depth 1 --jobs 4
     ./bootstrap.sh --with-toolset=gcc
@@ -68,7 +68,7 @@ function build_gtest {
             $GIT clean --force -Xd
             $GIT checkout --force main
         fi
-        $GIT pull --prune --recurse-submodules --no-tags --depth 1 --jobs 4
+        $GIT pull --prune --recurse-submodules --no-tags --depth=1 --jobs=4
     fi
     $GIT submodule update --init --recursive --depth 1 --jobs 4
     [[ -z "$SKIP_COMPILER" ]] || return
@@ -110,7 +110,7 @@ function build_hunspell {
             rm -f config.cache
             $GIT checkout --force master
         fi
-        $GIT pull --prune --recurse-submodules --no-tags --depth 1 --jobs 4
+        $GIT pull --prune --recurse-submodules --no-tags --depth=1 --jobs=4
     fi
     $GIT submodule update --init --recursive --depth 1 --jobs 4
     if [[ -z `command -v autopoint` &&
@@ -139,7 +139,7 @@ function build_cryptopp {
             $GIT clean --force -Xd
             $GIT checkout --force master
         fi
-        $GIT pull --prune --recurse-submodules --no-tags --depth 1 --jobs 4
+        $GIT pull --prune --recurse-submodules --no-tags --depth=1 --jobs=4
     fi
     $GIT submodule update --init --recursive --depth 1 --jobs 4
     [[ -z "$SKIP_COMPILER" ]] || return
@@ -163,7 +163,7 @@ function build_openssl {
             $GIT clean --force -Xd
             $GIT checkout --force master
         fi
-        $GIT pull --prune --recurse-submodules --no-tags --depth 1 --jobs 4
+        $GIT pull --prune --recurse-submodules --no-tags --depth=1 --jobs=4
     fi
     $GIT submodule update --init --recursive --depth 1 --jobs 4
     CC=gcc CXX=g++ ./config --prefix=$(pwd) no-async enable-makedepend
