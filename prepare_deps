@@ -43,7 +43,7 @@ function build_boost {
         if [[ -n "$CLEAN_BUILD" ]]
         then
             $GIT clean --force -Xd
-            $GIT checkout --force --recurse-submodules master
+            $GIT checkout --force master
         fi
         $GIT pull --prune --recurse-submodules --jobs 4
     fi
@@ -66,9 +66,9 @@ function build_gtest {
         if [[ -n "$CLEAN_BUILD" ]]
         then
             $GIT clean --force -Xd
-            $GIT checkout --force --recurse-submodules main
+            $GIT checkout --force main
         fi
-        $GIT pull --prune --recurse-submodules
+        $GIT pull --prune --recurse-submodules --jobs 4
     fi
     $GIT submodule update --init --recursive --depth 1 --jobs 4
     [[ -z "$SKIP_COMPILER" ]] || return
@@ -108,7 +108,7 @@ function build_hunspell {
         then
             $GIT clean --force -Xd
             rm -f config.cache
-            $GIT checkout --force --recurse-submodules master
+            $GIT checkout --force master
         fi
         $GIT pull --prune --recurse-submodules --jobs 4
     fi
@@ -137,7 +137,7 @@ function build_cryptopp {
         if [[ -n "$CLEAN_BUILD" ]]
         then
             $GIT clean --force -Xd
-            $GIT checkout --force --recurse-submodules master
+            $GIT checkout --force master
         fi
         $GIT pull --prune --recurse-submodules --jobs 4
     fi
@@ -161,9 +161,9 @@ function build_openssl {
             $GIT config core.eol lf
             $GIT config core.autocrlf false
             $GIT clean --force -Xd
-            $GIT checkout --force --recurse-submodules master
+            $GIT checkout --force master
         fi
-        $GIT pull --prune --recurse-submodules
+        $GIT pull --prune --recurse-submodules --jobs 4
     fi
     $GIT submodule update --init --recursive --depth 1 --jobs 4
     CC=gcc CXX=g++ ./config --prefix=$(pwd) no-async enable-makedepend
