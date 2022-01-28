@@ -43,9 +43,9 @@ function build_boost {
         if [[ -n "$CLEAN_BUILD" ]]
         then
             $GIT clean --force -Xd
-            $GIT checkout --force master
+            $GIT checkout --force --no-recurse-submodules master
         fi
-        $GIT pull --prune --recurse-submodules --no-tags --depth=1 --jobs=4
+        $GIT pull --prune --no-recurse-submodules --no-tags --depth=1
     fi
     $GIT submodule update --init --recursive --no-fetch --depth 1 --jobs 4
     ./bootstrap.sh --with-toolset=gcc
@@ -66,9 +66,9 @@ function build_gtest {
         if [[ -n "$CLEAN_BUILD" ]]
         then
             $GIT clean --force -Xd
-            $GIT checkout --force main
+            $GIT checkout --force --no-recurse-submodules main
         fi
-        $GIT pull --prune --recurse-submodules --no-tags --depth=1 --jobs=4
+        $GIT pull --prune --no-recurse-submodules --no-tags --depth=1
     fi
     $GIT submodule update --init --recursive --no-fetch --depth 1 --jobs 4
     [[ -z "$SKIP_COMPILER" ]] || return
@@ -108,9 +108,9 @@ function build_hunspell {
         then
             $GIT clean --force -Xd
             rm -f config.cache
-            $GIT checkout --force master
+            $GIT checkout --force --no-recurse-submodules master
         fi
-        $GIT pull --prune --recurse-submodules --no-tags --depth=1 --jobs=4
+        $GIT pull --prune --no-recurse-submodules --no-tags --depth=1
     fi
     $GIT submodule update --init --recursive --no-fetch --depth 1 --jobs 4
     if [[ -z `command -v autopoint` &&
@@ -137,9 +137,9 @@ function build_cryptopp {
         if [[ -n "$CLEAN_BUILD" ]]
         then
             $GIT clean --force -Xd
-            $GIT checkout --force master
+            $GIT checkout --force --no-recurse-submodules master
         fi
-        $GIT pull --prune --recurse-submodules --no-tags --depth=1 --jobs=4
+        $GIT pull --prune --no-recurse-submodules --no-tags --depth=1
     fi
     $GIT submodule update --init --recursive --no-fetch --depth 1 --jobs 4
     [[ -z "$SKIP_COMPILER" ]] || return
@@ -161,9 +161,9 @@ function build_openssl {
             $GIT config core.eol lf
             $GIT config core.autocrlf false
             $GIT clean --force -Xd
-            $GIT checkout --force master
+            $GIT checkout --force --no-recurse-submodules master
         fi
-        $GIT pull --prune --recurse-submodules --no-tags --depth=1 --jobs=4
+        $GIT pull --prune --no-recurse-submodules --no-tags --depth=1
     fi
     $GIT submodule update --init --recursive --no-fetch --depth 1 --jobs 4
     CC=gcc CXX=g++ ./config --prefix=$(pwd) no-async enable-makedepend
