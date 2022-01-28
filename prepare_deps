@@ -47,7 +47,7 @@ function build_boost {
         fi
         $GIT pull --prune --no-recurse-submodules --no-tags --depth=1
     fi
-    $GIT submodule update --init --recursive --no-fetch --depth 1 --jobs 4
+    $GIT submodule update --init --recursive --checkout --depth 1 --jobs 4
     ./bootstrap.sh --with-toolset=gcc
     ./b2 headers
     [[ -z "$SKIP_COMPILER" ]] || return
@@ -70,7 +70,7 @@ function build_gtest {
         fi
         $GIT pull --prune --no-recurse-submodules --no-tags --depth=1
     fi
-    $GIT submodule update --init --recursive --no-fetch --depth 1 --jobs 4
+    $GIT submodule update --init --recursive --checkout --depth 1 --jobs 4
     [[ -z "$SKIP_COMPILER" ]] || return
     if [[ $BAZEL != "true" ]]
     then
@@ -112,7 +112,7 @@ function build_hunspell {
         fi
         $GIT pull --prune --no-recurse-submodules --no-tags --depth=1
     fi
-    $GIT submodule update --init --recursive --no-fetch --depth 1 --jobs 4
+    $GIT submodule update --init --recursive --checkout --depth 1 --jobs 4
     if [[ -z `command -v autopoint` &&
           `uname` == Linux && `lsb_release -s -i` == Ubuntu ]]
     then
@@ -141,7 +141,7 @@ function build_cryptopp {
         fi
         $GIT pull --prune --no-recurse-submodules --no-tags --depth=1
     fi
-    $GIT submodule update --init --recursive --no-fetch --depth 1 --jobs 4
+    $GIT submodule update --init --recursive --checkout --depth 1 --jobs 4
     [[ -z "$SKIP_COMPILER" ]] || return
     $GNU_MAKE deps
     $GNU_MAKE -kj 3
@@ -165,7 +165,7 @@ function build_openssl {
         fi
         $GIT pull --prune --no-recurse-submodules --no-tags --depth=1
     fi
-    $GIT submodule update --init --recursive --no-fetch --depth 1 --jobs 4
+    $GIT submodule update --init --recursive --checkout --depth 1 --jobs 4
     CC=gcc CXX=g++ ./config --prefix=$(pwd) no-async enable-makedepend
     $GNU_MAKE update -kj 3
     [[ -z "$SKIP_COMPILER" ]] || return
