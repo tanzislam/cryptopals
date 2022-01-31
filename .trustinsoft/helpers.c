@@ -13,3 +13,8 @@ int isatty(int fildes)
     errno = ENOTTY;
     return 0;
 }
+
+long long llabs(long long i)
+{
+    return i >= 0 ? i : -i;
+}
