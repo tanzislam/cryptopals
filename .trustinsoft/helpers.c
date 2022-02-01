@@ -18,3 +18,8 @@ long long llabs(long long i)
 {
     return i >= 0 ? i : -i;
 }
+
+pid_t getpid(void)
+{
+    return 100;
+}
