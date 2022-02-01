@@ -23,3 +23,8 @@ pid_t getpid(void)
 {
     return 100;
 }
+
+pid_t fork(void)
+{
+    return 101;
+}
