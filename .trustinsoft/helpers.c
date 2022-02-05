@@ -1,5 +1,6 @@
 #include <time.h>
 #include <errno.h>
+#include <signal.h>
 
 int clock_gettime(clockid_t id, struct timespec * out)
 {
@@ -27,4 +28,10 @@ pid_t getpid(void)
 pid_t fork(void)
 {
     return 101;
+}
+
+pid_t waitpid(pid_t pid, int * stat_loc, int options)
+{
+    if (stat_loc) *stat_loc = 128 + SIGABRT;
+    return pid;
 }
