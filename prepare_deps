@@ -79,6 +79,7 @@ function build_gtest {
         then
             compiler_override="--compiler=msys-gcc"
         fi
+        compiler_override+=" --cxxopt=-std=c++14"
         $BAZEL --batch build $compiler_override gtest gtest_main
     else
         git fetch --shallow-since=2019-06-12
