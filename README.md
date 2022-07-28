@@ -76,7 +76,7 @@ To build these solutions you will need:
    - You will need to build Google Test using [Bazel](https://www.bazel.build/),
      as mentioned in the Build Requirements.
    - On Windows / MinGW-w64 I had to specify a compiler option:
-     `bazel build --compiler=mingw-gcc gtest gtest_main`.
+     `bazel build --compiler=mingw-gcc --cxxopt=-std=c++14 gtest gtest_main`.
    - On my iBook G3 (running macOS Tiger 10.4.11) Bazel is not available due to
      its dependency JDK8 not having been ported to the 32-bit PowerPC platform.
      As a workaround I restored the `Makefile` from before it was deleted and
@@ -84,7 +84,7 @@ To build these solutions you will need:
 
          git checkout 6b8c138154~1 -- googletest/make
          pushd googletest/make
-         gmake
+         gmake CXXFLAGS="-g -Wall -Wextra -pthread -std=c++14"
          popd
          [[ -d bazel-bin ]] || mkdir bazel-bin
          pushd bazel-bin
