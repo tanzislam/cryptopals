@@ -9,10 +9,9 @@
             "set_1_basics/challenge_1_convert_hex_to_base64/encode_base64.cpp",
             "set_1_basics/challenge_1_convert_hex_to_base64/test_hex2base64.cpp",
             "googletest/googletest/src/gtest-all.cc",
-            "googletest/googletest/src/gtest_main.cc",
-            ".trustinsoft/helpers.c"
+            "googletest/googletest/src/gtest_main.cc"
         ],
-        "cxx-cpp-extra-args": "-I set_1_basics/challenge_1_convert_hex_to_base64 -I boost -I googletest/googletest/include -I googletest/googletest",
+        "cxx-cpp-extra-args": "-I set_1_basics/challenge_1_convert_hex_to_base64 -I boost -I googletest/googletest/include -I googletest/googletest -DTIS_DETERMINISTIC_LIBC",
         "filesystem": {
             "files": [
                 {
