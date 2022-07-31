@@ -12,6 +12,7 @@
             "googletest/googletest/src/gtest_main.cc"
         ],
         "cxx-cpp-extra-args": "-I set_1_basics/challenge_1_convert_hex_to_base64 -I boost -I googletest/googletest/include -I googletest/googletest -DTIS_DETERMINISTIC_LIBC",
+        "cxx-std": "c++14",
         "filesystem": {
             "files": [
                 {
