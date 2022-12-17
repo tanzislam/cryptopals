@@ -77,6 +77,9 @@ To build these solutions you will need:
      as mentioned in the Build Requirements.
    - On Windows / MinGW-w64 I had to specify a compiler option:
      `bazel build --compiler=mingw-gcc --cxxopt=-std=c++14 gtest gtest_main`.
+   - On Ubuntu I encountered [this option-parsing bug in `gcc-ar` via Bazel](
+     https://github.com/bazelbuild/bazel/issues/3760), which I managed to work
+     around by replacing `/usr/bin/gcc-ar` with a symlink to `/usr/bin/ar`.
    - On my iBook G3 (running macOS Tiger 10.4.11) Bazel is not available due to
      its dependency JDK8 not having been ported to the 32-bit PowerPC platform.
      As a workaround I restored the `Makefile` from before it was deleted and

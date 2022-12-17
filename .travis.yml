@@ -127,6 +127,9 @@ before_install:
         export GNU_MAKE=make
         export AR=gcc-ar-9
         export RANLIB=gcc-ranlib-9
+        sudo rm -f /usr/bin/gcc-ar /usr/bin/gcc-ar-9
+        sudo ln -s /usr/bin/ar /usr/bin/gcc-ar
+        sudo ln -s /usr/bin/ar /usr/bin/gcc-ar-9
         # Workaround for https://github.com/travis-ci/travis-ci/issues/3668
         mkdir -p latest-gcc-symlinks
         ln -s /usr/bin/g++-9 latest-gcc-symlinks/g++
