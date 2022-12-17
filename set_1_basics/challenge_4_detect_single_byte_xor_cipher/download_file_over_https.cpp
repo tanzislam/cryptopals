@@ -69,8 +69,7 @@ std::string downloadFileOverHttps(const char * domain, const char * path)
     namespace ssl = boost::asio::ssl;
     using tcp = boost::asio::ip::tcp;
 
-    ssl::context sslContext(ssl::context::sslv23_client);
-    sslContext.set_options(ssl::context::default_workarounds);
+    ssl::context sslContext(ssl::context::tlsv12_client);
     sslContext.set_default_verify_paths();
 #ifdef BOOST_ASIO_WINDOWS
     addWindowsRootCertificatesToOpenSSL(sslContext.native_handle());
@@ -83,8 +82,9 @@ std::string downloadFileOverHttps(const char * domain, const char * path)
                          tcp::resolver(io).resolve(domain, "https"));
     sslSocket.lowest_layer().set_option(tcp::no_delay(true));
 
+    SSL_set_tlsext_host_name(sslSocket.native_handle(), domain);
     sslSocket.set_verify_mode(ssl::verify_peer);
-    sslSocket.set_verify_callback(ssl::rfc2818_verification(domain));
+    sslSocket.set_verify_callback(ssl::host_name_verification(domain));
     sslSocket.handshake(ssl::stream<tcp::socket>::client);
     BOOST_SCOPE_EXIT_ALL(&sslSocket)
     {
