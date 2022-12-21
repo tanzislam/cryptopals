@@ -75,6 +75,7 @@ jobs:
         pkg:
         - automake
         - bazel
+        - gettext
         - gmake
         - libtool
         - wget
