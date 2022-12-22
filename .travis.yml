@@ -34,14 +34,14 @@ git:
 jobs:
     include:
     - os: linux
-      dist: focal
+      dist: jammy
       addons:
         apt:
             sources:
             - sourceline: "deb [arch=amd64] https://storage.googleapis.com/bazel-apt stable jdk1.8"
               key_url: "https://bazel.build/bazel-release.pub.gpg"
             packages:
-            - g++-9
+            - g++-12
             - gdb
             - bazel
             - make
@@ -54,7 +54,7 @@ jobs:
             # https://ruby-doc.org/core/Regexp.html (enclosed in \A and \Z)
             branch_pattern: (master|travis-coverity-.*)
     - os: osx
-      osx_image: xcode12.5
+      osx_image: xcode14.1
       env: HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=true
       addons:
         homebrew:
@@ -126,15 +126,15 @@ before_install:
         ;;
       linux)
         export GNU_MAKE=make
-        export AR=gcc-ar-9
-        export RANLIB=gcc-ranlib-9
-        sudo rm -f /usr/bin/gcc-ar /usr/bin/gcc-ar-9
+        export AR=gcc-ar-12
+        export RANLIB=gcc-ranlib-12
+        sudo rm -f /usr/bin/gcc-ar /usr/bin/gcc-ar-12
         sudo ln -s /usr/bin/ar /usr/bin/gcc-ar
-        sudo ln -s /usr/bin/ar /usr/bin/gcc-ar-9
+        sudo ln -s /usr/bin/ar /usr/bin/gcc-ar-12
         # Workaround for https://github.com/travis-ci/travis-ci/issues/3668
         mkdir -p latest-gcc-symlinks
-        ln -s /usr/bin/g++-9 latest-gcc-symlinks/g++
-        ln -s /usr/bin/gcc-9 latest-gcc-symlinks/gcc
+        ln -s /usr/bin/g++-12 latest-gcc-symlinks/g++
+        ln -s /usr/bin/gcc-12 latest-gcc-symlinks/gcc
         export PATH=$PWD/latest-gcc-symlinks:$PATH
         ;;
       windows)
