@@ -15,9 +15,6 @@
 #    include <boost/system/system_error.hpp>
 #    include <boost/scope_exit.hpp>
 #    include <iostream>
-#    ifdef _MSC_VER
-#        pragma comment(lib, "crypt32")
-#    endif
 static void addWindowsRootCertificatesToOpenSSL(SSL_CTX * ctx)
 {
     // https://stackoverflow.com/questions/9507184 (CAPI Engine didn't work)

@@ -20,7 +20,7 @@ levenshtein_distance.cpp
 
 BOOST_LIBS = system
 
-LIBS = ssl crypto
+LIBS = ssl crypto $(if $(IS_WINDOWS_PLATFORM),crypt32 ws2_32)
 
 test_break_repeating_key_xor : $(SRCS:.cpp=.o)
 

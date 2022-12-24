@@ -21,7 +21,7 @@ download_file_over_https.cpp
 
 BOOST_LIBS = system
 
-LIBS = cryptopp ssl crypto
+LIBS = cryptopp ssl crypto $(if $(IS_WINDOWS_PLATFORM),crypt32 ws2_32)
 
 test_implement_cbc_mode : $(SRCS:.cpp=.o)
 

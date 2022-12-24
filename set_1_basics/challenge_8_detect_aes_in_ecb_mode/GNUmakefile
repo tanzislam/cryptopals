@@ -12,7 +12,7 @@ decode_hex.cpp
 
 BOOST_LIBS = system
 
-LIBS = ssl crypto
+LIBS = ssl crypto $(if $(IS_WINDOWS_PLATFORM),crypt32 ws2_32)
 
 test_detect_aes_in_ecb_mode : $(SRCS:.cpp=.o)
 

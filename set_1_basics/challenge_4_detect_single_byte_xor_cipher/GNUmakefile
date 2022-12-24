@@ -16,7 +16,7 @@ levenshtein_distance.cpp
 
 BOOST_LIBS = system
 
-LIBS = hunspell-1.7 ssl crypto
+LIBS = hunspell-1.7 ssl crypto $(if $(IS_WINDOWS_PLATFORM),crypt32 ws2_32)
 
 test_detect_single_byte_xor_cipher : $(SRCS:.cpp=.o)
 
