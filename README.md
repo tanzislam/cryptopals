@@ -23,9 +23,6 @@
 </a> <a href="https://codescene.io/projects/4256">
   <img src="https://codescene.io/projects/4256/status-badges/code-health"
        alt="Code Health"/>
-</a> <a href="https://lgtm.com/projects/g/tanzislam/cryptopals">
-  <img alt="lgtm"
-       src="https://img.shields.io/lgtm/alerts/g/tanzislam/cryptopals.svg?logo=lgtm&logoWidth=18"/>
 </a> <a href="https://app.codiga.io/public/project/365/cryptopals/dashboard">
   <img alt="Codiga"
        src="https://api.codiga.io/project/365/status/svg"/>
