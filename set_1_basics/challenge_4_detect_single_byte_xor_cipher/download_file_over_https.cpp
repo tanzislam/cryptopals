@@ -2,20 +2,18 @@
 #if __cplusplus < 201703L
 # define BOOST_ASIO_USE_TS_EXECUTOR_AS_DEFAULT
 #endif
-#include <boost/asio/ip/tcp.hpp>
-#include <boost/asio/ssl.hpp>
-#include <boost/asio/connect.hpp>
-#include <boost/scope_exit.hpp>
-#include <boost/asio/write.hpp>
-#include <boost/asio/buffer.hpp>
-#include <boost/asio/streambuf.hpp>
-#include <boost/asio/read_until.hpp>
-#include <istream>
+#include <boost/beast/ssl/ssl_stream.hpp>
+#include <boost/beast/core/tcp_stream.hpp>
+#include <boost/asio/ssl/host_name_verification.hpp>
+#include <boost/beast/http.hpp>
+#include <boost/beast/version.hpp>
+#include <boost/beast/core/flat_buffer.hpp>
 
 #ifdef BOOST_ASIO_WINDOWS
 #    include <openssl/ssl.h>
 #    include <wincrypt.h>
 #    include <boost/system/system_error.hpp>
+#    include <boost/scope_exit.hpp>
 #    include <iostream>
 #    ifdef _MSC_VER
 #        pragma comment(lib, "crypt32")
@@ -76,37 +74,42 @@ std::string downloadFileOverHttps(const char * domain, const char * path)
 #endif
 
     boost::asio::io_context io;
-    ssl::stream<tcp::socket> sslSocket(io, sslContext);
+    boost::beast::ssl_stream<boost::beast::tcp_stream> stream(io, sslContext);
 
-    boost::asio::connect(sslSocket.next_layer(),
-                         tcp::resolver(io).resolve(domain, "https"));
-    sslSocket.lowest_layer().set_option(tcp::no_delay(true));
+    stream.next_layer().connect(tcp::resolver(io).resolve(domain, "https"));
+    stream.next_layer().socket().set_option(tcp::no_delay(true));
 
-    SSL_set_tlsext_host_name(sslSocket.native_handle(), domain);
-    sslSocket.set_verify_mode(ssl::verify_peer);
-    sslSocket.set_verify_callback(ssl::host_name_verification(domain));
-    sslSocket.handshake(ssl::stream<tcp::socket>::client);
-    BOOST_SCOPE_EXIT_ALL(&sslSocket)
-    {
-        sslSocket.shutdown();
-        sslSocket.next_layer().close();
-    };
+    SSL_set_tlsext_host_name(stream.native_handle(), domain);
+    stream.set_verify_mode(ssl::verify_peer);
+    stream.set_verify_callback(ssl::host_name_verification(domain));
+    stream.handshake(ssl::stream<tcp::socket>::client);
 
-    auto request = std::string("GET ") + path + "\r\n";
-    boost::asio::write(sslSocket,
-                       boost::asio::buffer(request.data(), request.size()));
+    namespace http = boost::beast::http;
+    http::request<http::empty_body> request(http::verb::get, path, 11);
+    request.set(http::field::host, domain);
+    request.set(http::field::user_agent, BOOST_BEAST_VERSION_STRING);
+    request.set(http::field::accept, "*/*");
 
-    boost::asio::streambuf responseBuffer;
+    http::write(stream, request);
+
+    boost::beast::flat_buffer buffer;
+    http::response<http::string_body> response;
+    http::read(stream, buffer, response);
+
     try {
-        boost::asio::read_until(sslSocket, responseBuffer, '\0');
-    } catch (boost::system::system_error & e) {
-        if (e.code() != boost::asio::error::eof) throw;
+        stream.shutdown();
+    } catch (const boost::system::system_error & e) {
+        // https://github.com/boostorg/beast/issues/38
+        if (e.code() != ssl::error::stream_truncated) throw;
     }
+    stream.next_layer().socket().shutdown(tcp::socket::shutdown_send);
 
-    std::string fileContents;
-    std::istream response(&responseBuffer);
-    std::getline(response, fileContents, '\0');
-    return fileContents;
+    if (response.result() != http::status::ok)
+        throw std::runtime_error(
+                "GET failed: "
+                + std::to_string(static_cast<unsigned int>(response.result()))
+                + ": " + std::string(response.reason()));
+    return std::move(response.body());
 }
 
 }  // namespace cryptopals
