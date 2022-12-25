@@ -138,6 +138,12 @@ before_install:
         export PATH=$PWD/latest-gcc-symlinks:$PATH
         ;;
       windows)
+        # http://woshub.com/updating-trusted-root-certificates-in-windows-10
+        certutil -generateSSTFromWU roots.sst
+        powershell -Command '
+                Get-ChildItem -Path roots.sst |
+                Import-Certificate -CertStoreLocation Cert:\LocalMachine\Root'
+        rm -f roots.sst
         # https://docs.travis-ci.com/user/reference/windows/#how-do-i-use-msys2
         [[ ! -f C:/tools/msys64/msys2_shell.cmd ]] && rm -rf C:/tools/msys64
         choco uninstall -y mingw
