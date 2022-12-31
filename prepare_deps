@@ -34,7 +34,7 @@ function build_boost {
     # use [[ ! -d $dir ]] here
     if [[ ! -x $BOOST_DIR/bootstrap.sh ]]
     then
-        $GIT clone --depth 1 --shallow-submodules --no-tags --jobs 4 \
+        $GIT clone --depth 1 --shallow-submodules --no-tags \
              https://github.com/boostorg/boost.git $BOOST_DIR
         pushd $BOOST_DIR
     else
@@ -42,11 +42,11 @@ function build_boost {
         if [[ -n "$CLEAN_BUILD" ]]
         then
             $GIT clean --force -Xd
-            $GIT checkout --force --recurse-submodules master
+            $GIT checkout --force master
         fi
-        $GIT pull --prune --recurse-submodules --jobs 4
+        $GIT pull --prune --recurse-submodules
     fi
-    $GIT submodule update --init --recursive --depth 1 --jobs 4
+    $GIT submodule update --init --recursive --depth 1
     ./bootstrap.sh --with-toolset=gcc
     ./b2 headers
     ./b2 --layout=system toolset=gcc variant=release address-model=64 -j 2 \
@@ -56,7 +56,7 @@ function build_boost {
 function build_gtest {
     if [[ ! -f $GTEST_DIR/BUILD.bazel && ! -f $GTEST_DIR/WORKSPACE ]]
     then
-        $GIT clone --depth 1 --shallow-submodules --no-tags --jobs 4 \
+        $GIT clone --depth 1 --shallow-submodules --no-tags \
              https://github.com/google/googletest.git $GTEST_DIR
         pushd $GTEST_DIR
     else
@@ -64,11 +64,11 @@ function build_gtest {
         if [[ -n "$CLEAN_BUILD" ]]
         then
             $GIT clean --force -Xd
-            $GIT checkout --force --recurse-submodules main
+            $GIT checkout --force main
         fi
-        $GIT pull --prune --recurse-submodules --jobs 4
+        $GIT pull --prune --recurse-submodules
     fi
-    $GIT submodule update --init --recursive --depth 1 --jobs 4
+    $GIT submodule update --init --recursive --depth 1
     if [[ $BAZEL != "true" ]]
     then
         system_name=$(uname -s)
@@ -82,7 +82,7 @@ function build_gtest {
         compiler_override+=" --cxxopt=-std=c++14"
         $BAZEL --batch build $compiler_override gtest gtest_main
     else
-        git fetch --shallow-since=2019-06-12
+        git fetch --shallow-since=2019-06-12 || git fetch --unshallow || true
         git checkout 6b8c138154~1 -- googletest/make
         pushd googletest/make
         echo -e '*.o\n*.a\nsample1_unittest' > .gitignore
@@ -97,7 +97,7 @@ function build_gtest {
 function build_hunspell {
     if [[ ! -f $HUNSPELL_DIR/configure.ac ]]
     then
-        $GIT clone --depth 1 --shallow-submodules --no-tags --jobs 4 \
+        $GIT clone --depth 1 --shallow-submodules --no-tags \
              https://github.com/hunspell/hunspell.git $HUNSPELL_DIR
         pushd $HUNSPELL_DIR
     else
@@ -106,11 +106,11 @@ function build_hunspell {
         then
             $GIT clean --force -Xd
             rm -f config.cache
-            $GIT checkout --force --recurse-submodules master
+            $GIT checkout --force master
         fi
-        $GIT pull --prune --recurse-submodules --jobs 4
+        $GIT pull --prune --recurse-submodules
     fi
-    $GIT submodule update --init --recursive --depth 1 --jobs 4
+    $GIT submodule update --init --recursive --depth 1
     if [[ -z `command -v autopoint` &&
           `uname` == Linux && `lsb_release -s -i` == Ubuntu ]]
     then
@@ -126,7 +126,7 @@ function build_hunspell {
 function build_cryptopp {
     if [[ ! -f $CRYPTOPP_DIR/GNUmakefile ]]
     then
-        $GIT clone --depth 1 --shallow-submodules --no-tags --jobs 4 \
+        $GIT clone --depth 1 --shallow-submodules --no-tags \
              https://github.com/weidai11/cryptopp.git $CRYPTOPP_DIR
         pushd $CRYPTOPP_DIR
     else
@@ -134,11 +134,11 @@ function build_cryptopp {
         if [[ -n "$CLEAN_BUILD" ]]
         then
             $GIT clean --force -Xd
-            $GIT checkout --force --recurse-submodules master
+            $GIT checkout --force master
         fi
-        $GIT pull --prune --recurse-submodules --jobs 4
+        $GIT pull --prune --recurse-submodules
     fi
-    $GIT submodule update --init --recursive --depth 1 --jobs 4
+    $GIT submodule update --init --recursive --depth 1
     $GNU_MAKE deps
     $GNU_MAKE -kj 3
 }
@@ -147,7 +147,7 @@ function build_openssl {
     if [[ ! -f $OPENSSL_DIR/config ]]
     then
         $GIT clone --config core.eol=lf --config core.autocrlf=false --depth 1 \
-             --shallow-submodules --no-tags --jobs 4 \
+             --shallow-submodules --no-tags \
              https://github.com/openssl/openssl.git $OPENSSL_DIR
         pushd $OPENSSL_DIR
     else
@@ -157,11 +157,11 @@ function build_openssl {
             $GIT config core.eol lf
             $GIT config core.autocrlf false
             $GIT clean --force -Xd
-            $GIT checkout --force --recurse-submodules master
+            $GIT checkout --force master
         fi
-        $GIT pull --prune --recurse-submodules --jobs 4
+        $GIT pull --prune --recurse-submodules
     fi
-    $GIT submodule update --init --recursive --depth 1 --jobs 4
+    $GIT submodule update --init --recursive --depth 1
     CC=gcc CXX=g++ ./config --prefix=$(pwd) no-async enable-makedepend
     $GNU_MAKE update -kj 3
     $GNU_MAKE -kj 3
@@ -184,6 +184,8 @@ function download_scowl_for_hunspell {
 }
 
 set -xe
+git config fetch.parallel 0
+git config submodule.fetchJobs 0
 build_boost &
 build_gtest &
 build_hunspell &
