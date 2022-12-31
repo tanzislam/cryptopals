@@ -79,6 +79,16 @@ jobs:
         - gmake
         - libtool
         - wget
+    - os: linux
+      dist: focal
+      arch: ppc64le
+      env: BAZEL=true
+      addons:
+        apt:
+            packages:
+            - g++-10
+            - gdb
+            - make
 
 cache:
     directories:
@@ -126,15 +136,21 @@ before_install:
         ;;
       linux)
         export GNU_MAKE=make
-        export AR=gcc-ar-12
-        export RANLIB=gcc-ranlib-12
-        sudo rm -f /usr/bin/gcc-ar /usr/bin/gcc-ar-12
+        if [[ $TRAVIS_CPU_ARCH == amd64 ]]
+        then
+            gccVer=12
+        else
+            gccVer=10
+        fi
+        export AR=gcc-ar-$gccVer
+        export RANLIB=gcc-ranlib-$gccVer
+        sudo rm -f /usr/bin/gcc-ar /usr/bin/gcc-ar-$gccVer
         sudo ln -s /usr/bin/ar /usr/bin/gcc-ar
-        sudo ln -s /usr/bin/ar /usr/bin/gcc-ar-12
+        sudo ln -s /usr/bin/ar /usr/bin/gcc-ar-$gccVer
         # Workaround for https://github.com/travis-ci/travis-ci/issues/3668
         mkdir -p latest-gcc-symlinks
-        ln -s /usr/bin/g++-12 latest-gcc-symlinks/g++
-        ln -s /usr/bin/gcc-12 latest-gcc-symlinks/gcc
+        ln -s /usr/bin/g++-$gccVer latest-gcc-symlinks/g++
+        ln -s /usr/bin/gcc-$gccVer latest-gcc-symlinks/gcc
         export PATH=$PWD/latest-gcc-symlinks:$PATH
         ;;
       windows)
@@ -168,7 +184,7 @@ before_install:
         export RANLIB=gcc-ranlib
         ;;
     esac
-- export BAZEL=bazel
+- export BAZEL=${BAZEL:-bazel}
 - export GIT=git
 - g++ --version
 - $shell $GNU_MAKE --version
@@ -231,7 +247,8 @@ script:
 
 after_success:
 - |-
-    if [[ $TRAVIS_OS_NAME == linux && ! -z "$SCANTISTTOKEN" ]]
+    if [[ $TRAVIS_OS_NAME == linux && ! -z "$SCANTISTTOKEN"
+          && $TRAVIS_CPU_ARCH == amd64 ]]
     then
         bash <(curl -s https://scripts.scantist.com/ci-travis.sh)
     fi
