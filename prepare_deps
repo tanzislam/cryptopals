@@ -214,12 +214,10 @@ function build_openssl {
 
 function download_scowl_for_hunspell {
     url='https://downloads.sourceforge.net/project/wordlist/speller/2017.01.22/'
-    url+='hunspell-en_US-2017.01.22.zip?r=https%3A%2F%2Fsourceforge.net%2F'
-    url+='projects%2Fwordlist%2Ffiles%2Fspeller%2F2017.01.22%2F&ts=1486860415'
-    url+='&use_mirror=vorboss'
-    wget "$url" -O hunspell-en_US-2017.01.22.zip
-    unzip -o -d $HUNSPELL_DIR hunspell-en_US-2017.01.22.zip
-    rm hunspell-en_US-2017.01.22.zip
+    file='hunspell-en_US-2017.01.22.zip'
+    wget "$url$file" -O $file || curl -L -o $file "$url$file"
+    unzip -o -d $HUNSPELL_DIR $file
+    rm $file
 }
 
 set -xe
