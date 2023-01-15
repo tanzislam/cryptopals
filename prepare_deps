@@ -44,9 +44,48 @@ function build_boost {
             $GIT clean --force -Xd
             $GIT checkout --force master
         fi
-        $GIT pull --prune --recurse-submodules --strategy-option=renormalize
+        $GIT pull --prune
     fi
-    $GIT submodule update --init --recursive --depth 1
+    $GIT submodule update --init --recursive --depth 1 -- \
+         tools/build libs/config tools/boost_install libs/headers \
+         libs/algorithm \
+         libs/align \
+         libs/asio \
+         libs/assert \
+         libs/beast \
+         libs/bind \
+         libs/concept_check \
+         libs/container_hash \
+         libs/core \
+         libs/date_time \
+         libs/describe \
+         libs/detail \
+         libs/endian \
+         libs/function \
+         libs/integer \
+         libs/intrusive \
+         libs/io \
+         libs/iostreams \
+         libs/iterator \
+         libs/move \
+         libs/mp11 \
+         libs/mpl \
+         libs/numeric \
+         libs/optional \
+         libs/predef \
+         libs/preprocessor \
+         libs/range \
+         libs/scope_exit \
+         libs/smart_ptr \
+         libs/static_assert \
+         libs/static_string \
+         libs/system \
+         libs/throw_exception \
+         libs/type_index \
+         libs/typeof \
+         libs/type_traits \
+         libs/utility \
+         libs/winapi
     ./bootstrap.sh --with-toolset=gcc
     ./b2 headers
     ./b2 --layout=system toolset=gcc variant=release address-model=64 -j 2 \
