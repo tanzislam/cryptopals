@@ -66,7 +66,7 @@ To build these solutions you will need:
      `b2 --layout=system toolset=gcc variant=release address-model=64`.
    - On macOS and Linux: `./b2 --layout=system variant=release`.
 
- - [Google Test](https://github.com/google/googletest/).
+ - [Google Test](https://google.github.io/googletest/).
    - You will need to build Google Test using [Bazel](https://www.bazel.build/),
      as mentioned in the Build Requirements.
    - On Windows / MinGW-w64 I had to specify a compiler option:
@@ -150,9 +150,6 @@ UNIX-like utilities on Windows are provided by any of the following:
  - [Windows Services for Linux (WSL)](
    https://msdn.microsoft.com/commandline/wsl/) -- available as an optional
    Windows feature on Windows 10 (Anniversary Update onwards)
- - [GnuWin](http://gnuwin32.sourceforge.net/), [UnxUtils](
-   http://unxutils.sourceforge.net/) or [win-bash](
-   http://win-bash.sourceforge.net/)
 
 You may need to install additional packages beyond the ones bundled with the
 default installation. Check the respective documentation for guidance on how to
@@ -161,10 +158,11 @@ locate and install packages.
 Once the packages are installed, the "from source" dependency libraries can be
 downloaded and built using the `prepare_deps` script, especially in CI jobs. You
 will need [GNU Bash](https://www.gnu.org/software/bash/) (at least v3.1),
-[Wget](https://www.gnu.org/software/wget/) and `unzip` for it. (When installing
-Wget in MacPorts I ran into [this issue](https://trac.macports.org/ticket/47085)
-but the suggested fix worked fine -- so run `sudo port -v configure libffi`,
-then patch the files, then run `sudo port build libffi && sudo make install`.)
+[Wget](https://www.gnu.org/software/wget/) (or [Curl](https://curl.se/)) and
+`unzip` for it. (When installing Wget in MacPorts I ran into [this issue](
+https://trac.macports.org/ticket/47085) but the suggested fix worked fine -- so
+run `sudo port -v configure libffi`, then patch the files, then run
+`sudo port build libffi && sudo make install`.)
 
 Although my development environment is in Windows (primarily [Notepad++](
 https://notepad-plus-plus.org/) enhanced with some humble [NppExec](
