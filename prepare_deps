@@ -202,11 +202,11 @@ function build_openssl {
     fi
     $GIT submodule update --init --recursive --depth 1
     CC=gcc CXX=g++ ./config --prefix=$(pwd) no-async enable-makedepend
-    $GNU_MAKE update -kj 3
-    $GNU_MAKE -kj 3
+    $GNU_MAKE update -kj 4
+    $GNU_MAKE -kj 4
     # https://github.com/openssl/openssl/issues/14994#issuecomment-825872628
-    $GNU_MAKE -kj 3
-    $GNU_MAKE -kj 3
+    $GNU_MAKE -kj 4
+    $GNU_MAKE -kj 4
     [[ -d lib ]] || mkdir lib
     pushd lib
     ln -fs ../libssl.* ../libcrypto.* .
