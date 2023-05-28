@@ -229,4 +229,9 @@ build_hunspell &
 build_cryptopp &
 build_openssl &
 download_scowl_for_hunspell &
+while sleep 300
+do
+    echo "Dummy output to prevent termination"
+done &
+disown
 wait
