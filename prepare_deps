@@ -233,5 +233,7 @@ while sleep 300
 do
     echo "Dummy output to prevent termination"
 done &
+dummy_pid=$(jobs -p %%)
 disown
 wait
+kill $dummy_pid
