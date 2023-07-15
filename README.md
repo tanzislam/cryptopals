@@ -23,9 +23,6 @@
 </a> <a href="https://codescene.io/projects/4256">
   <img src="https://codescene.io/projects/4256/status-badges/code-health"
        alt="Code Health"/>
-</a> <a href="https://app.codiga.io/public/project/365/cryptopals/dashboard">
-  <img alt="Codiga"
-       src="https://api.codiga.io/project/365/status/svg"/>
 </a> <a href="https://codeclimate.com/github/tanzislam/cryptopals">
   <img alt="Code Climate"
        src="https://api.codeclimate.com/v1/badges/95f777506332767d6c34/maintainability"
