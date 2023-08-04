@@ -29,24 +29,36 @@ then
     export RANLIB=${RANLIB:-gcc-ranlib}
 fi
 
-function build_boost {
+function checkout {
+    local repoURL="$1"
+    local dir="$2"
+    local branch="$3"
+    local testFiles="$4"
+    shift 4
+
     # The Travis Cache plugin creates the directories beforehand, so we can't
     # use [[ ! -d $dir ]] here
-    if [[ ! -x $BOOST_DIR/bootstrap.sh ]]
+    if echo -e "$testFiles" | xargs -t -n1 -I% [ ! -f "$dir"/% ]
     then
-        $GIT clone --depth 1 --shallow-submodules --no-tags \
-             https://github.com/boostorg/boost.git $BOOST_DIR
-        pushd $BOOST_DIR
+        $GIT clone --depth 1 --shallow-submodules --no-tags $repoURL "$dir"
+        pushd "$dir"
     else
-        pushd $BOOST_DIR
+        pushd "$dir"
         if [[ -n "$CLEAN_BUILD" ]]
         then
             $GIT clean --force -Xd
-            $GIT checkout --force master
+            $GIT checkout --force "$branch"
         fi
         $GIT pull --prune
     fi
-    $GIT submodule update --init --recursive --depth 1 -- \
+    $GIT submodule update --init --recursive --depth 1 -- $@
+}
+
+function build_boost {
+    checkout https://github.com/boostorg/boost.git \
+             "$BOOST_DIR" \
+             master \
+             bootstrap.sh \
          tools/build libs/config tools/boost_install libs/headers \
          libs/algorithm \
          libs/align \
@@ -93,21 +105,10 @@ function build_boost {
 }
 
 function build_gtest {
-    if [[ ! -f $GTEST_DIR/BUILD.bazel && ! -f $GTEST_DIR/WORKSPACE ]]
-    then
-        $GIT clone --depth 1 --shallow-submodules --no-tags \
-             https://github.com/google/googletest.git $GTEST_DIR
-        pushd $GTEST_DIR
-    else
-        pushd $GTEST_DIR
-        if [[ -n "$CLEAN_BUILD" ]]
-        then
-            $GIT clean --force -Xd
-            $GIT checkout --force main
-        fi
-        $GIT pull --prune --recurse-submodules
-    fi
-    $GIT submodule update --init --recursive --depth 1
+    checkout https://github.com/google/googletest.git \
+             "$GTEST_DIR" \
+             main \
+             "BUILD.bazel\nWORKSPACE"
     if [[ $BAZEL != "true" ]]
     then
         system_name=$(uname -s)
@@ -134,22 +135,14 @@ function build_gtest {
 }
 
 function build_hunspell {
-    if [[ ! -f $HUNSPELL_DIR/configure.ac ]]
+    checkout https://github.com/hunspell/hunspell.git \
+             "$HUNSPELL_DIR" \
+             master \
+             configure.ac
+    if [[ -n "$CLEAN_BUILD" ]]
     then
-        $GIT clone --depth 1 --shallow-submodules --no-tags \
-             https://github.com/hunspell/hunspell.git $HUNSPELL_DIR
-        pushd $HUNSPELL_DIR
-    else
-        pushd $HUNSPELL_DIR
-        if [[ -n "$CLEAN_BUILD" ]]
-        then
-            $GIT clean --force -Xd
-            rm -f config.cache
-            $GIT checkout --force master
-        fi
-        $GIT pull --prune --recurse-submodules
+        rm -f config.cache
     fi
-    $GIT submodule update --init --recursive --depth 1
     if [[ -z `command -v autopoint` &&
           `uname` == Linux && `lsb_release -s -i` == Ubuntu ]]
     then
@@ -163,44 +156,25 @@ function build_hunspell {
 }
 
 function build_cryptopp {
-    if [[ ! -f $CRYPTOPP_DIR/GNUmakefile ]]
-    then
-        $GIT clone --depth 1 --shallow-submodules --no-tags \
-             https://github.com/weidai11/cryptopp.git $CRYPTOPP_DIR
-        pushd $CRYPTOPP_DIR
-    else
-        pushd $CRYPTOPP_DIR
-        if [[ -n "$CLEAN_BUILD" ]]
-        then
-            $GIT clean --force -Xd
-            $GIT checkout --force master
-        fi
-        $GIT pull --prune --recurse-submodules
-    fi
-    $GIT submodule update --init --recursive --depth 1
+    checkout https://github.com/weidai11/cryptopp.git \
+             "$CRYPTOPP_DIR" \
+             master \
+             GNUmakefile
     $GNU_MAKE deps
     $GNU_MAKE -kj 3
 }
 
 function build_openssl {
-    if [[ ! -f $OPENSSL_DIR/config ]]
+    if [[ -n "$CLEAN_BUILD" ]]
     then
-        $GIT clone --config core.eol=lf --config core.autocrlf=false --depth 1 \
-             --shallow-submodules --no-tags \
-             https://github.com/openssl/openssl.git $OPENSSL_DIR
-        pushd $OPENSSL_DIR
-    else
-        pushd $OPENSSL_DIR
-        if [[ -n "$CLEAN_BUILD" ]]
-        then
-            $GIT config core.eol lf
-            $GIT config core.autocrlf false
-            $GIT clean --force -Xd
-            $GIT checkout --force master
-        fi
-        $GIT pull --prune --recurse-submodules
+        pushd "$OPENSSL_DIR"
+        $GIT config core.eol lf
+        $GIT config core.autocrlf false
+        popd
     fi
-    $GIT submodule update --init --recursive --depth 1
+    local optsAndURL="--config core.eol=lf --config core.autocrlf=false"
+    optsAndURL+=" https://github.com/openssl/openssl.git"
+    checkout "$optsAndURL" "$OPENSSL_DIR" master config
     CC=gcc CXX=g++ ./config --prefix=$(pwd) no-async enable-makedepend
     $GNU_MAKE update -kj 4
     $GNU_MAKE -kj 4
