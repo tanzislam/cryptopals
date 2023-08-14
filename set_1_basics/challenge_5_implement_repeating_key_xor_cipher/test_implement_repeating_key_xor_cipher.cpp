@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include "repeating_stringstream.hpp"
+#include <iomanip>
 #include <sstream>
 #include "encode_hex.hpp"
 #include "xor.hpp"
