@@ -23,7 +23,7 @@ export OPENSSL_DIR=${OPENSSL_DIR:-openssl}
 export GNU_MAKE=${GNU_MAKE:-make}
 export BAZEL=${BAZEL:-true}
 export GIT=${GIT:-git}
-if [[ $(uname) != "Darwin" ]]
+if [[ $(uname) != "Darwin" && $(uname -o) != "Android" ]]
 then
     export AR=${AR:-gcc-ar}
     export RANLIB=${RANLIB:-gcc-ranlib}
@@ -144,7 +144,8 @@ function build_hunspell {
         rm -f config.cache
     fi
     if [[ -z `command -v autopoint` &&
-          `uname` == Linux && `lsb_release -s -i` == Ubuntu ]]
+          `uname` == Linux && `uname -o` != Android &&
+          `lsb_release -s -i` == Ubuntu ]]
     then
         sudo apt install -y autopoint
     fi
@@ -160,6 +161,12 @@ function build_cryptopp {
              "$CRYPTOPP_DIR" \
              master \
              GNUmakefile
+    if [[ `uname -o` == Android ]]
+    then
+        pkg install libcpufeatures
+        export CRYPTOPP_CPPFLAGS=-I/data/data/com.termux/files/usr/include/ndk_compat
+        export CRYPTOPP_LDFLAGS=-lndk_compat
+    fi
     $GNU_MAKE deps
     $GNU_MAKE -kj 3
 }
@@ -195,8 +202,11 @@ function download_scowl_for_hunspell {
 }
 
 set -xe
-git config fetch.parallel 0
-git config submodule.fetchJobs 0
+if [[ $(uname -o) != "Android" ]]
+then
+    git config fetch.parallel 0
+    git config submodule.fetchJobs 0
+fi
 build_boost &
 build_gtest &
 build_hunspell &
