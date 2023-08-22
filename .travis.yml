@@ -54,7 +54,7 @@ jobs:
             # https://ruby-doc.org/core/Regexp.html (enclosed in \A and \Z)
             branch_pattern: (master|travis-coverity-.*)
     - os: osx
-      osx_image: xcode14.1
+      osx_image: xcode14.2
       env: HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=true
       addons:
         homebrew:
