@@ -27,6 +27,9 @@
   <img alt="Code Climate"
        src="https://api.codeclimate.com/v1/badges/95f777506332767d6c34/maintainability"
        title="Cppcheck, EditorConfig, Markdownlint, ShellCheck"/>
+</a> <a href="https://codequality.browserstack.com/organization/gh/tanzislam/repositories/44164131e5d272f765a0b5e0a2648cf6">
+  <img alt="Embold"
+       src="https://codequality.browserstack.com/api/badges?repositoryUid=44164131e5d272f765a0b5e0a2648cf6&type=rating&token=eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTY5Mjc3ODk2NDUzNiwiaWF0IjoxNjkyNzc4OTY0fQ.DvxX-RDa76qrLyNQyFlXZlqmkY0ng7TpoEOiOsP1DzMPQ2ugwj5aVYDCSlMKzNyq5yzF0TEonZeEfl1nRyobiw"/>
 </a>
 
 These are my solutions to the interesting challenges at [the cryptopals crypto
