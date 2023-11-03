@@ -1,6 +1,7 @@
 #include "generate_random.hpp"
 #include <ctime>
 #include <algorithm>
+#include <iostream>
 
 namespace cryptopals {
 
@@ -15,8 +16,10 @@ std::string generateRandomBytes(size_t count)
 std::independent_bits_engine<std::mt19937, CHAR_BIT, unsigned short> &
     getRandomNumbers()
 {
+    static auto seed = time(nullptr);
     static std::independent_bits_engine<std::mt19937, CHAR_BIT, unsigned short>
-        randomNumberGenerator(time(nullptr));
+        randomNumberGenerator(
+            (std::clog << "[DEBUG] seed: " << seed << std::endl, seed));
     return randomNumberGenerator;
 }
 
