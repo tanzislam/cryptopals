@@ -111,13 +111,12 @@ function build_gtest {
              "BUILD.bazel\nWORKSPACE"
     if [[ $BAZEL != "true" ]]
     then
+        compiler_override="--incompatible_enable_cc_toolchain_resolution=false"
         system_name=$(uname -s)
-        if [[ $system_name =~ ^MINGW ]]
-        then
-            compiler_override="--compiler=mingw-gcc"
-        elif [[ $system_name =~ ^MSYS_ ]]
-        then
-            compiler_override="--compiler=msys-gcc"
+        if [[ $system_name =~ ^MINGW ]]; then
+            compiler_override+=" --compiler=mingw-gcc"
+        elif [[ $system_name =~ ^MSYS_ ]]; then
+            compiler_override+=" --compiler=msys-gcc"
         fi
         compiler_override+=" --cxxopt=-std=c++14"
         $BAZEL --batch build $compiler_override gtest gtest_main
