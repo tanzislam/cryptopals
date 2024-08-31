@@ -71,6 +71,8 @@ jobs:
             organization: $SONAR_ORGANIZATION
     - os: windows
     - os: freebsd
+      env: pkg=`sed -i 's/\\\${ABI}/FreeBSD:14:amd64/g' /etc/pkg/FreeBSD.conf`
+           REPO_AUTOUPDATE=false
       addons:
         pkg:
         - automake
