@@ -70,7 +70,15 @@ jobs:
         sonarcloud:
             organization: $SONAR_ORGANIZATION
     - os: windows
-    - os: freebsd
+    # - os: freebsd
+    #   addons:
+    #     pkg:
+    #     - automake
+    #     - bazel
+    #     - gettext
+    #     - gmake
+    #     - libtool
+    #     - wget
     - os: linux
       dist: focal
       arch: ppc64le
@@ -116,8 +124,6 @@ before_install:
 - |-
     case $TRAVIS_OS_NAME in
       freebsd)
-        su -m root -c 'sed -i "" -e "s/\${ABI}/FreeBSD:14:amd64/g" /etc/pkg/FreeBSD.conf'
-        su -m root -c 'REPO_AUTOUPDATE=false pkg install -y automake bazel gettext gmake libtool wget'
         export AR=ar
         export RANLIB=ranlib
         mkdir -p ~/bin
