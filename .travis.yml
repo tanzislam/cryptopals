@@ -116,7 +116,7 @@ before_install:
 - |-
     case $TRAVIS_OS_NAME in
       freebsd)
-        su -m root -c 'sed -i "s/\${ABI}/FreeBSD:14:amd64/g" /etc/pkg/FreeBSD.conf'
+        su -m root -c 'sed -i "s/\\\${ABI}/FreeBSD:14:amd64/g" /etc/pkg/FreeBSD.conf'
         su -m root -c 'pkg install -y automake bazel gettext gmake libtool wget'
         export AR=ar
         export RANLIB=ranlib
