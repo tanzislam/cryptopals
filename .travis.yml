@@ -72,7 +72,7 @@ jobs:
     - os: windows
     - os: freebsd
       env:
-      - pkg=`su -m root -c 'sed -i "s/\\\${ABI}/FreeBSD:14:amd64/g" /etc/pkg/FreeBSD.conf'`
+      - pkg=`su -m root -c 'sed -i "s/\${ABI}/FreeBSD:14:amd64/g" /etc/pkg/FreeBSD.conf'`
       - REPO_AUTOUPDATE=false
       addons:
         pkg:
