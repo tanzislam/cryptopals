@@ -97,6 +97,7 @@ function build_boost {
          libs/typeof \
          libs/type_traits \
          libs/utility \
+         libs/variant2 \
          libs/winapi
     ./bootstrap.sh --with-toolset=gcc
     ./b2 headers
