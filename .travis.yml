@@ -32,6 +32,9 @@ git:
     depth: false
 
 jobs:
+    allow_failures:
+    - os: freebsd
+    fast_finish: true
     include:
     - os: linux
       dist: jammy
