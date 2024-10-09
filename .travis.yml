@@ -55,18 +55,15 @@ jobs:
             branch_pattern: (master|travis-coverity-.*)
     - os: osx
       osx_image: xcode14.2
-      env: HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=true
+      env: HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=true BAZEL=true
       addons:
         homebrew:
             update: true
-            taps:
-            - bazelbuild/tap
             packages:
             - make
             - automake
             - libtool
             - gettext
-            - bazelbuild/tap/bazel
         sonarcloud:
             organization: $SONAR_ORGANIZATION
     - os: windows
