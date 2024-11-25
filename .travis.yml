@@ -148,11 +148,11 @@ before_install:
                 Import-Certificate -CertStoreLocation Cert:\LocalMachine\Root'
         rm -f roots.sst
         winupd=https://ctldl.windowsupdate.com/msdownload/update/v3/static
-        curl $winupd/trustedr/en/authrootstl.cab -o authrootstl.cab
+        curl -k $winupd/trustedr/en/authrootstl.cab -o authrootstl.cab
         expand authrootstl.cab authroot.stl
         certutil -enterprise -f -v -AddStore Root authroot.stl
         rm -f authrootstl.cab authroot.stl
-        curl $winupd/trustedr/en/disallowedcertstl.cab -o disallowed.cab
+        curl -k $winupd/trustedr/en/disallowedcertstl.cab -o disallowed.cab
         expand disallowed.cab disallowed.stl
         certutil -enterprise -f -v -AddStore disallowed disallowed.stl
         rm -f disallowed.cab disallowed.stl
