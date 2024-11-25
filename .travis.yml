@@ -56,19 +56,6 @@ jobs:
             build_command: $GNU_MAKE -k
             # https://ruby-doc.org/core/Regexp.html (enclosed in \A and \Z)
             branch_pattern: (master|travis-coverity-.*)
-    - os: osx
-      osx_image: xcode14.2
-      env: HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=true BAZEL=true
-      addons:
-        homebrew:
-            update: true
-            packages:
-            - make
-            - automake
-            - libtool
-            - gettext
-        sonarcloud:
-            organization: $SONAR_ORGANIZATION
     - os: windows
     - os: freebsd
       addons:
