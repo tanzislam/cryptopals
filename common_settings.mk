@@ -77,7 +77,8 @@ IS_MACOSX_PLATFORM := $(filter Darwin,$(PLATFORM))
 IS_ANDROID_PLATFORM := $(filter Android,$(shell uname -o))
 include $(dir $(this_plugin))dependency_cache.mk
 
-LDFLAGS += $(if $(IS_MACOSX_PLATFORM),, \
+, = ,
+LDFLAGS += $(if $(IS_MACOSX_PLATFORM),-Wl$(,)-headerpad_max_install_names, \
                 $(foreach d,$(LIB_DIRS),-Wl,-rpath,$(d))) \
            $(if $(and $(IS_ANDROID_PLATFORM),$(filter cryptopp,$(LIBS))), \
                 -lndk_compat)
