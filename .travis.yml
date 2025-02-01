@@ -32,9 +32,6 @@ git:
     depth: false
 
 jobs:
-    allow_failures:
-    - os: freebsd
-    fast_finish: true
     include:
     - os: linux
       dist: jammy
@@ -71,10 +68,10 @@ jobs:
             organization: $SONAR_ORGANIZATION
     - os: windows
     - os: freebsd
+      env: BAZEL=true
       addons:
         pkg:
         - automake
-        - bazel
         - gettext
         - gmake
         - libtool
@@ -127,8 +124,8 @@ before_install:
         export AR=ar
         export RANLIB=ranlib
         mkdir -p ~/bin
-        ln -s /usr/bin/clang ~/bin/gcc
-        ln -s /usr/bin/clang++ ~/bin/g++
+        su -m root -c 'ln -s /usr/bin/clang ~/bin/gcc'
+        su -m root -c 'ln -s /usr/bin/clang++ ~/bin/g++'
         export GNU_MAKE=gmake
         ;;
       osx)
@@ -241,7 +238,7 @@ script:
         export SSL_CERT_FILE=`pwd`/certs.pem
         ;;
       freebsd)
-        export SSL_CERT_FILE=/etc/ssl/cert.pem
+        export SSL_CERT_DIR=/etc/ssl/certs
         ;;
     esac
 - $shell ./test --gtest_color=yes
