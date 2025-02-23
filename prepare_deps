@@ -119,14 +119,14 @@ function build_gtest {
         elif [[ $system_name =~ ^MSYS_ ]]; then
             compiler_override+=" --compiler=msys-gcc"
         fi
-        compiler_override+=" --cxxopt=-std=c++14"
+        compiler_override+=" --cxxopt=-std=c++17"
         $BAZEL --batch build $compiler_override gtest gtest_main
     else
         git fetch --shallow-since=2019-06-12 || git fetch --unshallow || true
         git checkout 6b8c138154~1 -- googletest/make
         pushd googletest/make
         echo -e '*.o\n*.a\nsample1_unittest' > .gitignore
-        $GNU_MAKE -kj 2 CXXFLAGS="-g -Wall -Wextra -pthread -std=c++14"
+        $GNU_MAKE -kj 2 CXXFLAGS="-g -Wall -Wextra -pthread -std=c++17"
         popd
         [[ -d bazel-bin ]] || mkdir bazel-bin
         pushd bazel-bin

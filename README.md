@@ -70,7 +70,7 @@ To build these solutions you will need:
    - You will need to build Google Test using [Bazel](https://www.bazel.build/),
      as mentioned in the Build Requirements.
    - On Windows / MinGW-w64 I had to specify a compiler option:
-     `bazel build --compiler=mingw-gcc --cxxopt=-std=c++14 gtest gtest_main`.
+     `bazel build --compiler=mingw-gcc --cxxopt=-std=c++17 gtest gtest_main`.
    - On Ubuntu I encountered [this option-parsing bug in `gcc-ar` via Bazel](
      https://github.com/bazelbuild/bazel/issues/3760), which I managed to work
      around by replacing `/usr/bin/gcc-ar` with a symlink to `/usr/bin/ar`.
@@ -81,7 +81,7 @@ To build these solutions you will need:
 
          git checkout 6b8c138154~1 -- googletest/make
          pushd googletest/make
-         gmake CXXFLAGS="-g -Wall -Wextra -pthread -std=c++14"
+         gmake CXXFLAGS="-g -Wall -Wextra -pthread -std=c++17"
          popd
          [[ -d bazel-bin ]] || mkdir bazel-bin
          pushd bazel-bin
