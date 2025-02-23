@@ -69,7 +69,7 @@ To build these solutions you will need:
  - [Google Test](https://google.github.io/googletest/).
    - You will need to build Google Test using [Bazel](https://www.bazel.build/),
      as mentioned in the Build Requirements.
-   - On Windows / MinGW-w64 I had to specify a compiler option:
+   - On Windows / MinGW-w64 I had to use Bazel v6 and specify a compiler option:
      `bazel build --compiler=mingw-gcc --cxxopt=-std=c++17 gtest gtest_main`.
    - On Ubuntu I encountered [this option-parsing bug in `gcc-ar` via Bazel](
      https://github.com/bazelbuild/bazel/issues/3760), which I managed to work
