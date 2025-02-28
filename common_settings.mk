@@ -25,7 +25,6 @@ this_plugin := $(lastword $(MAKEFILE_LIST))
 CXX = g++
 CPP_STANDARD = -std=c++17 -pthread
 CPP_QUALITY_CHECKS = -pedantic -pedantic-errors -Wall -Wextra
-CPP_QUALITY_CHECKS += $(if $(filter clang,$(shell g++ --version)))
 CPP_OPTIMIZATIONS = -O3 -ffunction-sections -fdata-sections
 CPPFLAGS = $(CPP_STANDARD) $(CPP_QUALITY_CHECKS) $(CPP_OPTIMIZATIONS)
 CXXFLAGS := -isystem $(BOOST_DIR) \
